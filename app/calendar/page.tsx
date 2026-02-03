@@ -75,7 +75,7 @@ export default function IslamicCalendar() {
           {/* HIJRI HERO CARD */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-            className="relative p-10 rounded-[3.5rem] bg-gradient-to-br from-emerald-600/20 via-transparent to-transparent border border-emerald-500/20 overflow-hidden"
+            className="relative p-10 rounded-[3.5rem] bg-linear-to-br from-emerald-600/20 via-transparent to-transparent border border-emerald-500/20 overflow-hidden"
           >
             <div className="relative z-10">
               <span className="bg-emerald-500/20 text-emerald-400 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-500/20">
@@ -97,7 +97,7 @@ export default function IslamicCalendar() {
           </motion.div>
 
           {/* CALENDAR ENGINE */}
-          <div className="p-8 rounded-[3rem] bg-white/[0.02] border border-white/5 backdrop-blur-md">
+          <div className="p-8 rounded-[3rem] bg-white/2 border border-white/5 backdrop-blur-md">
             <div className="flex items-center justify-between mb-10 px-2">
                <div>
                   <h3 className="text-2xl font-bold">{currentDate.toLocaleString('default', { month: 'long' })}</h3>
@@ -126,7 +126,7 @@ export default function IslamicCalendar() {
                    <motion.div 
                      whileHover={{ scale: 1.05 }}
                      key={i} 
-                     className={`relative aspect-square rounded-2xl md:rounded-[1.5rem] flex flex-col items-center justify-center text-sm font-bold border transition-all cursor-pointer ${isToday ? 'bg-emerald-500 border-emerald-500 text-black shadow-2xl shadow-emerald-500/40' : 'bg-white/[0.03] border-white/5 hover:border-emerald-500/50'}`}
+                     className={`relative aspect-square rounded-2xl md:rounded-3xl flex flex-col items-center justify-center text-sm font-bold border transition-all cursor-pointer ${isToday ? 'bg-emerald-500 border-emerald-500 text-black shadow-2xl shadow-emerald-500/40' : 'bg-white/3 border-white/5 hover:border-emerald-500/50'}`}
                    >
                      {i + 1}
                      {isToday && <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-black rounded-full" />}
@@ -139,14 +139,14 @@ export default function IslamicCalendar() {
 
         {/* --- RIGHT: EVENTS --- */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="p-6 rounded-[2.5rem] bg-white/[0.02] border border-white/5">
+          <div className="p-6 rounded-[2.5rem] bg-white/2 border border-white/5">
             <h3 className="text-sm font-black uppercase tracking-[0.2em] mb-8 text-gray-400 flex items-center gap-2">
               <Sparkles size={14} className="text-amber-500" /> Key Observations
             </h3>
             
             <div className="space-y-4">
               {islamicEvents.map((event, idx) => (
-                <div key={idx} className="group p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-emerald-500/5 hover:border-emerald-500/20 transition-all">
+                <div key={idx} className="group p-4 rounded-2xl bg-white/2 border border-white/5 hover:bg-emerald-500/5 hover:border-emerald-500/20 transition-all">
                   <div className="flex items-center justify-between mb-2">
                     <span className={`p-2 rounded-xl ${event.color} bg-opacity-20 text-white`}>{event.icon}</span>
                     <span className="text-[9px] font-black text-gray-600 uppercase tracking-widest">{event.date}</span>
@@ -158,7 +158,7 @@ export default function IslamicCalendar() {
           </div>
 
           {/* LUXURY BANNER */}
-          <div className="p-8 rounded-[3rem] bg-gradient-to-br from-indigo-600/20 to-emerald-600/20 border border-white/10 relative overflow-hidden group">
+          <div className="p-8 rounded-[3rem] bg-linear-to-br from-indigo-600/20 to-emerald-600/20 border border-white/10 relative overflow-hidden group">
              <div className="relative z-10">
                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-400 mb-4">Sunnah Fasting</p>
                <h4 className="text-lg font-bold leading-tight">Monday & Thursday Fasting</h4>
