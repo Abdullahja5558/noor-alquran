@@ -13,7 +13,7 @@ export default function SeerahPage() {
     <div className="bg-[#020617] min-h-screen text-white font-sans selection:bg-emerald-500/30 overflow-x-hidden">
       
       {/* --- PREMIUM NAVIGATION --- */}
-      <nav className="fixed top-0 w-full z-[100] bg-[#020617]/90 backdrop-blur-3xl border-b border-white/5 px-4 md:px-8 py-5">
+      <nav className="fixed top-0 w-full z-100 bg-[#020617]/90 backdrop-blur-3xl border-b border-white/5 px-4 md:px-8 py-5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <button onClick={() => router.back()} className="group flex items-center gap-2 md:gap-3 bg-white/5 px-3 md:px-4 py-2 rounded-2xl border border-white/5 hover:bg-white/10 transition-all">
             <ArrowLeft size={18} className="text-gray-400 group-hover:text-emerald-500" />
@@ -36,7 +36,7 @@ export default function SeerahPage() {
         {/* --- HERO SECTION --- */}
         <section className="text-center mb-20 md:mb-32">
            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-             <h1 className="text-5xl md:text-9xl font-black tracking-tighter mb-6 bg-gradient-to-b from-white to-gray-500 bg-clip-text text-transparent leading-[0.9]">
+             <h1 className="text-5xl md:text-9xl font-black tracking-tighter mb-6 bg-linear-to-b from-white to-gray-500 bg-clip-text text-transparent leading-[0.9]">
                Prophetic <br/> <span className="text-emerald-500 italic font-light">Heritage.</span>
              </h1>
              <p className="text-gray-500 max-w-xl mx-auto text-[9px] md:text-xs uppercase tracking-[0.3em] font-black mt-8">
@@ -60,7 +60,7 @@ export default function SeerahPage() {
 
           {/* Timeline Vertical Line */}
           {/* Desktop: Center, Mobile: Left */}
-          <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 w-px h-[95%] bg-gradient-to-b from-emerald-500/50 via-emerald-500/5 to-transparent z-0"></div>
+          <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 w-px h-[95%] bg-linear-to-b from-emerald-500/50 via-emerald-500/5 to-transparent z-0"></div>
 
           <div className="space-y-16 md:space-y-32 relative z-10">
             {SEERAH_TIMELINE.map((item, idx) => (
@@ -73,7 +73,7 @@ export default function SeerahPage() {
               >
                 {/* Event Card */}
                 <div className="flex-1 w-full pl-10 md:pl-0">
-                   <div className="p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] bg-white/[0.03] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 relative group backdrop-blur-sm">
+                   <div className="p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] bg-white/3 border border-white/5 hover:border-emerald-500/30 transition-all duration-500 relative group backdrop-blur-sm">
                       <div className="flex justify-between items-center mb-6 md:mb-8">
                          <span className="text-emerald-500 font-black text-xl md:text-4xl tracking-tighter">{item.year}</span>
                          <History className="text-white/10 group-hover:text-emerald-500/20 transition-colors" size={28} />
@@ -94,7 +94,7 @@ export default function SeerahPage() {
                 </div>
 
                 {/* Center Node */}
-                <div className="absolute left-[-3px] md:relative md:left-0 z-20">
+                <div className="absolute -left-0.75 md:relative md:left-0 z-20">
                    <div className="w-9 h-9 md:w-16 md:h-16 rounded-full bg-[#020617] border-4 border-emerald-500/20 flex items-center justify-center shadow-2xl">
                       <div className="w-2.5 h-2.5 md:w-5 md:h-5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_20px_#10b981]"></div>
                    </div>
@@ -110,9 +110,9 @@ export default function SeerahPage() {
         {/* --- SECTION 1: PROPHETS OVERVIEW --- */}
         <section className="mb-20 md:mb-40">
           <div className="flex items-center gap-4 md:gap-8 mb-16 md:mb-24 px-4">
-             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-white/10"></div>
+             <div className="h-px flex-1 bg-linear-to-r from-transparent to-white/10"></div>
              <h2 className="text-[10px] md:text-xs font-black uppercase tracking-[0.5em] text-emerald-500 whitespace-nowrap">The Messengers of Allah</h2>
-             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-white/10"></div>
+             <div className="h-px flex-1 bg-linear-to-l from-transparent to-white/10"></div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
@@ -123,7 +123,7 @@ export default function SeerahPage() {
                 viewport={{ once: true }}
                 whileHover={{ y: -8 }}
                 key={idx}
-                className="p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] bg-white/[0.02] border border-white/5 hover:border-emerald-500/20 transition-all group relative overflow-hidden"
+                className="p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] bg-white/2 border border-white/5 hover:border-emerald-500/20 transition-all group relative overflow-hidden"
               >
                 <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-6 md:mb-10 border border-emerald-500/10 group-hover:scale-110 transition-transform">
                    <ShieldCheck size={28} />
