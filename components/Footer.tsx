@@ -63,8 +63,8 @@ export default function Footer() {
     >
       
       {/* Background Glow - Cinematic Effect */}
-      <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[400px] blur-[150px] rounded-full pointer-events-none transition-colors duration-1000 ${
-        isLight ? "bg-emerald-100/50" : "bg-emerald-500/[0.03]"
+      <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-250 h-100 blur-[150px] rounded-full pointer-events-none transition-colors duration-1000 ${
+        isLight ? "bg-emerald-100/50" : "bg-emerald-500/3"
       }`} />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -74,7 +74,7 @@ export default function Footer() {
           {/* --- LEFT: BRAND & NEWSLETTER --- */}
           <div className="space-y-10">
             <Link href="/" className="flex items-center gap-4 group w-fit">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-2xl transition-all duration-500 group-hover:rotate-[15deg] ${
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-2xl transition-all duration-500 group-hover:rotate-15 ${
                 isLight ? "bg-slate-900 shadow-slate-300" : "bg-emerald-500 shadow-emerald-500/20"
               }`}>
                 <Globe className={isLight ? "text-white" : "text-black"} size={24} />
@@ -98,7 +98,7 @@ export default function Footer() {
                 className={`w-full border rounded-2xl py-5 px-8 outline-none transition-all text-sm pr-40 backdrop-blur-xl ${
                   isLight 
                   ? "bg-white border-slate-200 focus:border-emerald-500 text-slate-900" 
-                  : "bg-white/[0.03] border-white/10 focus:border-emerald-500/50 text-white"
+                  : "bg-white/3 border-white/10 focus:border-emerald-500/50 text-white"
                 }`}
               />
               <button className={`absolute right-2 top-2 bottom-2 px-8 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer shadow-lg active:scale-95 ${
@@ -152,7 +152,7 @@ export default function Footer() {
                 className={`w-11 h-11 rounded-2xl border flex items-center justify-center transition-all duration-300 ${
                   isLight 
                   ? "border-slate-200 bg-white text-slate-400 hover:text-emerald-600 hover:border-emerald-200 shadow-sm" 
-                  : "border-white/5 bg-white/[0.02] text-gray-500 hover:text-emerald-500 hover:border-emerald-500/20"
+                  : "border-white/5 bg-white/2 text-gray-500 hover:text-emerald-500 hover:border-emerald-500/20"
                 }`}
               >
                 <Icon size={20} />
@@ -162,7 +162,7 @@ export default function Footer() {
 
           {/* Made with Love Badge */}
           <div className={`px-6 py-2 rounded-full border text-[9px] font-black tracking-[0.3em] flex items-center gap-3 ${
-            isLight ? "bg-white border-slate-200 text-slate-400" : "bg-white/[0.02] border-white/5 text-gray-500"
+            isLight ? "bg-white border-slate-200 text-slate-400" : "bg-white/2 border-white/5 text-gray-500"
           }`}>
             CRAFTED WITH <Heart size={12} className="text-emerald-500 fill-emerald-500 animate-pulse" /> IN PAKISTAN © {currentYear}
           </div>
