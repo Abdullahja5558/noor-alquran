@@ -45,7 +45,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed w-full z-[100] transition-all duration-700 px-4 md:px-8 ${scrolled ? "top-0 py-3" : "top-6 py-2"}`}>
+    <nav className={`fixed w-full z-100 transition-all duration-700 px-4 md:px-8 ${scrolled ? "top-0 py-3" : "top-6 py-2"}`}>
       <div className={`max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-[2.2rem] transition-all duration-700 border ${
           scrolled 
             ? isDarkMode 
@@ -56,7 +56,7 @@ const Navbar = () => {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group cursor-pointer">
-          <div className={`p-2.5 rounded-2xl group-hover:rotate-[15deg] transition-all duration-500 shadow-lg ${
+          <div className={`p-2.5 rounded-2xl group-hover:rotate-15 transition-all duration-500 shadow-lg ${
             isDarkMode ? "bg-emerald-600 shadow-emerald-500/20" : "bg-slate-900 shadow-slate-900/10"
           }`}>
             <BookOpen className="text-white w-5 h-5" />
