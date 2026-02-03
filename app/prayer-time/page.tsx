@@ -87,7 +87,7 @@ export default function PrayerTimes() {
     <div className="bg-[#020617] min-h-screen text-white selection:bg-emerald-500/30 font-sans overflow-x-hidden">
       
       {/* --- ELITE NAV --- */}
-      <nav className="fixed top-0 w-full z-[100] bg-[#020617]/90 backdrop-blur-2xl border-b border-white/5 px-4 md:px-8 py-5">
+      <nav className="fixed top-0 w-full z-100 bg-[#020617]/90 backdrop-blur-2xl border-b border-white/5 px-4 md:px-8 py-5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <button onClick={() => router.back()} className="group flex items-center gap-2 md:gap-3 bg-white/5 px-3 md:px-5 py-2 rounded-2xl border border-white/5 hover:bg-white/10 transition-all">
             <ArrowLeft size={18} className="text-gray-400 group-hover:text-emerald-500" />
@@ -136,7 +136,7 @@ export default function PrayerTimes() {
           </div>
           
           {/* Decorative Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-emerald-500/[0.03] blur-[100px] -z-10" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-emerald-500/3 blur-[100px] -z-10" />
         </motion.div>
 
         {/* --- PRAYER CARDS GRID --- */}
@@ -152,7 +152,7 @@ export default function PrayerTimes() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
                 viewport={{ once: true }}
-                className={`group relative p-6 md:p-10 rounded-[2rem] md:rounded-[3.5rem] border transition-all duration-700 flex items-center justify-between ${isActive ? 'bg-emerald-600 border-emerald-400 shadow-2xl shadow-emerald-500/20 scale-[1.01]' : 'bg-white/[0.03] border-white/5 hover:bg-white/[0.05]'}`}
+                className={`group relative p-6 md:p-10 rounded-4xl md:rounded-[3.5rem] border transition-all duration-700 flex items-center justify-between ${isActive ? 'bg-emerald-600 border-emerald-400 shadow-2xl shadow-emerald-500/20 scale-[1.01]' : 'bg-white/3 border-white/5 hover:bg-white/5'}`}
               >
                 <div className="flex items-center gap-4 md:gap-8 z-10">
                    <div className={`w-12 h-12 md:w-20 md:h-20 rounded-2xl md:rounded-[2.5rem] flex items-center justify-center transition-all duration-700 ${isActive ? 'bg-black text-emerald-500' : 'bg-white/5 text-gray-500 group-hover:text-emerald-400'}`}>
@@ -198,8 +198,8 @@ export default function PrayerTimes() {
                 <p className="text-3xl md:text-6xl font-arabic leading-relaxed text-emerald-400 px-2" style={{ direction: 'rtl' }}>
                   {selectedHadith.arabic}
                 </p>
-                <div className="h-px w-16 md:w-24 bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent mx-auto" />
-                <p className="text-xl md:text-4xl font-urdu leading-[2] md:leading-[2.2] text-white/90 px-2" style={{ direction: 'rtl' }}>
+                <div className="h-px w-16 md:w-24 bg-linear-to-r from-transparent via-emerald-500/30 to-transparent mx-auto" />
+                <p className="text-xl md:text-4xl font-urdu leading-loose md:leading-[2.2] text-white/90 px-2" style={{ direction: 'rtl' }}>
                   {selectedHadith.urdu}
                 </p>
                 <p className="text-xs md:text-lg text-gray-400 font-light italic max-w-2xl mx-auto leading-relaxed">
