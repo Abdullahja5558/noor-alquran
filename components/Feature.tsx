@@ -29,7 +29,7 @@ export default function Feature() {
         <div className={`md:col-span-2 p-10 md:p-14 rounded-[3rem] border transition-all duration-700 group hover:shadow-2xl ${
           isLight 
             ? "bg-white border-slate-200 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)]" 
-            : "bg-gradient-to-br from-white/5 to-transparent border-white/10"
+            : "bg-linear-to-br from-white/5 to-transparent border-white/10"
         }`}>
           <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-transform group-hover:rotate-6 ${
             isLight ? "bg-emerald-50" : "bg-emerald-500/10"
