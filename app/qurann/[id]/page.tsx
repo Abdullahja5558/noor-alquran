@@ -131,13 +131,13 @@ export default function SurahDetail() {
       {/* --- SMART COMPACT PLAYER --- */}
       <AnimatePresence>
         {ayahs.length > 0 && (
-          <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-xs">
+          <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-[90%] max-w-xs">
             <div className="bg-slate-900/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-3 flex items-center justify-between shadow-2xl">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
                   {isBuffering ? <Loader2 size={16} className="animate-spin" /> : <Music size={16} className={isPlaying ? 'animate-pulse' : ''} />}
                 </div>
-                <div className="max-w-[100px]">
+                <div className="max-w-25">
                   <p className="text-[10px] font-bold truncate">{surahInfo?.englishName}</p>
                   <p className="text-[8px] text-emerald-500 font-bold uppercase tracking-tighter">{isBuffering ? 'Buffering' : `Ayah ${activeAyah || 1}`}</p>
                 </div>
@@ -167,7 +167,7 @@ export default function SurahDetail() {
             <motion.div 
               key={index}
               ref={(el) => { if (el) ayahRefs.current[ayah.numberInSurah] = el; }}
-              className={`relative p-4 rounded-2xl transition-all duration-500 ${activeAyah === ayah.numberInSurah ? 'bg-white/[0.02] ring-1 ring-white/5 shadow-xl' : 'opacity-40 hover:opacity-60'}`}
+              className={`relative p-4 rounded-2xl transition-all duration-500 ${activeAyah === ayah.numberInSurah ? 'bg-white/2 ring-1 ring-white/5 shadow-xl' : 'opacity-40 hover:opacity-60'}`}
             >
               <div className="flex flex-col items-center text-center">
                 <div className="flex items-center gap-3 mb-4">
@@ -189,7 +189,7 @@ export default function SurahDetail() {
                 </p>
               </div>
               {activeAyah === ayah.numberInSurah && (
-                <div className="absolute inset-0 bg-emerald-500/[0.01] blur-xl -z-10" />
+                <div className="absolute inset-0 bg-emerald-500/1 blur-xl -z-10" />
               )}
             </motion.div>
           ))}
@@ -200,7 +200,7 @@ export default function SurahDetail() {
           {prevSurah ? (
             <button 
               onClick={() => router.push(`/qurann/${prevSurah.number}`)}
-              className="w-full md:w-auto flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-emerald-500/30 transition-all group cursor-pointer"
+              className="w-full md:w-auto flex items-center gap-4 p-4 rounded-2xl bg-white/2 border border-white/5 hover:bg-white/5 hover:border-emerald-500/30 transition-all group cursor-pointer"
             >
               <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:text-emerald-500 transition-colors">
                 <ChevronLeft size={20} />
@@ -215,7 +215,7 @@ export default function SurahDetail() {
           {nextSurah ? (
             <button 
               onClick={() => router.push(`/qurann/${nextSurah.number}`)}
-              className="w-full md:w-auto flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-emerald-500/30 transition-all group cursor-pointer"
+              className="w-full md:w-auto flex items-center gap-4 p-4 rounded-2xl bg-white/2 border border-white/5 hover:bg-white/5 hover:border-emerald-500/30 transition-all group cursor-pointer"
             >
               <div className="text-right pl-8">
                 <p className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">Next Surah</p>
