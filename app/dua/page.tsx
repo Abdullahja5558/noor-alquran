@@ -84,7 +84,7 @@ export default function DuaPage() {
     <div className="bg-[#020617] min-h-screen text-white font-sans selection:bg-emerald-500/30 overflow-x-hidden">
       
       {/* --- PREMIUM NAV --- */}
-      <nav className="fixed top-0 w-full z-[100] bg-[#020617]/90 backdrop-blur-3xl border-b border-white/5 px-4 md:px-8 py-4 md:py-6">
+      <nav className="fixed top-0 w-full z-100 bg-[#020617]/90 backdrop-blur-3xl border-b border-white/5 px-4 md:px-8 py-4 md:py-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <button onClick={() => router.back()} className="group flex items-center gap-2 md:gap-3 bg-white/5 px-3 md:px-5 py-2 rounded-2xl border border-white/5 hover:bg-white/10 transition-all">
             <ArrowLeft size={18} className="text-gray-400 group-hover:text-emerald-500" />
@@ -118,7 +118,7 @@ export default function DuaPage() {
               <input 
                 type="text"
                 placeholder="Search for a dua (e.g. Sukoon, Success)..."
-                className="w-full bg-white/[0.03] border border-white/10 rounded-[1.5rem] md:rounded-[2rem] py-4 md:py-6 pl-14 md:pl-16 pr-8 text-sm md:text-base focus:outline-none focus:border-emerald-500/50 focus:bg-white/[0.05] transition-all shadow-2xl"
+                className="w-full bg-white/3 border border-white/10 rounded-3xl md:rounded-4xl py-4 md:py-6 pl-14 md:pl-16 pr-8 text-sm md:text-base focus:outline-none focus:border-emerald-500/50 focus:bg-white/5 transition-all shadow-2xl"
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
            </div>
@@ -149,7 +149,7 @@ export default function DuaPage() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.4, delay: idx * 0.05 }}
                   key={dua.id}
-                  className="group relative p-8 md:p-16 rounded-[2.5rem] md:rounded-[5rem] bg-white/[0.02] border border-white/5 hover:border-emerald-500/20 transition-all duration-700 overflow-hidden"
+                  className="group relative p-8 md:p-16 rounded-[2.5rem] md:rounded-[5rem] bg-white/2 border border-white/5 hover:border-emerald-500/20 transition-all duration-700 overflow-hidden"
                 >
                   <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-10 md:mb-16">
                      <div className="flex items-center gap-4">
@@ -185,7 +185,7 @@ export default function DuaPage() {
                      <p className="text-3xl md:text-6xl font-arabic leading-[1.7] md:leading-[1.8] text-emerald-400 px-2 md:px-4" style={{ direction: 'rtl' }}>
                         {dua.arabic}
                      </p>
-                     <div className="h-px w-20 md:w-40 bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent mx-auto" />
+                     <div className="h-px w-20 md:w-40 bg-linear-to-r from-transparent via-emerald-500/20 to-transparent mx-auto" />
                      <p className="text-xl md:text-4xl font-urdu leading-relaxed text-white/90 px-2 md:px-4" style={{ direction: 'rtl' }}>
                         {dua.urdu}
                      </p>
@@ -222,7 +222,7 @@ export default function DuaPage() {
               initial={{ opacity: 0, y: 50, x: "-50%" }} 
               animate={{ opacity: 1, y: 0, x: "-50%" }} 
               exit={{ opacity: 0, y: 50, x: "-50%" }}
-              className="fixed bottom-10 left-1/2 z-[200] bg-emerald-500 text-black px-8 py-4 rounded-2xl font-bold shadow-2xl flex items-center gap-3 border-2 border-white/20"
+              className="fixed bottom-10 left-1/2 z-200 bg-emerald-500 text-black px-8 py-4 rounded-2xl font-bold shadow-2xl flex items-center gap-3 border-2 border-white/20"
             >
               <CheckCircle2 size={20} />
               <span className="text-xs uppercase tracking-widest">Full Dua Copied</span>
