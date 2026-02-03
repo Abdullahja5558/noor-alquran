@@ -52,7 +52,7 @@ export default function QuranPage() {
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div>
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40">
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-linear-to-b from-white to-white/40">
                 Al-Quran <span className="text-emerald-500 text-3xl md:text-4xl ml-2">الكريم</span>
               </h1>
               <p className="text-gray-400 mt-4 max-w-lg font-light">
@@ -96,10 +96,10 @@ export default function QuranPage() {
                   // Yahan Navigation Logic add ki hai 👇
                   onClick={() => router.push(`/qurann/${surah.number}`)}
                   whileHover={{ y: -5, scale: 1.02 }}
-                  className="group relative p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer overflow-hidden"
+                  className="group relative p-6 rounded-4xl bg-white/2 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer overflow-hidden"
                 >
                   {/* Surah Number Background */}
-                  <div className="absolute -right-4 -bottom-4 text-8xl font-bold text-white/[0.02] group-hover:text-emerald-500/[0.03] transition-colors pointer-events-none">
+                  <div className="absolute -right-4 -bottom-4 text-8xl font-bold text-white/2 group-hover:text-emerald-500/3 transition-colors pointer-events-none">
                     {surah.number}
                   </div>
 
