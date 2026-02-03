@@ -46,7 +46,7 @@ export default function Topics() {
     >
       
       {/* 1. Ambient Background Light */}
-      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] blur-[120px] rounded-full pointer-events-none transition-colors duration-1000 ${
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-75 blur-[120px] rounded-full pointer-events-none transition-colors duration-1000 ${
         isLight ? "bg-emerald-200/20" : "bg-emerald-500/5"
       }`} />
 
@@ -67,7 +67,7 @@ export default function Topics() {
           <h2 className={`text-4xl md:text-7xl font-bold mt-8 tracking-tighter transition-colors duration-700 ${
             isLight 
             ? "text-slate-900" 
-            : "text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40"
+            : "text-transparent bg-clip-text bg-linear-to-b from-white to-white/40"
           }`}>
             Wisdom for every <br /> human emotion.
           </h2>
@@ -89,14 +89,14 @@ export default function Topics() {
               className="group relative"
             >
               {/* Card Outer Glow on Hover */}
-              <div className={`absolute -inset-0.5 bg-gradient-to-b rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition duration-500 blur-sm ${
+              <div className={`absolute -inset-0.5 bg-linear-to-b rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition duration-500 blur-sm ${
                 isLight ? item.lightColor : item.color
               } to-transparent`} />
               
               <div className={`relative h-full py-16 rounded-[2.5rem] border backdrop-blur-md overflow-hidden flex flex-col items-center justify-center transition-all duration-700 ${
                 isLight 
                 ? "bg-white border-slate-100 group-hover:bg-white group-hover:border-emerald-200 shadow-sm" 
-                : "border-white/5 bg-white/[0.03] group-hover:bg-white/[0.07] group-hover:border-white/10"
+                : "border-white/5 bg-white/3 group-hover:bg-white/[0.07] group-hover:border-white/10"
               }`}>
                 
                 {/* Icon Circle */}
@@ -120,7 +120,7 @@ export default function Topics() {
                 </div>
 
                 {/* Corner Decorative Gradient */}
-                <div className={`absolute -bottom-10 -right-10 w-24 h-24 bg-gradient-to-br blur-2xl opacity-0 group-hover:opacity-100 transition-opacity ${
+                <div className={`absolute -bottom-10 -right-10 w-24 h-24 bg-linear-to-br blur-2xl opacity-0 group-hover:opacity-100 transition-opacity ${
                   isLight ? item.lightColor : item.color
                 } to-transparent`} />
               </div>
@@ -133,7 +133,7 @@ export default function Topics() {
           initial={{ width: 0 }}
           whileInView={{ width: '100%' }}
           transition={{ duration: 1.5, delay: 0.5 }}
-          className={`h-[1px] bg-gradient-to-r from-transparent via-current to-transparent mt-32 opacity-10 ${
+          className={`h-px bg-linear-to-r from-transparent via-current to-transparent mt-32 opacity-10 ${
             isLight ? "text-slate-900" : "text-white"
           }`} 
         />
