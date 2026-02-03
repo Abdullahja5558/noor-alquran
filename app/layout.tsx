@@ -18,9 +18,15 @@ export const metadata: Metadata = {
     "Noor Al-Quran: Read all 114 Surahs, listen to Quran recitations, view Islamic calendar, prayer timings, Seerah, and daily duas.",
   keywords:
     "Quran, Surah, Tafsir, Quran Audio, Islamic Calendar, Prayer Times, Seerah, Daily Dua, Noor Al-Quran, Quran Recitations, Quran Recitations Online, Quran Recitations in Urdu, Quran Recitations in Urdu Online, Quran with Tafsir, Islamic Resources Online for Quran, Quran with Tafsir in Urdu ",
-    icons: {
-    icon: "/favicon5.png",
-  },
+   // Inside your metadata object
+icons: {
+  icon: [
+    {
+      url: "/favicon5.png",
+      href: "/favicon5.png",
+    },
+  ],
+},
     
   authors: [{ name: "Noor Al-Quran" }],
   openGraph: {
