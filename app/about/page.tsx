@@ -21,7 +21,7 @@ export default function PremiumAbout() {
     <div className="bg-[#020617] min-h-screen text-white font-sans selection:bg-emerald-500/30 overflow-x-hidden">
       
       {/* --- FLOATING NAV --- */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl z-[100] bg-white/[0.03] backdrop-blur-2xl border border-white/10 px-8 py-4 rounded-[2rem] flex items-center justify-between shadow-2xl">
+      <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl z-100 bg-white/3 backdrop-blur-2xl border border-white/10 px-8 py-4 rounded-4xl flex items-center justify-between shadow-2xl">
         <button onClick={() => router.back()} className="flex items-center gap-2 group">
           <ArrowLeft size={18} className="text-emerald-500 group-hover:-translate-x-1 transition-transform" />
           <span className="text-[10px] font-black tracking-widest uppercase">Back</span>
@@ -47,7 +47,7 @@ export default function PremiumAbout() {
             initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
             className="text-7xl md:text-[11rem] font-black tracking-tighter leading-[0.8] mb-12"
           >
-            Digital <br/> <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-600 bg-clip-text text-transparent italic">Spiritualism.</span>
+            Digital <br/> <span className="bg-linear-to-r from-emerald-400 via-cyan-400 to-emerald-600 bg-clip-text text-transparent italic">Spiritualism.</span>
           </motion.h1>
           <p className="text-gray-400 text-lg md:text-2xl max-w-2xl mx-auto font-light leading-relaxed mb-12">
             The world's most elegant Islamic ecosystem. Crafted for the modern believer who seeks beauty in worship.
@@ -71,7 +71,7 @@ export default function PremiumAbout() {
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
               {/* Al-Quran Premium Card */}
-              <div className="md:col-span-2 relative p-10 rounded-[3rem] bg-gradient-to-br from-emerald-900/20 to-[#020617] border border-emerald-500/20 overflow-hidden group">
+              <div className="md:col-span-2 relative p-10 rounded-[3rem] bg-linear-to-br from-emerald-900/20 to-[#020617] border border-emerald-500/20 overflow-hidden group">
                  <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-6">
                        <div className="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-black shadow-lg shadow-emerald-500/30">
@@ -89,7 +89,7 @@ export default function PremiumAbout() {
               </div>
 
               {/* Prayer Times Mini Card */}
-              <div className="p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 flex flex-col justify-between">
+              <div className="p-10 rounded-[3rem] bg-white/2 border border-white/5 flex flex-col justify-between">
                  <Clock className="text-emerald-500" size={32} />
                  <div>
                     <h4 className="text-xl font-bold mb-2">Precise Prayer</h4>
@@ -98,7 +98,7 @@ export default function PremiumAbout() {
               </div>
 
               {/* Seerah & Calendar Grid */}
-              <div className="p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 flex flex-col justify-between">
+              <div className="p-10 rounded-[3rem] bg-white/2 border border-white/5 flex flex-col justify-between">
                  <Calendar className="text-cyan-400" size={32} />
                  <div>
                     <h4 className="text-xl font-bold mb-2">Islamic Calendar</h4>
@@ -131,7 +131,7 @@ export default function PremiumAbout() {
       {/* English Vision Card */}
       <motion.div 
         whileHover={{ y: -5 }}
-        className="p-10 rounded-[2.5rem] bg-white/[0.03] backdrop-blur-xl border border-white/10 flex flex-col justify-between group shadow-2xl"
+        className="p-10 rounded-[2.5rem] bg-white/3 backdrop-blur-xl border border-white/10 flex flex-col justify-between group shadow-2xl"
       >
         <div>
           <span className="text-[9px] font-black tracking-[0.4em] text-emerald-500 uppercase mb-6 block">Our Vision</span>
@@ -147,7 +147,7 @@ export default function PremiumAbout() {
       {/* Urdu Vision Card */}
       <motion.div 
         whileHover={{ y: -5 }}
-        className="p-10 rounded-[2.5rem] bg-emerald-500/[0.02] backdrop-blur-xl border border-emerald-500/10 flex flex-col justify-between text-right shadow-2xl"
+        className="p-10 rounded-[2.5rem] bg-emerald-500/2 backdrop-blur-xl border border-emerald-500/10 flex flex-col justify-between text-right shadow-2xl"
         style={{ direction: 'rtl' }}
       >
         <div>
@@ -173,7 +173,7 @@ export default function PremiumAbout() {
 <section className="px-6 max-w-5xl mx-auto mb-40 relative group">
   
   {/* Outer Glowing Shell */}
-  <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/20 via-cyan-500/20 to-emerald-500/20 rounded-[5rem] blur-2xl opacity-50 group-hover:opacity-100 transition duration-1000"></div>
+  <div className="absolute -inset-1 bg-linear-to-r from-emerald-500/20 via-cyan-500/20 to-emerald-500/20 rounded-[5rem] blur-2xl opacity-50 group-hover:opacity-100 transition duration-1000"></div>
 
   <div className="relative bg-[#020617] rounded-[4.5rem] border border-white/5 overflow-hidden">
     
@@ -189,14 +189,14 @@ export default function PremiumAbout() {
       <motion.div 
         initial={{ y: -20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
-        className="mb-10 px-6 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md flex items-center gap-3"
+        className="mb-10 px-6 py-2 rounded-full bg-white/3 border border-white/10 backdrop-blur-md flex items-center gap-3"
       >
         <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
         <span className="text-[9px] font-black uppercase tracking-[0.4em] text-emerald-400">Project: Noor 2026</span>
       </motion.div>
 
       <h2 className="text-6xl md:text-8xl font-black mb-8 tracking-tighter text-center leading-none">
-        The Light <br/> <span className="bg-gradient-to-b from-white to-white/40 bg-clip-text text-transparent italic font-light">In Your Pocket.</span>
+        The Light <br/> <span className="bg-linear-to-b from-white to-white/40 bg-clip-text text-transparent italic font-light">In Your Pocket.</span>
       </h2>
 
       <p className="text-gray-500 max-w-md mx-auto mb-16 text-center text-lg font-light leading-relaxed">
@@ -206,7 +206,7 @@ export default function PremiumAbout() {
       {/* ULTRA-PREMIUM COMING SOON BUTTON */}
       <div className="relative group/btn">
         {/* Animated Glow Aura */}
-        <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full blur-xl opacity-20 group-hover/btn:opacity-60 transition duration-500"></div>
+        <div className="absolute -inset-1 bg-linear-to-r from-emerald-400 to-cyan-400 rounded-full blur-xl opacity-20 group-hover/btn:opacity-60 transition duration-500"></div>
         
         <motion.button 
           whileHover={{ scale: 1.02 }}
@@ -214,7 +214,7 @@ export default function PremiumAbout() {
           className="relative px-12 py-6 bg-white text-black rounded-full flex items-center gap-6 overflow-hidden transition-all shadow-2xl"
         >
           {/* Internal Button Shine */}
-          <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[-30deg] group-hover/btn:left-[100%] transition-all duration-1000"></div>
+          <div className="absolute top-0 -left-full w-full h-full bg-linear-to-r from-transparent via-white/50 to-transparent skew-x-[-30deg] group-hover/btn:left-full transition-all duration-1000"></div>
           
           <div className="flex flex-col items-start leading-none">
             <span className="text-[8px] font-black uppercase tracking-widest opacity-50 mb-1">Mobile App</span>
