@@ -118,7 +118,7 @@ export default function UltimatePremiumHero() {
         {/* Background Effects */}
         <div className="absolute inset-0 z-0">
           <div 
-            className={`absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] blur-[150px] rounded-full opacity-60 transition-colors duration-1000 ${
+            className={`absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-250 h-125 blur-[150px] rounded-full opacity-60 transition-colors duration-1000 ${
               isLight ? "bg-emerald-100" : "bg-emerald-500/10"
             }`} 
           />
@@ -146,12 +146,12 @@ export default function UltimatePremiumHero() {
             }`}
           >
             Experience the <br /> 
-            <span className={`text-transparent bg-clip-text bg-gradient-to-b ${
+            <span className={`text-transparent bg-clip-text bg-linear-to-b ${
               isLight ? "from-emerald-600 to-slate-800" : "from-white via-white to-white/30"
             }`}>Divine Beauty</span>
           </motion.h1>
 
-          <div ref={ayahRef} className="relative mt-20 group min-h-[400px] flex items-center justify-center">
+          <div ref={ayahRef} className="relative mt-20 group min-h-100 flex items-center justify-center">
             
             {/* --- PREMIUM FLOATING TAG --- */}
             <motion.div 
@@ -160,7 +160,7 @@ export default function UltimatePremiumHero() {
               className="absolute -top-6 left-1/2 -translate-x-1/2 z-30"
             >
               <div className="relative group/tag">
-                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl blur-md opacity-50 group-hover/tag:opacity-100 transition duration-500" />
+                <div className="absolute -inset-1 bg-linear-to-r from-emerald-500 to-cyan-500 rounded-2xl blur-md opacity-50 group-hover/tag:opacity-100 transition duration-500" />
                 <div className={`relative flex items-center gap-3 border px-6 py-3 rounded-2xl backdrop-blur-3xl shadow-2xl transition-colors duration-700 ${
                   isLight ? "bg-white border-slate-200" : "bg-[#050b1d] border-white/20"
                 }`}>
@@ -175,7 +175,7 @@ export default function UltimatePremiumHero() {
             </motion.div>
 
             <div className={`absolute -inset-1 rounded-[3rem] blur-2xl transition duration-1000 ${
-              isLight ? "bg-slate-200/50 opacity-40 group-hover:opacity-60" : "bg-gradient-to-r from-emerald-500/20 to-blue-500/20 opacity-40 group-hover:opacity-70"
+              isLight ? "bg-slate-200/50 opacity-40 group-hover:opacity-60" : "bg-linear-to-r from-emerald-500/20 to-blue-500/20 opacity-40 group-hover:opacity-70"
             }`} />
             
             <div className={`relative w-full backdrop-blur-3xl rounded-[2.5rem] p-8 md:p-16 lg:p-24 shadow-2xl overflow-hidden transition-all duration-700 border ${
@@ -229,7 +229,7 @@ export default function UltimatePremiumHero() {
                       </div>
                       <div className="space-y-4 text-right">
                         <span className="text-[10px] tracking-widest uppercase text-emerald-500 font-black">اردو ترجمہ</span>
-                        <p className={`text-2xl font-urdu leading-[2] transition-colors duration-700 ${
+                        <p className={`text-2xl font-urdu leading-loose transition-colors duration-700 ${
                           isLight ? "text-slate-800" : "text-white"
                         }`} style={{ direction: 'rtl' }}>
                           {ayah.urdu}
