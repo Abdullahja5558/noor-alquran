@@ -89,7 +89,7 @@ export default function QuranPage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div>
               <h1 className={`text-5xl md:text-7xl font-bold tracking-tighter transition-colors ${
-                isLight ? "text-slate-900" : "bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40"
+                isLight ? "text-slate-900" : "bg-clip-text text-transparent bg-linear-to-b from-white to-white/40"
               }`}>
                 Al-Quran <span className="text-emerald-500 text-3xl md:text-4xl ml-2 font-normal italic">الكريم</span>
               </h1>
