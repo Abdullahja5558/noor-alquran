@@ -11,6 +11,13 @@ const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
+    // --- SCROLL TO TOP FIX ---
+    // Force browser to start at top on refresh/load
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "light") {
       setIsDarkMode(false);
@@ -19,7 +26,6 @@ const Navbar = () => {
       document.documentElement.classList.add("dark");
     }
 
-    // Scroll threshold ko 10 rakha hai taake foran response mile
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -111,7 +117,6 @@ const Navbar = () => {
           : "bg-slate-100 border border-slate-200 hover:border-emerald-600/30 shadow-[inset_0_0_10px_rgba(0,0,0,0.02)]"
       }`}
           >
-            {/* Inner Glow Effect */}
             <div
               className={`absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100 
       ${isDarkMode ? "bg-emerald-500/10" : "bg-emerald-600/5"}`}
@@ -154,6 +159,7 @@ const Navbar = () => {
             </button>
           </Link>
         </div>
+
         {/* Mobile Controls */}
         <div className="flex items-center gap-2 md:hidden">
           <button
