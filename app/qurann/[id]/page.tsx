@@ -33,12 +33,16 @@ export default function SurahDetail() {
   const preloadedUrls = useRef<Set<string>>(new Set());
 
   useEffect(() => {
+    // Immediate Theme Detection to prevent white flash
+    const isDark = document.documentElement.classList.contains("dark");
+    setIsLight(!isDark);
     setMounted(true);
+
     const updateTheme = () => {
-      const isDark = document.documentElement.classList.contains("dark");
-      setIsLight(!isDark);
+      const currentDark = document.documentElement.classList.contains("dark");
+      setIsLight(!currentDark);
     };
-    updateTheme();
+
     const observer = new MutationObserver(updateTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
@@ -117,11 +121,48 @@ export default function SurahDetail() {
     }
   };
 
-  if (!mounted) return <div className="min-h-screen bg-[#F1F5F9]" />;
-
-  if (loading) return (
-    <div className={`min-h-screen flex items-center justify-center ${isLight ? "bg-[#F1F5F9]" : "bg-[#020617]"}`}>
-      <Loader2 className="text-emerald-600 animate-spin" size={30} />
+  // Prevent white flash by checking mounted and using theme-specific background
+  if (!mounted || loading) return (
+    <div className={`min-h-screen flex flex-col items-center justify-center gap-8 transition-colors duration-500 ${isLight ? "bg-[#F8FAFC]" : "bg-[#020617]"}`}>
+      <div className="relative w-24 h-24">
+        {/* Outer Ring */}
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 rounded-full border-2 border-transparent border-t-emerald-500 border-r-emerald-500/30"
+        />
+        {/* Inner Ring (Reverse) */}
+        <motion.div 
+          animate={{ rotate: -360 }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-2 rounded-full border-2 border-transparent border-b-emerald-400 border-l-emerald-400/20"
+        />
+        {/* Center Glow */}
+        <motion.div 
+          animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.9, 1.1, 0.9] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute inset-6 bg-emerald-500/20 blur-xl rounded-full"
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Sparkles className="text-emerald-500 w-6 h-6 animate-pulse" />
+        </div>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`text-[10px] font-black uppercase tracking-[0.5em] ${isLight ? "text-slate-400" : "text-emerald-500/60"}`}
+        >
+          Loading Surah
+        </motion.p>
+        <div className={`h-0.5 w-24 rounded-full overflow-hidden ${isLight ? "bg-slate-200" : "bg-white/5"}`}>
+          <motion.div 
+            animate={{ x: [-100, 100] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            className="h-full w-full bg-emerald-500"
+          />
+        </div>
+      </div>
     </div>
   );
 
@@ -151,14 +192,13 @@ export default function SurahDetail() {
         </div>
       </nav>
 
-      {/* --- PREMIUM MINI PLAYER CONTROL --- */}
+      {/* --- MINI PLAYER & MAIN CONTENT (Keep original code from here...) --- */}
       <AnimatePresence>
         {ayahs.length > 0 && (
-          <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-[95%] max-w-md">
+          <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-md">
             <div className={`backdrop-blur-3xl border rounded-[2.5rem] p-3 md:p-4 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all ${
               isLight ? "bg-white/90 border-slate-200" : "bg-slate-900/80 border-white/10"
             }`}>
-              {/* Left: Info & Artist */}
               <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
                 <div className={`relative w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center overflow-hidden transition-all ${
                   isLight ? "bg-emerald-600 text-white shadow-lg shadow-emerald-200" : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/20"
@@ -182,8 +222,6 @@ export default function SurahDetail() {
                   </div>
                 </div>
               </div>
-
-              {/* Right: Actions */}
               <div className="flex items-center gap-2 ml-2">
                 <button 
                   onClick={togglePlayback} 
@@ -206,14 +244,12 @@ export default function SurahDetail() {
       </AnimatePresence>
 
       <main className="pt-32 pb-48 px-6 max-w-5xl mx-auto">
-        {/* Bismillah */}
         {id !== "1" && id !== "9" && (
           <div className="text-center mb-16">
             <h2 className={`text-4xl md:text-5xl font-arabic transition-all tracking-normal ${isLight ? "text-emerald-900" : "text-emerald-50/80"}`} style={{ direction: 'rtl', fontFamily: "'Amiri', serif" }}>بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</h2>
           </div>
         )}
 
-        {/* Verses List */}
         <div className="space-y-8 md:space-y-12">
           {ayahs.map((ayah, index) => (
             <motion.div 
@@ -260,7 +296,6 @@ export default function SurahDetail() {
           ))}
         </div>
 
-        {/* --- NAVIGATION --- */}
         <div className={`mt-32 pt-16 border-t flex flex-col md:flex-row gap-6 items-center justify-between ${
           isLight ? "border-slate-200" : "border-white/5"
         }`}>
