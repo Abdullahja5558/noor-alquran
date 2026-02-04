@@ -73,7 +73,7 @@ export default function DuaPage() {
     >
       
       {/* --- ELITE NAV --- */}
-      <nav className={`fixed top-0 w-full z-[100] backdrop-blur-3xl border-b px-4 md:px-8 py-4 md:py-6 transition-all duration-700 ${
+      <nav className={`fixed top-0 w-full z-100 backdrop-blur-3xl border-b px-4 md:px-8 py-4 md:py-6 transition-all duration-700 ${
         isLight ? "bg-white/80 border-slate-200 shadow-sm" : "bg-[#020617]/90 border-white/5"
       }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -197,7 +197,7 @@ export default function DuaPage() {
                      <p className={`text-3xl md:text-6xl font-arabic leading-[1.7] md:leading-[1.8] px-2 md:px-4 ${isLight ? "text-emerald-700" : "text-emerald-400"}`} style={{ direction: 'rtl' }}>
                         {dua.arabic}
                      </p>
-                     <div className={`h-px w-20 md:w-40 mx-auto ${isLight ? "bg-emerald-100" : "bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent"}`} />
+                     <div className={`h-px w-20 md:w-40 mx-auto ${isLight ? "bg-emerald-100" : "bg-linear-to-r from-transparent via-emerald-500/20 to-transparent"}`} />
                      <p className={`text-xl md:text-4xl font-urdu leading-relaxed px-2 md:px-4 ${isLight ? "text-slate-800" : "text-white/90"}`} style={{ direction: 'rtl' }}>
                         {dua.urdu}
                      </p>
@@ -234,7 +234,7 @@ export default function DuaPage() {
           {copyStatus && (
             <motion.div 
               initial={{ opacity: 0, y: 50, x: "-50%" }} animate={{ opacity: 1, y: 0, x: "-50%" }} exit={{ opacity: 0, y: 50, x: "-50%" }}
-              className="fixed bottom-10 left-1/2 z-[200] bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl flex items-center gap-3 border-2 border-white/20"
+              className="fixed bottom-10 left-1/2 z-200 bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl flex items-center gap-3 border-2 border-white/20"
             >
               <CheckCircle2 size={20} />
               <span className="text-xs uppercase tracking-widest">Full Dua Copied</span>
