@@ -40,7 +40,7 @@ export default function SeerahPage() {
     >
       
       {/* --- PREMIUM NAVIGATION --- */}
-      <nav className={`fixed top-0 w-full z-[100] backdrop-blur-3xl border-b px-4 md:px-8 py-5 transition-all duration-700 ${
+      <nav className={`fixed top-0 w-full z-100 backdrop-blur-3xl border-b px-4 md:px-8 py-5 transition-all duration-700 ${
         isLight ? "bg-white/80 border-slate-200 shadow-sm" : "bg-[#020617]/90 border-white/5"
       }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
