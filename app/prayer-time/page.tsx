@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Clock, MapPin, Volume2, Sunrise, Sun, Sunset, CloudMoon, BellRing } from 'lucide-react';
+import { ArrowLeft, Clock, MapPin, Volume2, Sunrise, Sun, Sunset, CloudMoon, BellRing, Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Footer from '@/components/Footer';
 import { PRAYER_HADITHS, Hadith } from '@/components/hadithData';
@@ -12,6 +12,27 @@ export default function PrayerTimes() {
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedHadith, setSelectedHadith] = useState<Hadith | null>(null);
+
+  // --- FLICKER & THEME STATES ---
+  const [isLight, setIsLight] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const updateTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      const currentLightMode = !isDark;
+      setIsLight(currentLightMode);
+      // Body background sync to prevent scroll flicker
+      document.body.style.backgroundColor = currentLightMode ? "#F1F5F9" : "#020617";
+    };
+
+    updateTheme();
+    setMounted(true);
+
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -77,35 +98,47 @@ export default function PrayerTimes() {
     Isha: <CloudMoon size={24} />,
   };
 
-  if (loading || !selectedHadith) return (
-    <div className="bg-[#020617] min-h-screen flex items-center justify-center">
-      <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-14 h-14 border-b-2 border-emerald-500 rounded-full" />
-    </div>
-  );
+  // --- PREVENT FLICKER DURING HYDRATION ---
+  if (!mounted || loading || !selectedHadith) {
+    return (
+      <div className={`min-h-screen flex items-center justify-center ${isLight ? "bg-[#F1F5F9]" : "bg-[#020617]"}`}>
+        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-14 h-14 border-b-2 border-emerald-500 rounded-full" />
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-[#020617] min-h-screen text-white selection:bg-emerald-500/30 font-sans overflow-x-hidden">
+    <div 
+      className="min-h-screen font-sans selection:bg-emerald-500/30 overflow-x-hidden transition-all duration-700"
+      style={{ backgroundColor: isLight ? "#F1F5F9" : "#020617", color: isLight ? "#0F172A" : "#FFFFFF" }}
+    >
       
       {/* --- ELITE NAV --- */}
-      <nav className="fixed top-0 w-full z-100 bg-[#020617]/90 backdrop-blur-2xl border-b border-white/5 px-4 md:px-8 py-5">
+      <nav className={`fixed top-0 w-full z-[100] backdrop-blur-2xl border-b px-4 md:px-8 py-5 transition-all duration-700 ${
+        isLight ? "bg-white/80 border-slate-200 shadow-sm" : "bg-[#020617]/90 border-white/5"
+      }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <button onClick={() => router.back()} className="group flex items-center gap-2 md:gap-3 bg-white/5 px-3 md:px-5 py-2 rounded-2xl border border-white/5 hover:bg-white/10 transition-all">
-            <ArrowLeft size={18} className="text-gray-400 group-hover:text-emerald-500" />
-            <span className="text-[9px] md:text-[10px] font-black tracking-widest uppercase">Back</span>
+          <button onClick={() => router.back()} className={`group flex items-center gap-2 md:gap-3 px-3 md:px-5 py-2 rounded-2xl border transition-all ${
+            isLight ? "bg-slate-100 border-slate-200 hover:bg-slate-200" : "bg-white/5 border-white/5 hover:bg-white/10"
+          }`}>
+            <ArrowLeft size={18} className={isLight ? "text-slate-600" : "text-gray-400"} />
+            <span className={`text-[9px] md:text-[10px] font-black tracking-widest uppercase ${isLight ? "text-slate-900" : "text-white"}`}>Back</span>
           </button>
           
           <div className="flex flex-col items-center">
              <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-emerald-100/70">Faisalabad Live</span>
+                <span className={`text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] ${isLight ? "text-emerald-700" : "text-emerald-100/70"}`}>Faisalabad Live</span>
              </div>
           </div>
 
           <div className="flex items-center gap-3 md:gap-4">
-            <span className="text-[11px] md:text-[13px] font-mono text-emerald-500 font-bold hidden xs:block">
+            <span className={`text-[11px] md:text-[13px] font-mono font-bold hidden xs:block ${isLight ? "text-emerald-700" : "text-emerald-500"}`}>
               {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
             </span>
-            <div className="w-9 h-9 md:w-11 md:h-11 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20 text-emerald-500 shadow-inner">
+            <div className={`w-9 h-9 md:w-11 md:h-11 rounded-xl flex items-center justify-center border shadow-inner ${
+              isLight ? "bg-emerald-100 border-emerald-200 text-emerald-700" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-500"
+            }`}>
               <Clock size={18} />
             </div>
           </div>
@@ -117,26 +150,28 @@ export default function PrayerTimes() {
         {/* --- PREMIUM NEXT PRAYER HERO --- */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-          className="relative p-8 md:p-16 rounded-[2.5rem] md:rounded-[5rem] bg-emerald-950/20 border border-emerald-500/10 mb-12 md:mb-20 overflow-hidden text-center"
+          className={`relative p-8 md:p-16 rounded-[2.5rem] md:rounded-[5rem] border mb-12 md:mb-20 overflow-hidden text-center transition-all duration-700 ${
+            isLight ? "bg-white border-slate-200 shadow-xl" : "bg-emerald-950/20 border-emerald-500/10"
+          }`}
         >
           <div className="relative z-10">
             <motion.div 
               animate={{ y: [0, -5, 0] }} transition={{ duration: 4, repeat: Infinity }}
-              className="inline-flex items-center gap-2 bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20 mb-6"
+              className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-6 ${
+                isLight ? "bg-emerald-50 border-emerald-100" : "bg-emerald-500/10 border-emerald-500/20"
+              }`}
             >
-               <BellRing size={12} className="text-emerald-400 animate-bounce" />
-               <span className="text-[9px] font-black tracking-[0.3em] uppercase text-emerald-400/80">Next Adhan</span>
+               <BellRing size={12} className="text-emerald-500 animate-bounce" />
+               <span className={`text-[9px] font-black tracking-[0.3em] uppercase ${isLight ? "text-emerald-700" : "text-emerald-400/80"}`}>Next Adhan</span>
             </motion.div>
             
-            <h2 className="text-6xl md:text-9xl font-black tracking-tighter text-white leading-none">
+            <h2 className={`text-6xl md:text-9xl font-black tracking-tighter leading-none ${isLight ? "text-slate-900" : "text-white"}`}>
               {formatTo12H(prayerStatus.next.time).split(' ')[0]}
               <span className="text-xl md:text-4xl text-emerald-500 ml-2 md:ml-4 uppercase font-light italic">{formatTo12H(prayerStatus.next.time).split(' ')[1]}</span>
             </h2>
-            <p className="text-sm md:text-xl font-bold tracking-[0.4em] md:tracking-[0.6em] uppercase text-emerald-500/40 mt-6">{prayerStatus.next.name} Prayer</p>
+            <p className={`text-sm md:text-xl font-bold tracking-[0.4em] md:tracking-[0.6em] uppercase mt-6 ${isLight ? "text-slate-400" : "text-emerald-500/40"}`}>{prayerStatus.next.name} Prayer</p>
           </div>
-          
-          {/* Decorative Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-emerald-500/3 blur-[100px] -z-10" />
+          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full blur-[100px] -z-10 ${isLight ? "bg-emerald-500/5" : "bg-emerald-500/3"}`} />
         </motion.div>
 
         {/* --- PRAYER CARDS GRID --- */}
@@ -152,23 +187,37 @@ export default function PrayerTimes() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
                 viewport={{ once: true }}
-                className={`group relative p-6 md:p-10 rounded-4xl md:rounded-[3.5rem] border transition-all duration-700 flex items-center justify-between ${isActive ? 'bg-emerald-600 border-emerald-400 shadow-2xl shadow-emerald-500/20 scale-[1.01]' : 'bg-white/3 border-white/5 hover:bg-white/5'}`}
+                className={`group relative p-6 md:p-10 rounded-4xl md:rounded-[3.5rem] border transition-all duration-700 flex items-center justify-between ${
+                    isActive 
+                    ? 'bg-emerald-600 border-emerald-400 shadow-2xl shadow-emerald-500/20 scale-[1.01]' 
+                    : isLight 
+                      ? 'bg-white border-slate-200 hover:border-emerald-300 shadow-sm' 
+                      : 'bg-white/3 border-white/5 hover:bg-white/5'
+                }`}
               >
                 <div className="flex items-center gap-4 md:gap-8 z-10">
-                   <div className={`w-12 h-12 md:w-20 md:h-20 rounded-2xl md:rounded-[2.5rem] flex items-center justify-center transition-all duration-700 ${isActive ? 'bg-black text-emerald-500' : 'bg-white/5 text-gray-500 group-hover:text-emerald-400'}`}>
+                   <div className={`w-12 h-12 md:w-20 md:h-20 rounded-2xl md:rounded-[2.5rem] flex items-center justify-center transition-all duration-700 ${
+                       isActive 
+                       ? 'bg-black text-emerald-500' 
+                       : isLight ? 'bg-slate-50 text-slate-400 group-hover:text-emerald-600' : 'bg-white/5 text-gray-500 group-hover:text-emerald-400'
+                   }`}>
                       {prayerIcons[name]}
                    </div>
                    <div>
-                      <h4 className={`text-xl md:text-4xl font-bold tracking-tight ${isActive ? 'text-black' : 'text-white'}`}>{name}</h4>
-                      <p className={`text-[8px] md:text-[10px] font-black uppercase tracking-widest mt-1 ${isActive ? 'text-black/60' : 'text-gray-500'}`}>{isActive ? 'Live Now' : 'Timing'}</p>
+                      <h4 className={`text-xl md:text-4xl font-bold tracking-tight ${isActive ? 'text-white' : isLight ? 'text-slate-900' : 'text-white'}`}>{name}</h4>
+                      <p className={`text-[8px] md:text-[10px] font-black uppercase tracking-widest mt-1 ${isActive ? 'text-white/70' : isLight ? 'text-slate-400' : 'text-gray-500'}`}>{isActive ? 'Live Now' : 'Timing'}</p>
                    </div>
                 </div>
 
                 <div className="flex items-center gap-4 md:gap-10 z-10">
                    <div className="text-right">
-                      <p className={`text-2xl md:text-5xl font-black tracking-tighter ${isActive ? 'text-black' : 'text-white'}`}>{formattedTime}</p>
+                      <p className={`text-2xl md:text-5xl font-black tracking-tighter ${isActive ? 'text-white' : isLight ? 'text-slate-900' : 'text-white'}`}>{formattedTime}</p>
                    </div>
-                   <div className={`hidden xs:flex w-10 h-10 md:w-14 md:h-14 rounded-full items-center justify-center border transition-all ${isActive ? 'border-black/20 text-black' : 'border-white/10 text-gray-600'}`}>
+                   <div className={`hidden xs:flex w-10 h-10 md:w-14 md:h-14 rounded-full items-center justify-center border transition-all ${
+                       isActive 
+                       ? 'border-white/20 text-white' 
+                       : isLight ? 'border-slate-200 text-slate-300' : 'border-white/10 text-gray-600'
+                   }`}>
                       <Volume2 size={20} />
                    </div>
                 </div>
@@ -184,31 +233,35 @@ export default function PrayerTimes() {
           className="mt-24 md:mt-32 relative"
         >
           <div className="max-w-4xl mx-auto relative group">
-            <div className="absolute -inset-4 bg-emerald-500/5 rounded-[5rem] blur-3xl opacity-0 group-hover:opacity-100 transition duration-1000"></div>
+            <div className={`absolute -inset-4 rounded-[5rem] blur-3xl opacity-0 group-hover:opacity-100 transition duration-1000 ${isLight ? "bg-emerald-500/10" : "bg-emerald-500/5"}`}></div>
             
-            <div className="relative bg-[#0f172a]/40 backdrop-blur-3xl border border-white/5 rounded-[3rem] md:rounded-[5rem] p-8 md:p-20 text-center overflow-hidden">
+            <div className={`relative backdrop-blur-3xl border rounded-[3rem] md:rounded-[5rem] p-8 md:p-20 text-center overflow-hidden transition-all duration-700 ${
+              isLight ? "bg-white border-slate-200 shadow-xl" : "bg-[#0f172a]/40 border-white/5"
+            }`}>
               <div className="mb-8 md:mb-12">
                 <span className="text-[9px] md:text-[11px] font-black tracking-[0.5em] text-emerald-500 uppercase block mb-4">Daily Inspiration</span>
-                <h3 className="text-xl md:text-3xl font-bold text-white/90">
+                <h3 className={`text-xl md:text-3xl font-bold ${isLight ? "text-slate-900" : "text-white/90"}`}>
                   Hazrat Muhammad <span className="text-emerald-500">ﷺ</span>
                 </h3>
               </div>
 
               <div className="space-y-8 md:space-y-12">
-                <p className="text-3xl md:text-6xl font-arabic leading-relaxed text-emerald-400 px-2" style={{ direction: 'rtl' }}>
+                <p className={`text-3xl md:text-6xl font-arabic leading-relaxed px-2 ${isLight ? "text-emerald-700" : "text-emerald-400"}`} style={{ direction: 'rtl' }}>
                   {selectedHadith.arabic}
                 </p>
-                <div className="h-px w-16 md:w-24 bg-linear-to-r from-transparent via-emerald-500/30 to-transparent mx-auto" />
-                <p className="text-xl md:text-4xl font-urdu leading-loose md:leading-[2.2] text-white/90 px-2" style={{ direction: 'rtl' }}>
+                <div className={`h-px w-16 md:w-24 mx-auto ${isLight ? "bg-emerald-200" : "bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"}`} />
+                <p className={`text-xl md:text-4xl font-urdu leading-loose md:leading-[2.2] px-2 ${isLight ? "text-slate-800" : "text-white/90"}`} style={{ direction: 'rtl' }}>
                   {selectedHadith.urdu}
                 </p>
-                <p className="text-xs md:text-lg text-gray-400 font-light italic max-w-2xl mx-auto leading-relaxed">
+                <p className={`text-xs md:text-lg font-light italic max-w-2xl mx-auto leading-relaxed ${isLight ? "text-slate-500" : "text-gray-400"}`}>
                   "{selectedHadith.english}"
                 </p>
               </div>
 
-              <div className="mt-10 md:mt-16 inline-flex items-center gap-3 bg-white/5 px-6 py-2 rounded-full border border-white/10">
-                <span className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest text-emerald-500/60">{selectedHadith.ref}</span>
+              <div className={`mt-10 md:mt-16 inline-flex items-center gap-3 px-6 py-2 rounded-full border transition-all ${
+                isLight ? "bg-slate-50 border-slate-200 text-emerald-700" : "bg-white/5 border-white/10 text-emerald-500/60"
+              }`}>
+                <span className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest">{selectedHadith.ref}</span>
               </div>
             </div>
           </div>

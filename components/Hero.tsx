@@ -9,17 +9,23 @@ export default function UltimatePremiumHero() {
   const [copied, setCopied] = useState(false);
   const ayahRef = useRef<HTMLDivElement>(null);
   
-  // --- THEME SYNC (NO NEXT-THEMES DEPENDENCY) ---
+  // --- FLICKER FIX STATES ---
   const [isLight, setIsLight] = useState(false);
+  const [mounted, setMounted] = useState(false); // New: To track mounting
 
   useEffect(() => {
     const updateTheme = () => {
       const isDark = document.documentElement.classList.contains("dark");
-      setIsLight(!isDark);
-      // Premium Slate background for body to prevent bright white flash
-      document.body.style.backgroundColor = !isDark ? "#F8FAFC" : "#020617";
+      const currentLightMode = !isDark;
+      setIsLight(currentLightMode);
+      
+      // Theme ke mutabiq body background for smooth scrolling
+      document.body.style.backgroundColor = currentLightMode ? "#F8FAFC" : "#020617";
     };
+
     updateTheme();
+    setMounted(true); // Component ab safely mount ho chuka hai
+
     const observer = new MutationObserver(updateTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
@@ -108,6 +114,11 @@ export default function UltimatePremiumHero() {
     }
   };
 
+  // --- ZERO FLICKER GUARD ---
+  if (!mounted) {
+    return <div className="min-h-screen bg-transparent" />; // Returns nothing until client loads
+  }
+
   return (
     <div 
       className="transition-all duration-700 ease-in-out selection:bg-emerald-500/30"
@@ -153,7 +164,6 @@ export default function UltimatePremiumHero() {
 
           <div ref={ayahRef} className="relative mt-20 group min-h-100 flex items-center justify-center">
             
-            {/* --- PREMIUM FLOATING TAG --- */}
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -182,7 +192,7 @@ export default function UltimatePremiumHero() {
               isLight ? "bg-white/80 border-slate-200 shadow-slate-200/50" : "bg-[#050b1d]/90 border-white/10"
             }`}>
               
-              <AnimatePresence>
+              <AnimatePresence mode='wait'>
                 {loading && (
                   <motion.div 
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -211,7 +221,7 @@ export default function UltimatePremiumHero() {
                       className={`text-4xl md:text-6xl lg:text-7xl font-arabic leading-[1.8] mb-16 text-center transition-colors duration-700 ${
                         isLight ? "text-slate-900" : "text-white"
                       }`}
-                      style={{ direction: 'rtl' }}
+                      style={{ direction: 'rtl', fontFamily: "'Amiri', serif" }}
                     >
                       {ayah.arabic}
                     </h2>
