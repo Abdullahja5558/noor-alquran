@@ -47,7 +47,7 @@ export default function PremiumAbout() {
     >
       
       {/* --- FLOATING NAV --- */}
-      <nav className={`fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl z-[100] backdrop-blur-2xl border px-8 py-4 rounded-[2.5rem] flex items-center justify-between transition-all duration-700 ${
+      <nav className={`fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl z-100 backdrop-blur-2xl border px-8 py-4 rounded-[2.5rem] flex items-center justify-between transition-all duration-700 ${
         isLight 
         ? "bg-white/80 border-slate-200 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)]" 
         : "bg-white/3 border-white/10 shadow-2xl"
@@ -80,7 +80,7 @@ export default function PremiumAbout() {
             initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
             className="text-7xl md:text-[11rem] font-black tracking-tighter leading-[0.8] mb-12"
           >
-            Digital <br/> <span className="bg-gradient-to-r from-emerald-600 via-cyan-500 to-emerald-700 bg-clip-text text-transparent italic">Spiritualism.</span>
+            Digital <br/> <span className="bg-linear-to-r from-emerald-600 via-cyan-500 to-emerald-700 bg-clip-text text-transparent italic">Spiritualism.</span>
           </motion.h1>
           <p className={`text-lg md:text-2xl max-w-2xl mx-auto font-light leading-relaxed mb-12 transition-colors ${
             isLight ? "text-slate-500" : "text-gray-400"
@@ -105,7 +105,7 @@ export default function PremiumAbout() {
         <section className="px-6 max-w-7xl mx-auto mb-40">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className={`md:col-span-2 relative p-10 rounded-[3.5rem] border overflow-hidden group transition-all duration-700 ${
-                isLight ? "bg-white border-slate-200 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.1)]" : "bg-gradient-to-br from-emerald-900/20 to-[#020617] border-emerald-500/20"
+                isLight ? "bg-white border-slate-200 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.1)]" : "bg-linear-to-br from-emerald-900/20 to-[#020617] border-emerald-500/20"
               }`}>
                  <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-6">
@@ -192,7 +192,7 @@ export default function PremiumAbout() {
               </div>
 
               <h2 className={`text-6xl md:text-8xl font-black mb-8 tracking-tighter leading-none ${isLight ? "text-slate-900" : "text-white"}`}>
-                The Light <br/> <span className="bg-gradient-to-b from-emerald-600 to-emerald-900 bg-clip-text text-transparent italic font-light">In Your Pocket.</span>
+                The Light <br/> <span className="bg-linear-to-b from-emerald-600 to-emerald-900 bg-clip-text text-transparent italic font-light">In Your Pocket.</span>
               </h2>
 
               <p className={`max-w-md mx-auto mb-16 text-lg font-light leading-relaxed ${isLight ? "text-slate-500" : "text-gray-500"}`}>We are crafting the ultimate spiritual companion. No ads, just pure devotion.</p>
