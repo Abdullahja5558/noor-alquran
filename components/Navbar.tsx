@@ -47,7 +47,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed w-full z-[100] transition-all duration-500 px-4 md:px-8 ${scrolled ? "top-4" : "top-8"}`}
+      className={`fixed w-full z-100 transition-all duration-500 px-4 md:px-8 ${scrolled ? "top-4" : "top-8"}`}
     >
       <div
         className={`max-w-7xl mx-auto flex items-center justify-between px-8 py-4 rounded-[2.8rem] transition-all duration-500 
@@ -172,7 +172,7 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className={`absolute top-24 left-4 right-4 backdrop-blur-2xl rounded-[2rem] border p-8 flex flex-col gap-6 md:hidden shadow-2xl ${
+            className={`absolute top-24 left-4 right-4 backdrop-blur-2xl rounded-4xl border p-8 flex flex-col gap-6 md:hidden shadow-2xl ${
               isDarkMode
                 ? "bg-slate-900/95 border-white/10"
                 : "bg-white/95 border-slate-200"
