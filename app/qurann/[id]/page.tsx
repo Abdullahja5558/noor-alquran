@@ -154,7 +154,7 @@ export default function SurahDetail() {
       {/* --- PREMIUM MINI PLAYER CONTROL --- */}
       <AnimatePresence>
         {ayahs.length > 0 && (
-          <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-md">
+          <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-[95%] max-w-md">
             <div className={`backdrop-blur-3xl border rounded-[2.5rem] p-3 md:p-4 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all ${
               isLight ? "bg-white/90 border-slate-200" : "bg-slate-900/80 border-white/10"
             }`}>
@@ -224,7 +224,7 @@ export default function SurahDetail() {
               className={`relative p-6 md:p-10 rounded-[2.5rem] transition-all duration-500 border cursor-pointer ${
                 activeAyah === ayah.numberInSurah 
                 ? (isLight ? 'bg-white border-emerald-300 shadow-xl ring-1 ring-emerald-100' : 'bg-white/5 border-emerald-500/30 ring-1 ring-emerald-500/20 shadow-[0_0_40px_rgba(16,185,129,0.1)]')
-                : (isLight ? 'bg-white/40 border-slate-100 hover:border-emerald-200' : 'bg-white/[0.02] border-transparent hover:border-white/10')
+                : (isLight ? 'bg-white/40 border-slate-100 hover:border-emerald-200' : 'bg-white/2 border-transparent hover:border-white/10')
               }`}
             >
               <div className="flex flex-col items-center text-center">
@@ -232,7 +232,7 @@ export default function SurahDetail() {
                   <span className={`text-[9px] font-black border px-3 py-1 rounded-full uppercase tracking-widest ${
                     isLight ? "bg-slate-50 border-slate-200 text-slate-400" : "border-white/10 text-gray-500"
                   }`}>{ayah.numberInSurah}</span>
-                  <div className={`h-[1px] w-6 ${isLight ? "bg-emerald-100" : "bg-emerald-500/10"}`} />
+                  <div className={`h-px w-6 ${isLight ? "bg-emerald-100" : "bg-emerald-500/10"}`} />
                   <div className={`${activeAyah === ayah.numberInSurah ? "text-emerald-500" : "text-emerald-500/20"} transition-all`}>
                     <Volume2 size={14}/>
                   </div>
@@ -265,7 +265,7 @@ export default function SurahDetail() {
           isLight ? "border-slate-200" : "border-white/5"
         }`}>
           {prevSurah ? (
-            <button onClick={() => router.push(`/qurann/${prevSurah.number}`)} className={`w-full md:w-auto flex items-center gap-6 p-6 rounded-[2rem] border transition-all group cursor-pointer ${
+            <button onClick={() => router.push(`/qurann/${prevSurah.number}`)} className={`w-full md:w-auto flex items-center gap-6 p-6 rounded-4xl border transition-all group cursor-pointer ${
               isLight ? "bg-white border-slate-200 shadow-sm hover:border-emerald-300" : "bg-white/2 border-white/5 hover:border-emerald-500/30"
             }`}>
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
@@ -279,7 +279,7 @@ export default function SurahDetail() {
           ) : <div />}
 
           {nextSurah ? (
-            <button onClick={() => router.push(`/qurann/${nextSurah.number}`)} className={`w-full md:w-auto flex items-center gap-6 p-6 rounded-[2rem] border transition-all group cursor-pointer ${
+            <button onClick={() => router.push(`/qurann/${nextSurah.number}`)} className={`w-full md:w-auto flex items-center gap-6 p-6 rounded-4xl border transition-all group cursor-pointer ${
               isLight ? "bg-white border-slate-200 shadow-sm hover:border-emerald-300" : "bg-white/2 border-white/5 hover:border-emerald-500/30"
             }`}>
               <div className="text-right">
