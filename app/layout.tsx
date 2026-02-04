@@ -18,16 +18,14 @@ export const metadata: Metadata = {
     "Noor Al-Quran: Read all 114 Surahs, listen to Quran recitations, view Islamic calendar, prayer timings, Seerah, and daily duas.",
   keywords:
     "Quran, Surah, Tafsir, Quran Audio, Islamic Calendar, Prayer Times, Seerah, Daily Dua, Noor Al-Quran, Quran Recitations, Quran Recitations Online, Quran Recitations in Urdu, Quran Recitations in Urdu Online, Quran with Tafsir, Islamic Resources Online for Quran, Quran with Tafsir in Urdu ",
-   // Inside your metadata object
-icons: {
-  icon: [
-    {
-      url: "/favicon5.png",
-      href: "/favicon5.png",
-    },
-  ],
-},
-    
+  icons: {
+    icon: [
+      {
+        url: "/favicon5.png",
+        href: "/favicon5.png",
+      },
+    ],
+  },
   authors: [{ name: "Noor Al-Quran" }],
   openGraph: {
     type: "website",
@@ -44,11 +42,36 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning={true}
-    suppressContentEditableWarning={true}
-    style ={{ scrollBehavior: "smooth" }}>
+    <html 
+      lang="en" 
+      suppressHydrationWarning={true}
+      style={{ scrollBehavior: "smooth" }}
+    >
+      <head>
+        {/* --- ANTI-WHITE FLASH SCRIPT --- */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+                  if (!theme && supportDarkMode) theme = 'dark';
+                  
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning={true}
       >
         {children}
       </body>
