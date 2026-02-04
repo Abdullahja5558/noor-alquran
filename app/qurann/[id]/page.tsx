@@ -195,7 +195,7 @@ export default function SurahDetail() {
       {/* --- MINI PLAYER & MAIN CONTENT (Keep original code from here...) --- */}
       <AnimatePresence>
         {ayahs.length > 0 && (
-          <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-md">
+          <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-[95%] max-w-md">
             <div className={`backdrop-blur-3xl border rounded-[2.5rem] p-3 md:p-4 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all ${
               isLight ? "bg-white/90 border-slate-200" : "bg-slate-900/80 border-white/10"
             }`}>
