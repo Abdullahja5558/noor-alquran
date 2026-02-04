@@ -114,7 +114,7 @@ export default function PrayerTimes() {
     >
       
       {/* --- ELITE NAV --- */}
-      <nav className={`fixed top-0 w-full z-[100] backdrop-blur-2xl border-b px-4 md:px-8 py-5 transition-all duration-700 ${
+      <nav className={`fixed top-0 w-full z-100 backdrop-blur-2xl border-b px-4 md:px-8 py-5 transition-all duration-700 ${
         isLight ? "bg-white/80 border-slate-200 shadow-sm" : "bg-[#020617]/90 border-white/5"
       }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -249,7 +249,7 @@ export default function PrayerTimes() {
                 <p className={`text-3xl md:text-6xl font-arabic leading-relaxed px-2 ${isLight ? "text-emerald-700" : "text-emerald-400"}`} style={{ direction: 'rtl' }}>
                   {selectedHadith.arabic}
                 </p>
-                <div className={`h-px w-16 md:w-24 mx-auto ${isLight ? "bg-emerald-200" : "bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"}`} />
+                <div className={`h-px w-16 md:w-24 mx-auto ${isLight ? "bg-emerald-200" : "bg-linear-to-r from-transparent via-emerald-500/30 to-transparent"}`} />
                 <p className={`text-xl md:text-4xl font-urdu leading-loose md:leading-[2.2] px-2 ${isLight ? "text-slate-800" : "text-white/90"}`} style={{ direction: 'rtl' }}>
                   {selectedHadith.urdu}
                 </p>
