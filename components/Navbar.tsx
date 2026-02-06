@@ -13,10 +13,20 @@ const Navbar = () => {
   useEffect(() => {
     // --- SCROLL TO TOP FIX ---
     // Force browser to start at top on refresh/load
+    window.scrollTo(0, 0);
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
-    window.scrollTo(0, 0);
+
+    // Thora sa delay taake render complete ho jaye
+    const timer = setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'instant' 
+      });
+    }, 10);
+    
 
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "light") {
