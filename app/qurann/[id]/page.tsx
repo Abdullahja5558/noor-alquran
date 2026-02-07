@@ -67,10 +67,8 @@ export default function SurahDetail() {
       if (!id) return;
       try {
         setLoading(true);
-        // Fixed Identifier: ur.jalandhry for text, and ur.khan for Urdu Audio (which is Fateh Muhammad Jalandhry's recitation in the API database)
         const res = await fetch(`https://api.alquran.cloud/v1/surah/${id}/editions/quran-uthmani,ur.jalandhry,en.asad,ar.alafasy,ur.khan,en.walk`);
         const data = await res.json();
-        
         const listRes = await fetch(`https://api.alquran.cloud/v1/surah`);
         const listData = await listRes.json();
         setAllSurahs(listData.data);
@@ -82,7 +80,7 @@ export default function SurahDetail() {
             urduText: data.data[1].ayahs[i].text,
             englishText: data.data[2].ayahs[i].text,
             audio: data.data[3].ayahs[i].audio,
-            audioUrdu: data.data[4].ayahs[i].audio, // This is the Urdu Voice
+            audioUrdu: data.data[4].ayahs[i].audio,
             audioEnglish: data.data[5].ayahs[i].audio
           }));
 
@@ -112,7 +110,6 @@ export default function SurahDetail() {
     if (audioMode === 'en') selectedUrl = ayahs[index].audioEnglish;
 
     if (!selectedUrl) {
-      console.error("Audio URL not found for this mode");
       setIsBuffering(false);
       return;
     }
@@ -120,33 +117,20 @@ export default function SurahDetail() {
     audioRef.current.src = selectedUrl;
     audioRef.current.load();
     
-    const playPromise = audioRef.current.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => { 
-          setIsBuffering(false); 
-          setIsPlaying(true); 
-        })
-        .catch((err) => {
-          console.error("Playback failed:", err);
-          setIsBuffering(false);
-        });
-    }
+    audioRef.current.play()
+      .then(() => { 
+        setIsBuffering(false); 
+        setIsPlaying(true); 
+      })
+      .catch(() => setIsBuffering(false));
 
-    if ((index + 1) % 5 === 3 || index === 0) {
-      fastPreload(ayahs, index + 3, 5);
-    }
-    
+    if ((index + 1) % 5 === 3 || index === 0) fastPreload(ayahs, index + 3, 5);
     ayahRefs.current[ayahs[index].numberInSurah]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   const togglePlayback = () => {
-    if (isPlaying) { 
-      audioRef.current?.pause(); 
-      setIsPlaying(false); 
-    } else { 
-      playAyah(currentAyahIndex); 
-    }
+    if (isPlaying) { audioRef.current?.pause(); setIsPlaying(false); }
+    else { playAyah(currentAyahIndex); }
   };
 
   const currentSurahNumber = parseInt(id as string);
@@ -161,6 +145,19 @@ export default function SurahDetail() {
 
   return (
     <div className={`min-h-screen transition-all duration-700 font-sans selection:bg-emerald-500/30 overflow-x-hidden ${isLight ? "bg-[#F8FAFC] text-slate-900" : "bg-[#020617] text-white"}`}>
+      
+      {/* Premium Font Injection */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Scheherazade+New:wght@400;500;600;700&display=swap');
+        
+        .premium-arabic {
+          font-family: 'Scheherazade New', 'Amiri', serif;
+          direction: rtl;
+          line-height: 1.8;
+          text-rendering: optimizeLegibility;
+        }
+      `}</style>
+
       <audio 
         ref={audioRef} 
         onEnded={() => currentAyahIndex < ayahs.length - 1 ? playAyah(currentAyahIndex + 1) : setIsPlaying(false)}
@@ -181,6 +178,7 @@ export default function SurahDetail() {
         </div>
       </nav>
 
+      {/* Control Bar */}
       {ayahs.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-[95%] max-w-lg flex flex-col gap-3">
           <div className={`flex items-center justify-center gap-1.5 p-1 rounded-full border backdrop-blur-3xl self-center shadow-2xl ${isLight ? "bg-white/80 border-slate-200" : "bg-slate-900/60 border-white/10"}`}>
@@ -193,7 +191,7 @@ export default function SurahDetail() {
 
           <div className={`backdrop-blur-3xl border rounded-[2.5rem] p-3 md:p-4 flex items-center justify-between shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] ${isLight ? "bg-white/95 border-slate-200" : "bg-slate-900/90 border-white/10"}`}>
             <div className="flex items-center gap-4 flex-1 min-w-0">
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-linear-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg overflow-hidden shrink-0">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg overflow-hidden shrink-0">
                 <motion.div animate={isPlaying ? { rotate: 360 } : {}} transition={{ repeat: Infinity, duration: 8, ease: "linear" }}>
                   <Disc size={26} className="text-white/90"/>
                 </motion.div>
@@ -223,7 +221,7 @@ export default function SurahDetail() {
       <main className="pt-32 pb-48 px-6 max-w-5xl mx-auto">
         {id !== "1" && id !== "9" && (
           <div className="text-center mb-16">
-            <h2 className={`text-4xl md:text-5xl font-arabic ${isLight ? "text-emerald-900" : "text-emerald-50/80"}`} style={{ direction: 'rtl', fontFamily: "'Amiri', serif" }}>بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</h2>
+            <h2 className={`text-5xl md:text-7xl premium-arabic ${isLight ? "text-emerald-900" : "text-emerald-50/80"}`}>بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</h2>
           </div>
         )}
 
@@ -244,7 +242,20 @@ export default function SurahDetail() {
                   <span className={`text-[9px] font-black border px-3 py-1 rounded-full uppercase tracking-widest ${activeAyah === ayah.numberInSurah ? "bg-emerald-500 border-emerald-500 text-white" : (isLight ? "bg-slate-50 border-slate-200 text-slate-400" : "border-white/10 text-gray-500")}`}>{ayah.numberInSurah}</span>
                   <div className={`${activeAyah === ayah.numberInSurah ? "text-emerald-500 scale-125" : "text-emerald-500/20 group-hover:text-emerald-500/40"} transition-all`}><Volume2 size={14}/></div>
                 </div>
-                <p className={`font-arabic leading-[1.8] mb-8 transition-all ${ayah.text.length > 200 ? 'text-2xl md:text-3xl' : 'text-3xl md:text-4xl'} ${activeAyah === ayah.numberInSurah ? (isLight ? 'text-slate-900' : 'text-white') : (isLight ? 'text-slate-600' : 'text-slate-400')}`} style={{ direction: 'rtl', fontFamily: "'Amiri', serif" }}>{ayah.text}</p>
+
+                {/* PREMIUM ARABIC TEXT */}
+                <p 
+                  className={`premium-arabic transition-all duration-300 ${
+                    ayah.text.length > 200 ? 'text-2xl md:text-4xl' : 'text-3xl md:text-5xl'
+                  } ${
+                    activeAyah === ayah.numberInSurah 
+                    ? (isLight ? 'text-slate-900' : 'text-white') 
+                    : (isLight ? 'text-slate-600' : 'text-slate-400')
+                  }`}
+                >
+                  {ayah.text}
+                </p>
+
                 <p className={`font-urdu leading-loose mb-6 font-medium ${ayah.urduText.length > 150 ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'} ${isLight ? "text-emerald-800/80" : "text-emerald-100/60"}`} style={{ direction: 'rtl' }}>{ayah.urduText}</p>
                 <p className={`text-[11px] md:text-xs font-medium max-w-2xl leading-relaxed italic uppercase tracking-wide ${isLight ? "text-slate-400" : "text-gray-500"}`}>{ayah.englishText}</p>
               </div>
@@ -252,7 +263,6 @@ export default function SurahDetail() {
           ))}
         </div>
 
-        {/* Prev/Next Buttons Section */}
         <div className={`mt-32 pt-16 border-t flex flex-col md:flex-row gap-6 items-center justify-between ${isLight ? "border-slate-200" : "border-white/5"}`}>
           {prevSurah && (
             <button onClick={() => router.push(`/qurann/${prevSurah.number}`)} className={`w-full md:w-auto flex items-center gap-6 p-6 rounded-4xl border transition-all group cursor-pointer active:scale-95 ${isLight ? "bg-white border-slate-200 hover:border-emerald-300 shadow-sm" : "bg-white/2 border-white/5 hover:border-emerald-500/30 shadow-2xl"}`}>
