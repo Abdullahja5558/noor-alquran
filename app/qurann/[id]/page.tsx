@@ -205,7 +205,7 @@ export default function SurahDetail() {
 
       {/* Control Bar */}
       {ayahs.length > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-lg flex flex-col gap-3">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-[95%] max-w-lg flex flex-col gap-3">
           <div className={`flex items-center justify-center gap-1.5 p-1 rounded-full border backdrop-blur-3xl self-center shadow-2xl ${isLight ? "bg-white/80 border-slate-200" : "bg-slate-900/60 border-white/10"}`}>
             {(['ar', 'ur', 'en'] as AudioMode[]).map((mode) => (
               <button key={mode} onClick={() => { setAudioMode(mode); if(isPlaying) playAyah(currentAyahIndex); }} className={`px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.15em] transition-all cursor-pointer ${audioMode === mode ? "bg-emerald-600 text-white shadow-lg" : "text-gray-400 hover:text-emerald-500"}`}>
@@ -216,7 +216,7 @@ export default function SurahDetail() {
 
           <div className={`backdrop-blur-3xl border rounded-[2.5rem] p-3 md:p-4 flex items-center justify-between shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] ${isLight ? "bg-white/95 border-slate-200" : "bg-slate-900/90 border-white/10"}`}>
             <div className="flex items-center gap-4 flex-1 min-w-0">
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg overflow-hidden shrink-0">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-linear-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg overflow-hidden shrink-0">
                 <motion.div animate={isPlaying ? { rotate: 360 } : {}} transition={{ repeat: Infinity, duration: 8, ease: "linear" }}>
                   <Disc size={26} className="text-white/90"/>
                 </motion.div>
