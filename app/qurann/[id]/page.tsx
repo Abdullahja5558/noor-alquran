@@ -182,7 +182,7 @@ export default function SurahDetail() {
       </nav>
 
       {ayahs.length > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-lg flex flex-col gap-3">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-[95%] max-w-lg flex flex-col gap-3">
           <div className={`flex items-center justify-center gap-1.5 p-1 rounded-full border backdrop-blur-3xl self-center shadow-2xl ${isLight ? "bg-white/80 border-slate-200" : "bg-slate-900/60 border-white/10"}`}>
             {(['ar', 'ur', 'en'] as AudioMode[]).map((mode) => (
               <button key={mode} onClick={() => { setAudioMode(mode); if(isPlaying) playAyah(currentAyahIndex); }} className={`px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.15em] transition-all cursor-pointer ${audioMode === mode ? "bg-emerald-600 text-white shadow-lg" : "text-gray-400 hover:text-emerald-500"}`}>
