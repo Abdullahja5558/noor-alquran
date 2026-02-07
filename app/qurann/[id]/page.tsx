@@ -147,7 +147,7 @@ export default function SurahDetail() {
     <div className={`min-h-screen transition-all duration-700 font-sans selection:bg-emerald-500/30 overflow-x-hidden ${isLight ? "bg-[#F8FAFC] text-slate-900" : "bg-[#020617] text-white"}`}>
       
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700&family=Scheherazade+New:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700&family=Scheherazade+New:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap');
         
         .premium-arabic {
           font-family: 'Scheherazade New', 'Amiri', serif;
@@ -155,6 +155,13 @@ export default function SurahDetail() {
           line-height: 2.2;
           text-rendering: optimizeLegibility;
           word-spacing: 4px;
+        }
+
+        .premium-urdu {
+          font-family: 'Noto Nastaliq Urdu', serif;
+          direction: rtl;
+          line-height: 2.2;
+          text-rendering: optimizeLegibility;
         }
 
         .ayah-end-symbol {
@@ -216,7 +223,7 @@ export default function SurahDetail() {
 
           <div className={`backdrop-blur-3xl border rounded-[2.5rem] p-3 md:p-4 flex items-center justify-between shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] ${isLight ? "bg-white/95 border-slate-200" : "bg-slate-900/90 border-white/10"}`}>
             <div className="flex items-center gap-4 flex-1 min-w-0">
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-linear-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg overflow-hidden shrink-0">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg overflow-hidden shrink-0">
                 <motion.div animate={isPlaying ? { rotate: 360 } : {}} transition={{ repeat: Infinity, duration: 8, ease: "linear" }}>
                   <Disc size={26} className="text-white/90"/>
                 </motion.div>
@@ -282,7 +289,9 @@ export default function SurahDetail() {
                   </span>
                 </p>
 
-                <p className={`font-urdu leading-loose mb-6 mt-8 font-medium ${ayah.urduText.length > 150 ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'} ${isLight ? "text-emerald-800/80" : "text-emerald-100/60"}`} style={{ direction: 'rtl' }}>{ayah.urduText}</p>
+                {/* Urdu Text Color Reset to original (slate/grayish) */}
+                <p className={`premium-urdu mb-6 mt-6 font-medium text-lg md:text-2xl ${isLight ? "text-slate-700" : "text-slate-300"}`}>{ayah.urduText}</p>
+                
                 <p className={`text-[11px] md:text-xs font-medium max-w-2xl leading-relaxed italic uppercase tracking-wide ${isLight ? "text-slate-400" : "text-gray-500"}`}>{ayah.englishText}</p>
               </div>
             </motion.div>
