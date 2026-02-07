@@ -9,22 +9,19 @@ export default function UltimatePremiumHero() {
   const [copied, setCopied] = useState(false);
   const ayahRef = useRef<HTMLDivElement>(null);
   
-  // --- FLICKER FIX STATES ---
   const [isLight, setIsLight] = useState(false);
-  const [mounted, setMounted] = useState(false); // New: To track mounting
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const updateTheme = () => {
       const isDark = document.documentElement.classList.contains("dark");
       const currentLightMode = !isDark;
       setIsLight(currentLightMode);
-      
-      // Theme ke mutabiq body background for smooth scrolling
       document.body.style.backgroundColor = currentLightMode ? "#F8FAFC" : "#020617";
     };
 
     updateTheme();
-    setMounted(true); // Component ab safely mount ho chuka hai
+    setMounted(true);
 
     const observer = new MutationObserver(updateTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
@@ -114,9 +111,8 @@ export default function UltimatePremiumHero() {
     }
   };
 
-  // --- ZERO FLICKER GUARD ---
   if (!mounted) {
-    return <div className="min-h-screen bg-transparent" />; // Returns nothing until client loads
+    return <div className="min-h-screen bg-transparent" />;
   }
 
   return (
@@ -124,6 +120,16 @@ export default function UltimatePremiumHero() {
       className="transition-all duration-700 ease-in-out selection:bg-emerald-500/30"
       style={{ backgroundColor: isLight ? "#F8FAFC" : "#020617" }}
     >
+      {/* Premium Font Injection */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Scheherazade+New:wght@500;600;700&display=swap');
+        .premium-arabic-hero {
+          font-family: 'Scheherazade New', 'Amiri', serif;
+          direction: rtl;
+          line-height: 1.6;
+        }
+      `}</style>
+
       <section className="relative min-h-screen flex flex-col items-center pt-32 pb-20 md:pt-40 px-4 overflow-hidden">
         
         {/* Background Effects */}
@@ -217,11 +223,11 @@ export default function UltimatePremiumHero() {
                       </span>
                     </div>
 
+                    {/* PREMIUM ARABIC APPLIED HERE */}
                     <h2 
-                      className={`text-4xl md:text-6xl lg:text-7xl font-arabic leading-[1.8] mb-16 text-center transition-colors duration-700 ${
+                      className={`premium-arabic-hero text-4xl md:text-6xl lg:text-7xl mb-16 text-center transition-colors duration-700 ${
                         isLight ? "text-slate-900" : "text-white"
                       }`}
-                      style={{ direction: 'rtl', fontFamily: "'Amiri', serif" }}
                     >
                       {ayah.arabic}
                     </h2>
