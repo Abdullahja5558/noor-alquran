@@ -191,7 +191,7 @@ export default function SurahDetail() {
 
           <div className={`backdrop-blur-3xl border rounded-[2.5rem] p-3 md:p-4 flex items-center justify-between shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] ${isLight ? "bg-white/95 border-slate-200" : "bg-slate-900/90 border-white/10"}`}>
             <div className="flex items-center gap-4 flex-1 min-w-0">
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg overflow-hidden shrink-0">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-linear-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg overflow-hidden shrink-0">
                 <motion.div animate={isPlaying ? { rotate: 360 } : {}} transition={{ repeat: Infinity, duration: 8, ease: "linear" }}>
                   <Disc size={26} className="text-white/90"/>
                 </motion.div>
