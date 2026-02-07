@@ -47,18 +47,15 @@ export default function SurahDetail() {
     return () => observer.disconnect();
   }, []);
 
-  // Optimized Fast Preload Function - Teeno languages load karega taake switching fast ho
   const fastPreload = (data: Ayah[], startIndex: number, count: number) => {
     const end = Math.min(startIndex + count, data.length);
     for (let i = startIndex; i < end; i++) {
-      const urls = [data[i].audio, data[i].audioUrdu, data[i].audioEnglish];
-      
+      const urls = [data[i].audio, data[i].audioUrdu, data[i].audioEnglish].filter(Boolean);
       urls.forEach(url => {
         if (!preloadedUrls.current.has(url)) {
           const audioObj = new Audio();
           audioObj.src = url;
           audioObj.preload = "auto";
-          // Low priority loading in background
           preloadedUrls.current.add(url);
         }
       });
@@ -70,29 +67,34 @@ export default function SurahDetail() {
       if (!id) return;
       try {
         setLoading(true);
+        // Fixed Identifier: ur.jalandhry for text, and ur.khan for Urdu Audio (which is Fateh Muhammad Jalandhry's recitation in the API database)
         const res = await fetch(`https://api.alquran.cloud/v1/surah/${id}/editions/quran-uthmani,ur.jalandhry,en.asad,ar.alafasy,ur.khan,en.walk`);
         const data = await res.json();
+        
         const listRes = await fetch(`https://api.alquran.cloud/v1/surah`);
         const listData = await listRes.json();
         setAllSurahs(listData.data);
 
-        const combinedAyahs = data.data[0].ayahs.map((a: any, i: number) => ({
-          numberInSurah: a.numberInSurah,
-          text: a.text,
-          urduText: data.data[1].ayahs[i].text,
-          englishText: data.data[2].ayahs[i].text,
-          audio: data.data[3].ayahs[i].audio,
-          audioUrdu: data.data[4].ayahs[i].audio,
-          audioEnglish: data.data[5].ayahs[i].audio
-        }));
+        if (data.data) {
+          const combinedAyahs = data.data[0].ayahs.map((a: any, i: number) => ({
+            numberInSurah: a.numberInSurah,
+            text: a.text,
+            urduText: data.data[1].ayahs[i].text,
+            englishText: data.data[2].ayahs[i].text,
+            audio: data.data[3].ayahs[i].audio,
+            audioUrdu: data.data[4].ayahs[i].audio, // This is the Urdu Voice
+            audioEnglish: data.data[5].ayahs[i].audio
+          }));
 
-        setSurahInfo(data.data[0]);
-        setAyahs(combinedAyahs);
+          setSurahInfo(data.data[0]);
+          setAyahs(combinedAyahs);
+        }
         setLoading(false);
-        
-        // Step 1: Pehli 5 ayats foran download karein
-        setTimeout(() => fastPreload(combinedAyahs, 0, 5), 100);
-      } catch (err) { console.error(err); setLoading(false); }
+        setTimeout(() => fastPreload(ayahs, 0, 5), 500);
+      } catch (err) { 
+        console.error("Fetch Error:", err); 
+        setLoading(false); 
+      }
     };
     fetchSurahData();
     window.scrollTo(0, 0);
@@ -109,18 +111,28 @@ export default function SurahDetail() {
     if (audioMode === 'ur') selectedUrl = ayahs[index].audioUrdu;
     if (audioMode === 'en') selectedUrl = ayahs[index].audioEnglish;
 
+    if (!selectedUrl) {
+      console.error("Audio URL not found for this mode");
+      setIsBuffering(false);
+      return;
+    }
+
     audioRef.current.src = selectedUrl;
     audioRef.current.load();
     
     const playPromise = audioRef.current.play();
     if (playPromise !== undefined) {
       playPromise
-        .then(() => { setIsBuffering(false); setIsPlaying(true); })
-        .catch(() => setIsBuffering(false));
+        .then(() => { 
+          setIsBuffering(false); 
+          setIsPlaying(true); 
+        })
+        .catch((err) => {
+          console.error("Playback failed:", err);
+          setIsBuffering(false);
+        });
     }
 
-    // Step 2: Jab user 3rd ayat (index 2) par ho, to aglay 5 (6-10) load karo
-    // Har 5 ke interval par aglay 5 load honge
     if ((index + 1) % 5 === 3 || index === 0) {
       fastPreload(ayahs, index + 3, 5);
     }
@@ -129,11 +141,14 @@ export default function SurahDetail() {
   };
 
   const togglePlayback = () => {
-    if (isPlaying) { audioRef.current?.pause(); setIsPlaying(false); }
-    else { playAyah(currentAyahIndex); }
+    if (isPlaying) { 
+      audioRef.current?.pause(); 
+      setIsPlaying(false); 
+    } else { 
+      playAyah(currentAyahIndex); 
+    }
   };
 
-  // Remaining UI and helper logic stays exactly the same as your code
   const currentSurahNumber = parseInt(id as string);
   const prevSurah = allSurahs.find(s => s.number === currentSurahNumber - 1);
   const nextSurah = allSurahs.find(s => s.number === currentSurahNumber + 1);
@@ -151,6 +166,7 @@ export default function SurahDetail() {
         onEnded={() => currentAyahIndex < ayahs.length - 1 ? playAyah(currentAyahIndex + 1) : setIsPlaying(false)}
         onWaiting={() => setIsBuffering(true)}
         onPlaying={() => setIsBuffering(false)}
+        onError={() => { setIsBuffering(false); setIsPlaying(false); }}
         preload="auto"
       />
 
@@ -188,7 +204,7 @@ export default function SurahDetail() {
                   {isPlaying && <Waves size={12} className="text-emerald-500 animate-pulse shrink-0" />}
                 </div>
                 <p className="text-emerald-500 font-bold text-[9px] uppercase tracking-wider mt-0.5 truncate">
-                  {audioMode === 'ar' ? 'Mishary Alafasy' : audioMode === 'ur' ? 'Miraj Uddin Khan' : 'Ibrahim Walk'}
+                  {audioMode === 'ar' ? 'Mishary Alafasy' : audioMode === 'ur' ? 'Fateh Muhammad Jalandhry' : 'Ibrahim Walk'}
                 </p>
               </div>
             </div>
@@ -236,6 +252,7 @@ export default function SurahDetail() {
           ))}
         </div>
 
+        {/* Prev/Next Buttons Section */}
         <div className={`mt-32 pt-16 border-t flex flex-col md:flex-row gap-6 items-center justify-between ${isLight ? "border-slate-200" : "border-white/5"}`}>
           {prevSurah && (
             <button onClick={() => router.push(`/qurann/${prevSurah.number}`)} className={`w-full md:w-auto flex items-center gap-6 p-6 rounded-4xl border transition-all group cursor-pointer active:scale-95 ${isLight ? "bg-white border-slate-200 hover:border-emerald-300 shadow-sm" : "bg-white/2 border-white/5 hover:border-emerald-500/30 shadow-2xl"}`}>
