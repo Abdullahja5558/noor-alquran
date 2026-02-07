@@ -146,15 +146,40 @@ export default function SurahDetail() {
   return (
     <div className={`min-h-screen transition-all duration-700 font-sans selection:bg-emerald-500/30 overflow-x-hidden ${isLight ? "bg-[#F8FAFC] text-slate-900" : "bg-[#020617] text-white"}`}>
       
-      {/* Premium Font Injection */}
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Scheherazade+New:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700&family=Scheherazade+New:wght@400;500;600;700&display=swap');
         
         .premium-arabic {
           font-family: 'Scheherazade New', 'Amiri', serif;
           direction: rtl;
-          line-height: 1.8;
+          line-height: 2.2;
           text-rendering: optimizeLegibility;
+          word-spacing: 4px;
+        }
+
+        .ayah-end-symbol {
+          font-family: 'Amiri', serif;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          margin: 0 12px;
+          color: #10b981;
+          vertical-align: middle;
+          user-select: none;
+        }
+
+        .ayah-number-badge {
+          font-family: 'sans-serif';
+          font-size: 0.35em;
+          position: absolute;
+          font-weight: 800;
+          top: 52%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
       `}</style>
 
@@ -180,7 +205,7 @@ export default function SurahDetail() {
 
       {/* Control Bar */}
       {ayahs.length > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-[95%] max-w-lg flex flex-col gap-3">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-lg flex flex-col gap-3">
           <div className={`flex items-center justify-center gap-1.5 p-1 rounded-full border backdrop-blur-3xl self-center shadow-2xl ${isLight ? "bg-white/80 border-slate-200" : "bg-slate-900/60 border-white/10"}`}>
             {(['ar', 'ur', 'en'] as AudioMode[]).map((mode) => (
               <button key={mode} onClick={() => { setAudioMode(mode); if(isPlaying) playAyah(currentAyahIndex); }} className={`px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.15em] transition-all cursor-pointer ${audioMode === mode ? "bg-emerald-600 text-white shadow-lg" : "text-gray-400 hover:text-emerald-500"}`}>
@@ -191,7 +216,7 @@ export default function SurahDetail() {
 
           <div className={`backdrop-blur-3xl border rounded-[2.5rem] p-3 md:p-4 flex items-center justify-between shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] ${isLight ? "bg-white/95 border-slate-200" : "bg-slate-900/90 border-white/10"}`}>
             <div className="flex items-center gap-4 flex-1 min-w-0">
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-linear-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg overflow-hidden shrink-0">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg overflow-hidden shrink-0">
                 <motion.div animate={isPlaying ? { rotate: 360 } : {}} transition={{ repeat: Infinity, duration: 8, ease: "linear" }}>
                   <Disc size={26} className="text-white/90"/>
                 </motion.div>
@@ -221,7 +246,7 @@ export default function SurahDetail() {
       <main className="pt-32 pb-48 px-6 max-w-5xl mx-auto">
         {id !== "1" && id !== "9" && (
           <div className="text-center mb-16">
-            <h2 className={`text-5xl md:text-7xl premium-arabic ${isLight ? "text-emerald-900" : "text-emerald-50/80"}`}>بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</h2>
+            <h2 className={`text-4xl md:text-6xl premium-arabic ${isLight ? "text-emerald-900" : "text-emerald-50/80"}`}>بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</h2>
           </div>
         )}
 
@@ -233,30 +258,31 @@ export default function SurahDetail() {
               onClick={() => playAyah(index)}
               className={`relative p-6 md:p-10 rounded-[2.5rem] transition-all duration-300 border cursor-pointer group ${
                 activeAyah === ayah.numberInSurah 
-                ? (isLight ? 'bg-white border-emerald-300 shadow-xl' : 'bg-white/5 border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.1)]')
+                ? (isLight ? 'bg-white border-emerald-300' : 'bg-white/5 border-emerald-500/30')
                 : (isLight ? 'bg-white/40 border-slate-100 hover:border-emerald-200' : 'bg-white/2 border-transparent hover:border-white/10')
               }`}
             >
               <div className="flex flex-col items-center text-center">
                 <div className="flex items-center gap-4 mb-8">
                   <span className={`text-[9px] font-black border px-3 py-1 rounded-full uppercase tracking-widest ${activeAyah === ayah.numberInSurah ? "bg-emerald-500 border-emerald-500 text-white" : (isLight ? "bg-slate-50 border-slate-200 text-slate-400" : "border-white/10 text-gray-500")}`}>{ayah.numberInSurah}</span>
-                  <div className={`${activeAyah === ayah.numberInSurah ? "text-emerald-500 scale-125" : "text-emerald-500/20 group-hover:text-emerald-500/40"} transition-all`}><Volume2 size={14}/></div>
+                  <div className={`${activeAyah === ayah.numberInSurah ? "text-emerald-500 scale-110" : "text-emerald-500/20 group-hover:text-emerald-500/40"} transition-all`}><Volume2 size={14}/></div>
                 </div>
 
-                {/* PREMIUM ARABIC TEXT */}
                 <p 
-                  className={`premium-arabic transition-all duration-300 ${
-                    ayah.text.length > 200 ? 'text-2xl md:text-4xl' : 'text-3xl md:text-5xl'
-                  } ${
+                  className={`premium-arabic transition-all duration-500 text-2xl md:text-4xl ${
                     activeAyah === ayah.numberInSurah 
                     ? (isLight ? 'text-slate-900' : 'text-white') 
                     : (isLight ? 'text-slate-600' : 'text-slate-400')
                   }`}
                 >
                   {ayah.text}
+                  <span className="ayah-end-symbol text-emerald-500 scale-125 md:scale-100">
+                    <span className="ayah-number-badge">{ayah.numberInSurah}</span>
+                    <span className="opacity-90">۝</span>
+                  </span>
                 </p>
 
-                <p className={`font-urdu leading-loose mb-6 font-medium ${ayah.urduText.length > 150 ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'} ${isLight ? "text-emerald-800/80" : "text-emerald-100/60"}`} style={{ direction: 'rtl' }}>{ayah.urduText}</p>
+                <p className={`font-urdu leading-loose mb-6 mt-8 font-medium ${ayah.urduText.length > 150 ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'} ${isLight ? "text-emerald-800/80" : "text-emerald-100/60"}`} style={{ direction: 'rtl' }}>{ayah.urduText}</p>
                 <p className={`text-[11px] md:text-xs font-medium max-w-2xl leading-relaxed italic uppercase tracking-wide ${isLight ? "text-slate-400" : "text-gray-500"}`}>{ayah.englishText}</p>
               </div>
             </motion.div>
