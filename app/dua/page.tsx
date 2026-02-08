@@ -47,7 +47,6 @@ export default function DuaPage() {
     }
   };
 
-  // FIX: Safe Audio Player Logic (Error 1 & 2 Fix)
   const playAudio = (url: string | undefined) => {
     if (!url || !audioRef.current) return;
     
