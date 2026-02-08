@@ -140,7 +140,6 @@ export default function PrayerTimes() {
             <ArrowLeft size={20} />
           </button>
           
-          {/* PREMIUM DROPDOWN */}
           <div className="relative" ref={dropdownRef}>
             <button 
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
