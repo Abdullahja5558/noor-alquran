@@ -31,7 +31,7 @@ export default function PrayerTimes() {
   const [isLight, setIsLight] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Close dropdown on outside click
+  
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
