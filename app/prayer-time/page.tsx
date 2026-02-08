@@ -219,7 +219,6 @@ export default function PrayerTimes() {
                 <div className={`absolute -bottom-20 -right-20 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full`} />
               </div>
 
-              {/* PRAYER CARDS */}
               <div className="grid gap-5">
                 {["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map((name, idx) => {
                   const isActive = prayerStatus.active === name;
