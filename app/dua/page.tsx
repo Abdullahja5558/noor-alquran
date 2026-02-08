@@ -49,8 +49,7 @@ export default function DuaPage() {
 
   const playAudio = (url: string | undefined) => {
     if (!url || !audioRef.current) return;
-    
-    // Yahan hum check kar rahe hain ke URL hai ya nahi (Fixes 'replace' error)
+   
     const secureUrl = url.replace("http://", "https://");
     
     audioRef.current.pause();
