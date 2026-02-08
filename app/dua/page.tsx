@@ -135,7 +135,7 @@ export default function DuaPage() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 key={`dua-${dua.id}-${idx}`} // FIX: Unique key (Error 3 Fix)
                 className={`group relative p-8 md:p-20 rounded-[3rem] md:rounded-[6rem] border transition-all duration-700 ${
-                  isLight ? "bg-white border-slate-200" : "bg-white/[0.02] border-white/5 shadow-2xl"
+                  isLight ? "bg-white border-slate-200" : "bg-white/2 border-white/5 shadow-2xl"
                 }`}
               >
                 <div className="flex justify-between items-start mb-10 md:mb-16">
