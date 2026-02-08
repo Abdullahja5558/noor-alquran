@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Play, Pause, Square, Sparkles, Loader2, Volume2, ChevronLeft, ChevronRight, Disc, Waves } from 'lucide-react';
 import Footer from '@/components/Footer';
 
@@ -36,6 +36,12 @@ export default function SurahDetail() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ayahRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const preloadedUrls = useRef<Set<string>>(new Set());
+
+  // Helper function to convert English digits to Arabic/Urdu digits
+  const toArabicVariant = (num: number) => {
+    const arabicDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return num.toString().split('').map(d => arabicDigits[parseInt(d)]).join('');
+  };
 
   useEffect(() => {
     const isDark = document.documentElement.classList.contains("dark");
@@ -177,16 +183,17 @@ export default function SurahDetail() {
         }
 
         .ayah-number-badge {
-          font-family: 'sans-serif';
-          font-size: 0.35em;
+          font-family: 'Scheherazade New', 'Amiri', serif;
+          font-size: 0.45em;
           position: absolute;
-          font-weight: 800;
-          top: 52%;
+          font-weight: 700;
+          top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
           display: flex;
           align-items: center;
           justify-content: center;
+          margin-top: 1px;
         }
       `}</style>
 
@@ -212,7 +219,7 @@ export default function SurahDetail() {
 
       {/* Control Bar */}
       {ayahs.length > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-[95%] max-w-lg flex flex-col gap-3">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-lg flex flex-col gap-3">
           <div className={`flex items-center justify-center gap-1.5 p-1 rounded-full border backdrop-blur-3xl self-center shadow-2xl ${isLight ? "bg-white/80 border-slate-200" : "bg-slate-900/60 border-white/10"}`}>
             {(['ar', 'ur', 'en'] as AudioMode[]).map((mode) => (
               <button key={mode} onClick={() => { setAudioMode(mode); if(isPlaying) playAyah(currentAyahIndex); }} className={`px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.15em] transition-all cursor-pointer ${audioMode === mode ? "bg-emerald-600 text-white shadow-lg" : "text-gray-400 hover:text-emerald-500"}`}>
@@ -284,12 +291,12 @@ export default function SurahDetail() {
                 >
                   {ayah.text}
                   <span className="ayah-end-symbol text-emerald-500 scale-125 md:scale-100">
-                    <span className="ayah-number-badge">{ayah.numberInSurah}</span>
+                    {/* CHANGED: Used the toArabicVariant function here */}
+                    <span className="ayah-number-badge">{toArabicVariant(ayah.numberInSurah)}</span>
                     <span className="opacity-90">۝</span>
                   </span>
                 </p>
 
-                {/* Urdu Text Color Reset to original (slate/grayish) */}
                 <p className={`premium-urdu mb-6 mt-6 font-medium text-lg md:text-2xl ${isLight ? "text-slate-700" : "text-slate-300"}`}>{ayah.urduText}</p>
                 
                 <p className={`text-[11px] md:text-xs font-medium max-w-2xl leading-relaxed italic uppercase tracking-wide ${isLight ? "text-slate-400" : "text-gray-500"}`}>{ayah.englishText}</p>
