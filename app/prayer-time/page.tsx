@@ -158,7 +158,7 @@ export default function PrayerTimes() {
               {isDropdownOpen && (
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                  className={`absolute top-full mt-3 left-1/2 -translate-x-1/2 w-56 rounded-3xl border shadow-2xl overflow-hidden z-[110] backdrop-blur-3xl ${
+                  className={`absolute top-full mt-3 left-1/2 -translate-x-1/2 w-56 rounded-3xl border shadow-2xl overflow-hidden z-110 backdrop-blur-3xl ${
                     isLight ? "bg-white/95 border-slate-200" : "bg-slate-900/95 border-white/10"
                   }`}
                 >
