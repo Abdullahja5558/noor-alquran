@@ -235,7 +235,7 @@ export default function PrayerTimes() {
                       }`}
                     >
                       <div className="flex items-center gap-6 md:gap-10">
-                        <div className={`w-14 h-14 md:w-24 md:h-24 rounded-[2rem] md:rounded-[3rem] flex items-center justify-center transition-transform group-hover:scale-110 ${
+                        <div className={`w-14 h-14 md:w-24 md:h-24 rounded-2rem md:rounded-[3rem] flex items-center justify-center transition-transform group-hover:scale-110 ${
                           isActive ? 'bg-black text-emerald-500' : isLight ? 'bg-slate-50 text-slate-300' : 'bg-white/5 text-gray-700'
                         }`}>
                           {prayerIcons[name]}
