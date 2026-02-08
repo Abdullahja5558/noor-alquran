@@ -202,7 +202,6 @@ export default function PrayerTimes() {
           ) : (
             <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
               
-              {/* NEXT PRAYER HERO */}
               <div className={`relative p-10 md:p-20 rounded-[4rem] md:rounded-[6rem] border mb-16 text-center overflow-hidden shadow-2xl transition-all duration-1000 ${
                 isLight ? "bg-white border-slate-200" : "bg-emerald-950/10 border-emerald-500/10"
               }`}>
