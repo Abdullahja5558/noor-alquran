@@ -130,7 +130,6 @@ export default function PrayerTimes() {
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.2); border-radius: 10px; }
       `}</style>
 
-      {/* --- ELITE NAV --- */}
       <nav className={`fixed top-0 w-full z-100 backdrop-blur-2xl border-b px-4 md:px-8 py-4 transition-all duration-700 ${
         isLight ? "bg-white/80 border-slate-200 shadow-sm" : "bg-[#020617]/90 border-white/5"
       }`}>
