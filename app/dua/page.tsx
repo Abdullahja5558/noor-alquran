@@ -37,7 +37,6 @@ export default function DuaPage() {
      dua.urdu.includes(searchTerm))
   );
 
-  // FIX: Safe Copy Logic
   const copyToClipboard = (dua: Dua) => {
     const fullText = `${dua.title}\n\n${dua.arabic}\n\n${dua.urdu}\n\nRef: ${dua.ref}`;
     if (navigator.clipboard) {
