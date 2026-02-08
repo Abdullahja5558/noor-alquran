@@ -249,7 +249,6 @@ export default function PrayerTimes() {
                 })}
               </div>
 
-              {/* DYNAMIC HADITH SECTION */}
               <section className="mt-32 relative">
                 <div className={`relative backdrop-blur-3xl border rounded-[4rem] md:rounded-[6rem] p-10 md:p-24 text-center transition-all shadow-2xl ${
                   isLight ? "bg-white border-slate-200" : "bg-slate-900/40 border-white/5"
