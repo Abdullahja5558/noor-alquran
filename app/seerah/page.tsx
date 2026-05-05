@@ -88,7 +88,6 @@ export default function SeerahPage() {
              <p className="text-emerald-600/60 mt-4 md:mt-6 tracking-[0.3em] md:tracking-[0.5em] uppercase text-[8px] md:text-[11px] font-black">Timeline of the Final Messenger</p>
           </div>
 
-          {/* Timeline Vertical Line */}
           <div className={`absolute left-4 md:left-1/2 md:-translate-x-1/2 w-px h-[95%] z-0 ${
             isLight ? "bg-slate-200" : "bg-linear-to-b from-emerald-500/50 via-emerald-500/5 to-transparent"
           }`}></div>
