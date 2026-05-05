@@ -61,7 +61,6 @@ export default function SeerahPage() {
 
       <main className="pt-32 md:pt-44 pb-24 px-4 md:px-6 max-w-5xl mx-auto">
         
-        {/* --- HERO SECTION --- */}
         <section className="text-center mb-20 md:mb-32">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <h1 className={`text-5xl md:text-9xl font-black tracking-tighter mb-6 leading-[0.9] ${
