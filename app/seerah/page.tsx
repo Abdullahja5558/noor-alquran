@@ -9,7 +9,6 @@ import Footer from '@/components/Footer';
 export default function SeerahPage() {
   const router = useRouter();
 
-  // --- ANTI-FLICKER & THEME LOGIC ---
   const [isLight, setIsLight] = useState(false);
   const [mounted, setMounted] = useState(false);
 
