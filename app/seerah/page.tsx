@@ -27,8 +27,6 @@ export default function SeerahPage() {
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
-
-  // Prevent hydration flash
   if (!mounted) return <div className="min-h-screen bg-transparent" />;
 
   return (
