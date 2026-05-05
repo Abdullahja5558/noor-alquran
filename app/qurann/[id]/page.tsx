@@ -289,7 +289,7 @@ export default function SurahDetail() {
                 >
                   {ayah.text}
                   <span className="ayah-end-symbol text-emerald-500 scale-125 md:scale-100">
-                    {/* CHANGED: Used the toArabicVariant function here */}
+                   
                     <span className="ayah-number-badge">{toArabicVariant(ayah.numberInSurah)}</span>
                     <span className="opacity-90">۝</span>
                   </span>
