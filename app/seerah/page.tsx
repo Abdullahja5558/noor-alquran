@@ -74,7 +74,6 @@ export default function SeerahPage() {
             </motion.div>
         </section>
 
-        {/* --- SECTION: LIFE OF MUHAMMAD ﷺ --- */}
         <section className="relative mb-32 md:mb-48">
           <div className="text-center mb-16 md:mb-28">
              <motion.div 
