@@ -17,7 +17,6 @@ export default function SeerahPage() {
       const isDark = document.documentElement.classList.contains("dark");
       const currentLightMode = !isDark;
       setIsLight(currentLightMode);
-      // Immediate background fix to prevent dark flash
       document.body.style.backgroundColor = currentLightMode ? "#F8FAFC" : "#020617";
     };
 
