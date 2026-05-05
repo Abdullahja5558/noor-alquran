@@ -35,7 +35,6 @@ export default function SeerahPage() {
       style={{ backgroundColor: isLight ? "#F8FAFC" : "#020617", color: isLight ? "#0F172A" : "#FFFFFF" }}
     >
       
-      {/* --- PREMIUM NAVIGATION --- */}
       <nav className={`fixed top-0 w-full z-100 backdrop-blur-3xl border-b px-4 md:px-8 py-5 transition-all duration-700 ${
         isLight ? "bg-white/80 border-slate-200 shadow-sm" : "bg-[#020617]/90 border-white/5"
       }`}>
