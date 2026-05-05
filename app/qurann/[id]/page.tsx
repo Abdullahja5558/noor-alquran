@@ -216,7 +216,6 @@ export default function SurahDetail() {
         </div>
       </nav>
 
-      {/* Control Bar */}
       {ayahs.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 w-[95%] max-w-lg flex flex-col gap-3">
           <div className={`flex items-center justify-center gap-1.5 p-1 rounded-full border backdrop-blur-3xl self-center shadow-2xl ${isLight ? "bg-white/80 border-slate-200" : "bg-slate-900/60 border-white/10"}`}>
