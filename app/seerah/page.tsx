@@ -137,7 +137,6 @@ export default function SeerahPage() {
           </div>
         </section>
 
-        {/* --- SECTION: PROPHETS OVERVIEW --- */}
         <section className="mb-20 md:mb-40">
           <div className="flex items-center gap-4 md:gap-8 mb-16 md:mb-24 px-4">
              <div className={`h-px flex-1 ${isLight ? "bg-slate-200" : "bg-linear-to-r from-transparent to-white/10"}`}></div>
