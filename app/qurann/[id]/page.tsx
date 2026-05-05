@@ -37,7 +37,6 @@ export default function SurahDetail() {
   const ayahRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const preloadedUrls = useRef<Set<string>>(new Set());
 
-  // Helper function to convert English digits to Arabic/Urdu digits
   const toArabicVariant = (num: number) => {
     const arabicDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
     return num.toString().split('').map(d => arabicDigits[parseInt(d)]).join('');
