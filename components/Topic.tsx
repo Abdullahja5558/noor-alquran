@@ -1,143 +1,248 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Zap, Heart, Anchor, Sun, Target } from 'lucide-react';
+
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Anchor, Heart, Target, Sun, BookOpen, X, ArrowRight } from "lucide-react";
+import Link from "next/link";
+
+interface TopicItem {
+  id: string;
+  title: string;
+  arabicTitle: string;
+  icon: React.ReactNode;
+  color: string;
+  badge: string;
+  ayahArabic: string;
+  ayahUrdu: string;
+  ayahEnglish: string;
+  reference: string;
+  surahLink: string;
+}
+
+const TOPICS: TopicItem[] = [
+  {
+    id: "patience",
+    title: "Patience (Sabr)",
+    arabicTitle: "الصَّبْرُ",
+    icon: <Anchor size={22} />,
+    color: "from-blue-500/20 to-cyan-500/20",
+    badge: "Strength in Hardship",
+    ayahArabic: "يَا أَيُّهَا الَّذِينَ آمَنُوا اسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ ۚ إِنَّ اللَّهَ مَعَ الصَّابِرِينَ",
+    ayahUrdu: "اے ایمان والو! صبر اور نماز کے ذریعے مدد طلب کرو، بے شک اللہ صبر کرنے والوں کے ساتھ ہے۔",
+    ayahEnglish: "O you who have believed, seek help through patience and prayer. Indeed, Allah is with the patient.",
+    reference: "Surah Al-Baqarah (2:153)",
+    surahLink: "/quran/2",
+  },
+  {
+    id: "gratitude",
+    title: "Gratitude (Shukr)",
+    arabicTitle: "الشُّكْرُ",
+    icon: <Heart size={22} />,
+    color: "from-emerald-500/20 to-teal-500/20",
+    badge: "Countless Blessings",
+    ayahArabic: "لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ",
+    ayahUrdu: "اگر تم شکر ادا کرو گے تو میں تمہیں ضرور زیادہ دوں گا۔",
+    ayahEnglish: "If you are grateful, I will surely increase you [in favor].",
+    reference: "Surah Ibrahim (14:7)",
+    surahLink: "/quran/14",
+  },
+  {
+    id: "success",
+    title: "True Success (Falah)",
+    arabicTitle: "الْفَلَاحُ",
+    icon: <Target size={22} />,
+    color: "from-amber-500/20 to-yellow-500/20",
+    badge: "Victory of Soul",
+    ayahArabic: "قَدْ أَفْلَحَ الْمُؤْمِنُونَ الَّذِينَ هُمْ فِي صَلَاتِهِمْ خَاشِعُونَ",
+    ayahUrdu: "یقیناً وہ مومنین کامیاب ہو گئے جو اپنی نمازوں میں عاجزی اختیار کرتے ہیں۔",
+    ayahEnglish: "Certainly will the believers have succeeded: They who are during their prayer humbly submissive.",
+    reference: "Surah Al-Mu'minun (23:1-2)",
+    surahLink: "/quran/23",
+  },
+  {
+    id: "peace",
+    title: "Inner Peace (Sakina)",
+    arabicTitle: "السَّكِينَةُ",
+    icon: <Sun size={22} />,
+    color: "from-purple-500/20 to-indigo-500/20",
+    badge: "Heart's Rest",
+    ayahArabic: "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ",
+    ayahUrdu: "سن لو! اللہ کی یاد ہی سے دلوں کو اطمینان اور سکون ملتا ہے۔",
+    ayahEnglish: "Unquestionably, by the remembrance of Allah hearts are assured.",
+    reference: "Surah Ar-Ra'd (13:28)",
+    surahLink: "/quran/13",
+  },
+];
 
 export default function Topics() {
-  const [isLight, setIsLight] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState<TopicItem | null>(null);
 
-  // --- THEME SYNC ---
+  // Lock background scroll completely when popup is open
   useEffect(() => {
-    const updateTheme = () => {
-      const isDark = document.documentElement.classList.contains("dark");
-      setIsLight(!isDark);
-    };
-    updateTheme();
-    const observer = new MutationObserver(updateTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
+    if (selectedTopic) {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = "hidden";
+      
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setSelectedTopic(null);
+        }
+      };
 
-  const topics = [
-    { title: 'Patience', icon: <Anchor size={20} />, color: 'from-blue-500/20', lightColor: 'from-blue-100' },
-    { title: 'Gratitude', icon: <Heart size={20} />, color: 'from-emerald-500/20', lightColor: 'from-emerald-100' },
-    { title: 'Success', icon: <Target size={20} />, color: 'from-amber-500/20', lightColor: 'from-amber-100' },
-    { title: 'Peace', icon: <Sun size={20} />, color: 'from-purple-500/20', lightColor: 'from-purple-100' },
-  ];
+      window.addEventListener("keydown", handleKeyDown);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 }
+      return () => {
+        document.body.style.overflow = originalStyle;
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = "";
     }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any } }
-  };
+  }, [selectedTopic]);
 
   return (
-    <section 
-      className={`relative py-40 px-6 overflow-hidden transition-colors duration-1000 ${
-        isLight ? "bg-[#F8FAFC]" : "bg-[#020617]"
-      }`}
-    >
-      
-      {/* 1. Ambient Background Light */}
-      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-75 blur-[120px] rounded-full pointer-events-none transition-colors duration-1000 ${
-        isLight ? "bg-emerald-200/20" : "bg-emerald-500/5"
-      }`} />
-
+    <section className="relative py-20 sm:py-28 px-4 sm:px-6 overflow-hidden">
       <div className="max-w-6xl mx-auto relative z-10">
-        
         {/* Header Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-24"
-        >
-          <span className={`text-[10px] font-bold tracking-[0.5em] uppercase px-4 py-1.5 border rounded-full transition-all duration-700 ${
-            isLight ? "text-emerald-700 border-emerald-200 bg-emerald-50" : "text-emerald-500 border-emerald-500/20 bg-emerald-500/5"
-          }`}>
-            Deep Dive
+        <div className="text-center mb-12 sm:mb-16">
+          <span className="text-[9px] sm:text-[10px] md:text-xs font-black tracking-[0.25em] sm:tracking-[0.3em] uppercase px-4 sm:px-5 py-2 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-emerald-700 dark:text-emerald-300 shadow-sm">
+            Divine Guidance
           </span>
-          <h2 className={`text-4xl md:text-7xl font-bold mt-8 tracking-tighter transition-colors duration-700 ${
-            isLight 
-            ? "text-slate-900" 
-            : "text-transparent bg-clip-text bg-linear-to-b from-white to-white/40"
-          }`}>
-            Wisdom for every <br /> human emotion.
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black mt-4 sm:mt-6 tracking-tight text-slate-900 dark:text-white">
+            Wisdom for every <br />
+            <span className="text-emerald-600 dark:text-emerald-400 italic">
+              human emotion.
+            </span>
           </h2>
-        </motion.div>
-        
-        {/* Topics Grid */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          {topics.map((item) => (
-            <motion.div 
-              key={item.title}
-              variants={itemVariants}
-              whileHover={{ y: -10 }}
-              className="group relative"
+          <p className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-lg mx-auto">
+            Click on any emotion to discover comforting Quranic verses and timeless spiritual remedies.
+          </p>
+        </div>
+
+        {/* Topics Grid with Responsive Sizing */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {TOPICS.map((item) => (
+            <motion.div
+              key={item.id}
+              whileHover={{ y: -5 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setSelectedTopic(item)}
+              className="group relative cursor-pointer"
             >
-              {/* Card Outer Glow on Hover */}
-              <div className={`absolute -inset-0.5 bg-linear-to-b rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition duration-500 blur-sm ${
-                isLight ? item.lightColor : item.color
-              } to-transparent`} />
-              
-              <div className={`relative h-full py-16 rounded-[2.5rem] border backdrop-blur-md overflow-hidden flex flex-col items-center justify-center transition-all duration-700 ${
-                isLight 
-                ? "bg-white border-slate-100 group-hover:bg-white group-hover:border-emerald-200 shadow-sm" 
-                : "border-white/5 bg-white/3 group-hover:bg-white/[0.07] group-hover:border-white/10"
-              }`}>
-                
-                {/* Icon Circle */}
-                <div className={`mb-6 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
-                  isLight 
-                  ? "bg-slate-50 text-slate-400 group-hover:text-emerald-600 group-hover:bg-emerald-50" 
-                  : "bg-white/5 text-gray-400 group-hover:text-emerald-400 group-hover:bg-emerald-500/10"
-                }`}>
+              <div className="relative h-full py-8 sm:py-10 px-5 sm:px-6 rounded-[2rem] sm:rounded-[2.2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/70 dark:hover:border-emerald-500/70 overflow-hidden flex flex-col items-center text-center transition-all duration-200 shadow-sm hover:shadow-md">
+                {/* Icon Box with Border */}
+                <div className="mb-5 sm:mb-6 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 text-emerald-600 dark:text-emerald-400 group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all shadow-sm">
                   {item.icon}
                 </div>
 
-                <h4 className={`text-xl font-medium tracking-tight transition-colors duration-500 ${
-                  isLight ? "text-slate-600 group-hover:text-slate-900" : "text-gray-300 group-hover:text-white"
-                }`}>
+                <span className="font-arabic text-xl sm:text-2xl mb-1 text-emerald-600 dark:text-emerald-400 font-normal">
+                  {item.arabicTitle}
+                </span>
+
+                <h3 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white mb-1">
                   {item.title}
-                </h4>
+                </h3>
 
-                {/* Subtle Bottom Zap */}
-                <div className="absolute bottom-8 opacity-0 group-hover:opacity-100 group-hover:bottom-10 transition-all duration-500">
-                  <Zap size={16} className={`${isLight ? "text-emerald-600 fill-emerald-100" : "text-emerald-500 fill-emerald-500/20"}`} />
+                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">
+                  {item.badge}
+                </span>
+
+                <div className="mt-auto pt-3 sm:pt-4 flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  <span>Read Verse</span>
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                 </div>
-
-                {/* Corner Decorative Gradient */}
-                <div className={`absolute -bottom-10 -right-10 w-24 h-24 bg-linear-to-br blur-2xl opacity-0 group-hover:opacity-100 transition-opacity ${
-                  isLight ? item.lightColor : item.color
-                } to-transparent`} />
               </div>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* 3. Bottom Decorative Line */}
-        <motion.div 
-          initial={{ width: 0 }}
-          whileInView={{ width: '100%' }}
-          transition={{ duration: 1.5, delay: 0.5 }}
-          className={`h-px bg-linear-to-r from-transparent via-current to-transparent mt-32 opacity-10 ${
-            isLight ? "text-slate-900" : "text-white"
-          }`} 
-        />
+        </div>
       </div>
+
+      {/* Fixed Position Modal - Body Scroll Locked */}
+      <AnimatePresence>
+        {selectedTopic && (
+          <div 
+            onClick={() => setSelectedTopic(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-md overflow-hidden"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 md:p-12 bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-800 overscroll-contain"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedTopic(null)}
+                aria-label="Close modal"
+                className="absolute top-4 sm:top-6 right-4 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="flex items-center gap-3 mb-6 pr-10">
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                  {selectedTopic.icon}
+                </div>
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                    {selectedTopic.title}
+                  </h3>
+                  <span className="text-[10px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+                    {selectedTopic.reference}
+                  </span>
+                </div>
+              </div>
+
+              {/* Arabic Verse */}
+              <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-center mb-5 sm:mb-6">
+                <p className="font-arabic text-xl sm:text-2xl md:text-3xl leading-loose text-slate-900 dark:text-emerald-50">
+                  {selectedTopic.ayahArabic}
+                </p>
+              </div>
+
+              {/* Urdu Translation */}
+              <div className="mb-4 text-right">
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block mb-1">
+                  اردو ترجمہ
+                </span>
+                <p className="font-urdu text-lg sm:text-xl leading-relaxed text-slate-800 dark:text-slate-200">
+                  {selectedTopic.ayahUrdu}
+                </p>
+              </div>
+
+              {/* English Translation */}
+              <div className="mb-6 sm:mb-8">
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block mb-1">
+                  English Meaning
+                </span>
+                <p className="text-xs sm:text-sm md:text-base italic text-slate-700 dark:text-slate-300 leading-relaxed">
+                  &quot;{selectedTopic.ayahEnglish}&quot;
+                </p>
+              </div>
+
+              {/* Modal Actions */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-5 sm:pt-6 border-t border-slate-200 dark:border-slate-800">
+                <Link
+                  href={selectedTopic.surahLink}
+                  onClick={() => setSelectedTopic(null)}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-emerald-600/30 text-center"
+                >
+                  <BookOpen size={15} />
+                  <span>Open Full Surah</span>
+                </Link>
+
+                <button
+                  onClick={() => setSelectedTopic(null)}
+                  className="px-6 py-3 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs uppercase tracking-wider hover:bg-emerald-500/10 transition-all cursor-pointer text-center"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

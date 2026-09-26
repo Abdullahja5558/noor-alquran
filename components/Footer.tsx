@@ -1,134 +1,126 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+
+import React, { useState } from "react";
+import Link from "next/link";
 import { 
   Instagram, 
-  Twitter, 
-  Github, 
-  Mail, 
   Heart, 
   ArrowUpRight,
   Globe,
-  Sparkles
-} from 'lucide-react';
+  Sparkles,
+  CheckCircle2
+} from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const [isLight, setIsLight] = useState(false);
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
 
-  // --- THEME SYNC ---
-  useEffect(() => {
-    const updateTheme = () => {
-      const isDark = document.documentElement.classList.contains("dark");
-      setIsLight(!isDark);
-    };
-    updateTheme();
-    const observer = new MutationObserver(updateTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setSubscribed(true);
+      setTimeout(() => setSubscribed(false), 3500);
+      setEmail("");
+    }
+  };
 
   const footerSections = [
     {
       title: "Navigation",
       links: [
+        { name: "Al-Quran", href: "/quran" },
         { name: "Prayer Times", href: "/prayer-time" },
-        { name: "Noble Quran", href: "/quran" },
         { name: "Daily Duas", href: "/dua" },
-        { name: "Digital Tasbeeh", href: "/tasbeeh" }
-      ]
+        { name: "Digital Tasbeeh", href: "/tasbeeh" },
+      ],
     },
     {
-      title: "Content",
+      title: "Spiritual",
       links: [
         { name: "Prophetic Seerah", href: "/seerah" },
         { name: "Islamic Calendar", href: "/calendar" },
-        { name: "About Noor", href: "/about" }
-      ]
+        { name: "About Noor", href: "/about" },
+      ],
     },
     {
-      title: "Legal & More",
+      title: "Developer",
       links: [
-        { name: "Open Source", href: "https://github.com/Abdullahja5558" }
-      ]
-    }
+        { name: "GitHub Repository", href: "https://github.com/Abdullahja5558" },
+        { name: "Contact & Feedback", href: "/about" },
+      ],
+    },
   ];
 
   return (
-    <footer 
-      className={`relative pt-32 pb-12 px-8 overflow-hidden border-t transition-all duration-1000 ${
-        isLight ? "bg-[#F8FAFC] border-slate-200" : "bg-[#020617] border-white/5"
-      }`}
-    >
-      
-      {/* Background Glow - Cinematic Effect */}
-      <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-250 h-100 blur-[150px] rounded-full pointer-events-none transition-colors duration-1000 ${
-        isLight ? "bg-emerald-100/50" : "bg-emerald-500/3"
-      }`} />
-
+    <footer className="relative pt-16 sm:pt-20 pb-10 sm:pb-12 px-4 sm:px-8 md:px-12 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
       <div className="max-w-7xl mx-auto relative z-10">
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 mb-24">
-          
-          {/* --- LEFT: BRAND & NEWSLETTER --- */}
-          <div className="space-y-10">
-            <Link href="/" className="flex items-center gap-4 group w-fit">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-2xl transition-all duration-500 group-hover:rotate-15 ${
-                isLight ? "bg-slate-900 shadow-slate-300" : "bg-emerald-500 shadow-emerald-500/20"
-              }`}>
-                <Globe className={isLight ? "text-white" : "text-black"} size={24} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 md:gap-24 mb-12 sm:mb-16">
+          {/* Left Brand & Newsletter */}
+          <div className="space-y-6 sm:space-y-8">
+            <Link href="/" className="flex items-center gap-3 group w-fit">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white shadow-md shadow-emerald-500/25 group-hover:rotate-12 transition-all duration-300">
+                <Globe size={22} />
               </div>
               <div className="flex flex-col">
-                <span className={`text-2xl font-black tracking-tighter uppercase italic ${isLight ? "text-slate-900" : "text-white"}`}>Noor</span>
-                <span className="text-[10px] font-black tracking-[0.4em] text-emerald-600 uppercase -mt-1">Al-Quran</span>
+                <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+                  Noor<span className="text-emerald-500">Quran</span>
+                </span>
+                <span className="text-[8px] sm:text-[9px] font-black tracking-[0.4em] text-emerald-600 dark:text-emerald-400 uppercase -mt-1">
+                  Al-Kareem
+                </span>
               </div>
             </Link>
-            
-            <h3 className={`text-4xl md:text-5xl font-black max-w-md leading-[1.1] tracking-tighter ${
-              isLight ? "text-slate-900" : "text-white"
-            }`}>
-              Bringing <span className="text-emerald-600 italic">Noor</span> to your digital daily life.
+
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold max-w-md leading-snug tracking-tight text-slate-900 dark:text-white">
+              Bringing <span className="text-emerald-600 dark:text-emerald-400 italic">Noor</span> to your digital daily life.
             </h3>
 
-            <div className="relative max-w-sm group">
-              <input 
-                type="email" 
-                placeholder="Stay updated via email" 
-                className={`w-full border rounded-2xl py-5 px-8 outline-none transition-all text-sm pr-40 backdrop-blur-xl ${
-                  isLight 
-                  ? "bg-white border-slate-200 focus:border-emerald-500 text-slate-900" 
-                  : "bg-white/3 border-white/10 focus:border-emerald-500/50 text-white"
-                }`}
+            {/* Newsletter Input */}
+            <form onSubmit={handleSubscribe} className="relative max-w-md">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Stay updated via email"
+                className="w-full rounded-2xl py-3.5 sm:py-4 pl-5 sm:pl-6 pr-32 sm:pr-36 outline-none transition-all text-xs md:text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:border-emerald-500 shadow-sm"
               />
-              <button className={`absolute right-2 top-2 bottom-2 px-8 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer shadow-lg active:scale-95 ${
-                isLight ? "bg-slate-900 text-white hover:bg-emerald-600" : "bg-emerald-500 text-black hover:bg-white"
-              }`}>
-                Join Us
+              <button
+                type="submit"
+                className="absolute right-1.5 sm:right-2 top-1.5 sm:top-2 bottom-1.5 sm:bottom-2 px-4 sm:px-6 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest bg-emerald-600 hover:bg-emerald-700 text-white transition-all cursor-pointer shadow-md active:scale-95 flex items-center gap-1.5"
+              >
+                {subscribed ? (
+                  <>
+                    <CheckCircle2 size={13} />
+                    <span>Joined!</span>
+                  </>
+                ) : (
+                  <span>Join Us</span>
+                )}
               </button>
-            </div>
+            </form>
           </div>
 
-          {/* --- RIGHT: LINKS GRID --- */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-12">
+          {/* Right Links Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
             {footerSections.map((section) => (
-              <div key={section.title} className="space-y-8">
-                <h4 className={`text-[9px] font-black tracking-[0.5em] uppercase flex items-center gap-2 ${
-                  isLight ? "text-slate-400" : "text-emerald-500/60"
-                }`}>
-                   <Sparkles size={10} className="text-emerald-500" /> {section.title}
+              <div key={section.title} className="space-y-4 sm:space-y-6">
+                <h4 className="text-[9px] sm:text-[10px] font-black tracking-[0.25em] sm:tracking-[0.3em] uppercase flex items-center gap-1.5 sm:gap-2 text-emerald-600 dark:text-emerald-400">
+                  <Sparkles size={11} /> {section.title}
                 </h4>
-                <ul className="space-y-5">
+                <ul className="space-y-3 sm:space-y-4">
                   {section.links.map((link) => (
                     <li key={link.name}>
-                      <Link 
-                        href={link.href} 
-                        className={`group flex items-center gap-1 transition-all text-[13px] font-medium tracking-tight ${
-                          isLight ? "text-slate-500 hover:text-emerald-600" : "text-gray-500 hover:text-white"
-                        }`}
+                      <Link
+                        href={link.href}
+                        className="group flex items-center gap-1 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors"
                       >
-                        {link.name}
-                        <ArrowUpRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-emerald-500" />
+                        <span>{link.name}</span>
+                        <ArrowUpRight
+                          size={12}
+                          className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-emerald-500"
+                        />
                       </Link>
                     </li>
                   ))}
@@ -138,46 +130,34 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* --- BOTTOM BAR --- */}
-        <div className={`pt-12 border-t flex flex-col md:flex-row justify-between items-center gap-10 ${
-          isLight ? "border-slate-200" : "border-white/5"
-        }`}>
-          
-          {/* Social Pillars */}
-          <div className="flex items-center gap-4">
-            {[Instagram].map((Icon, i) => (
-              <a 
-                key={i} 
-                href="https://www.instagram.com/mian.abdullah.9/" 
-                className={`w-11 h-11 rounded-2xl border flex items-center justify-center transition-all duration-300 ${
-                  isLight 
-                  ? "border-slate-200 bg-white text-slate-400 hover:text-emerald-600 hover:border-emerald-200 shadow-sm" 
-                  : "border-white/5 bg-white/2 text-gray-500 hover:text-emerald-500 hover:border-emerald-500/20"
-                }`}
-              >
-                <Icon size={20} />
-              </a>
-            ))}
+        {/* Bottom Bar */}
+        <div className="pt-6 sm:pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 text-xs text-center md:text-left">
+          {/* Social */}
+          <div className="flex items-center gap-3">
+            <a
+              href="https://www.instagram.com/mian.abdullah.9/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram Profile"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors shadow-sm"
+            >
+              <Instagram size={17} />
+            </a>
           </div>
 
-          {/* Made with Love Badge */}
-          <div className={`px-6 py-2 rounded-full border text-[9px] font-black tracking-[0.3em] flex items-center gap-3 ${
-            isLight ? "bg-white border-slate-200 text-slate-400" : "bg-white/2 border-white/5 text-gray-500"
-          }`}>
-            CRAFTED WITH <Heart size={12} className="text-emerald-500 fill-emerald-500 animate-pulse" /> IN PAKISTAN © {currentYear}
+          {/* Crafted with love */}
+          <div className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-[9px] sm:text-[10px] font-black tracking-[0.15em] sm:tracking-[0.2em] uppercase flex items-center justify-center gap-1.5 sm:gap-2 text-slate-700 dark:text-slate-300 shadow-sm text-center">
+            CRAFTED WITH <Heart size={11} className="text-emerald-500 fill-emerald-500 animate-pulse" /> BY AJ CODE IN PAKISTAN © {currentYear}
           </div>
 
-          {/* Tech Status */}
-          <div className={`flex gap-8 text-[10px] font-black tracking-[0.2em] ${
-            isLight ? "text-slate-400" : "text-gray-600"
-          }`}>
-            <div className="flex items-center gap-2">
-               <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]" />
-               <span className={isLight ? "text-slate-900" : "text-white"}>SYSTEM ONLINE</span>
+          {/* Version badge */}
+          <div className="flex items-center gap-3 sm:gap-4 text-[9px] sm:text-[10px] font-black tracking-widest text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]" />
+              <span className="text-slate-900 dark:text-white font-bold">SYSTEM ACTIVE</span>
             </div>
-            <span>V 2.6.0</span>
+            <span>V 3.0 ELITE</span>
           </div>
-
         </div>
       </div>
     </footer>

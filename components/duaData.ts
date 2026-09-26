@@ -2,9 +2,9 @@
 
 export interface Dua {
   id: number;
-  title: string;     
+  title: string;
   arabic: string;
-  urdu: string;      
+  urdu: string;
   english: string;
   category: string;
   ref: string;
@@ -13,231 +13,146 @@ export interface Dua {
 export const DUA_DATA: Dua[] = [
   {
     id: 1,
-    title: "Relief from Difficulties",
-    arabic: "لَّا إِلَهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ",
+    title: "Relief from Difficulties (Ayah Kareema)",
+    arabic: "لَّا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ",
     urdu: "تیرے سوا کوئی معبود نہیں، تو پاک ہے، بے شک میں ہی ظالموں میں سے تھا۔",
     english: "There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers.",
     category: "Protection",
-    ref: "Surah Al-Anbiya 21:87"
+    ref: "Surah Al-Anbiya 21:87",
   },
   {
     id: 2,
-    title: "Dua for Well-Being",
-    arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ",
-    urdu: "اے اللہ! میں تجھ سے دنیا اور آخرت میں معافی اور عافیت کا سوال کرتا ہوں۔",
-    english: "O Allah, I ask You for forgiveness and well-being in this world and the Hereafter.",
-    category: "Well-being",
-    ref: "Sunan Ibn Majah 3849 | Sahih"
+    title: "Protection from All Harm",
+    arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+    urdu: "اللہ کے نام کے ساتھ، جس کے نام کی برکت سے زمین اور آسمان میں کوئی چیز نقصان نہیں پہنچا سکتی، اور وہ خوب سننے والا، جاننے والا ہے۔",
+    english: "In the Name of Allah, with whose Name nothing can cause harm in the earth or in the heavens, and He is the All-Hearing, the All-Knowing.",
+    category: "Protection",
+    ref: "Sunan Abi Dawood 5088 | Sahih",
   },
   {
     id: 3,
-    title: "Dua for Peace of Heart",
-    arabic: "يَا مُقَلِّبَ الْقُلُوبِ ثَبِّتْ قَلْبِي عَلَى دِينِكَ",
-    urdu: "اے دلوں کو پھیرنے والے! میرے دل کو اپنے دین پر ثابت قدم رکھ۔",
-    english: "O Turner of the hearts, keep my heart steadfast upon Your religion.",
-    category: "Peace of Mind",
-    ref: "Jami` at-Tirmidhi 2140 | Hasan"
-  },{
-  id: 4,
-  title: "Dua for Forgiveness",
-  arabic: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ",
-  urdu: "اے میرے رب! مجھے بخش دے اور میری توبہ قبول فرما، بے شک تو بہت توبہ قبول کرنے والا، نہایت رحم والا ہے۔",
-  english: "My Lord, forgive me and accept my repentance. Indeed, You are the Accepter of repentance, the Most Merciful.",
-  category: "Forgiveness",
-  ref: "Sunan Abi Dawood 1516 | Sahih"
-},
-{
-  id: 5,
-  title: "Dua for Guidance",
-  arabic: "اللَّهُمَّ اهْدِنِي وَسَدِّدْنِي",
-  urdu: "اے اللہ! مجھے ہدایت عطا فرما اور مجھے درست راستے پر ثابت قدم رکھ۔",
-  english: "O Allah, guide me and keep me steadfast on the right path.",
-  category: "Guidance",
-  ref: "Sahih Muslim 2725"
-},
-{
-  id: 6,
-  title: "Dua for Relief from Anxiety",
-  arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ",
-  urdu: "اے اللہ! میں تجھ سے غم اور پریشانی سے پناہ مانگتا ہوں۔",
-  english: "O Allah, I seek refuge in You from anxiety and sorrow.",
-  category: "Anxiety",
-  ref: "Sahih al-Bukhari 6369"
-},
-//protection
-{
-    id: 1,
-    title: "Protection Through Allah’s Name",
-    arabic: "مَنْ قَالَ: بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ",
-    urdu: "جو شخص صبح و شام یہ دعا پڑھے کہ: اللہ کے نام کے ساتھ، جس کے نام کے ہوتے ہوئے کوئی چیز نقصان نہیں پہنچا سکتی، تو اسے کوئی چیز نقصان نہیں دیتی۔",
-    english: "Whoever says: In the Name of Allah, with whose Name nothing can cause harm, will not be harmed by anything.",
-    category: "Protection",
-    ref: "Sunan Abi Dawood 5088 | Hasan"
-  },
-  {
-    id: 2,
-    title: "Seeking Refuge in Allah’s Perfect Words",
-    arabic: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
-    urdu: "میں اللہ کے کامل کلمات کے ذریعے ہر اس چیز کے شر سے پناہ مانگتا ہوں جو اس نے پیدا فرمائی۔",
+    title: "Refuge in Allah's Perfect Words",
+    arabic: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+    urdu: "میں اللہ کے مکمل کلمات کے ذریعے اس کی پیدا کردہ تمام مخلوقات کے شر سے پناہ مانگتا ہوں۔",
     english: "I seek refuge in the perfect words of Allah from the evil of what He has created.",
     category: "Protection",
-    ref: "Sahih Muslim 2708"
-  },
-  {
-    id: 3,
-    title: "Protection While Staying at a Place",
-    arabic: "مَنْ نَزَلَ مَنْزِلًا فَقَالَ أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ",
-    urdu: "جو شخص کسی جگہ ٹھہرے اور یہ دعا پڑھے، تو وہاں سے روانہ ہونے تک کوئی چیز اسے نقصان نہیں پہنچاتی۔",
-    english: "Whoever stays at a place and says this supplication, nothing will harm him until he leaves.",
-    category: "Protection",
-    ref: "Sahih Muslim 2708"
+    ref: "Sahih Muslim 2708",
   },
   {
     id: 4,
-    title: "Allah’s Promise of Protection",
-    arabic: "احْفَظِ اللَّهَ يَحْفَظْكَ",
-    urdu: "اللہ کے احکامات کی حفاظت کرو، اللہ تمہاری حفاظت فرمائے گا۔",
-    english: "Be mindful of Allah, and Allah will protect you.",
-    category: "Protection",
-    ref: "Jami` at-Tirmidhi 2516 | Hasan Sahih"
-  },
-  //success
-   {
-    id: 1,
-    title: "Striving for Success Through Knowledge",
-    arabic: "طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ",
-    urdu: "علم حاصل کرنا ہر مسلمان پر فرض ہے۔",
-    english: "Seeking knowledge is obligatory upon every Muslim.",
-    category: "Success",
-    ref: "Sunan Ibn Majah 224 | Hasan"
-  },
-  {
-    id: 2,
-    title: "Hard Work and Reward",
-    arabic: "إِنَّ اللَّهَ يُحِبُّ إِذَا عَمِلَ أَحَدُكُمْ عَمَلًا أَنْ يُتْقِنَهُ",
-    urdu: "اللہ پسند فرماتا ہے کہ جب تم میں سے کوئی کام کرے تو اسے بہترین طریقے سے کرے۔",
-    english: "Allah loves that when anyone of you does a job, he perfects it.",
-    category: "Success",
-    ref: "Sunan al-Bayhaqi 3465 | Hasan"
-  },
-  {
-    id: 3,
-    title: "Trust in Allah for Success",
-    arabic: "مَنْ تَوَكَّلَ عَلَى اللَّهِ فَهُوَ حَسْبُهُ",
-    urdu: "جو شخص اللہ پر بھروسہ کرے، اللہ اس کے لیے کافی ہے۔",
-    english: "Whoever relies upon Allah, He is sufficient for him.",
-    category: "Success",
-    ref: "Sahih al-Bukhari 2 | Sahih Muslim 2672"
-  },
-  {
-    id: 4,
-    title: "Supplication Leads to Success",
-    arabic: "الدُّعَاءُ هُوَ سَلَامَةُ الْعَبْدِ وَنَجَاتُهُ",
-    urdu: "دعا بندے کی حفاظت اور نجات کا ذریعہ ہے۔",
-    english: "Supplication is the servant’s protection and means of salvation.",
-    category: "Success",
-    ref: "Sunan Abu Dawood 1476 | Hasan"
+    title: "Comprehensive Protection & Well-Being",
+    arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ",
+    urdu: "اے اللہ! میں تجھ سے دنیا اور آخرت میں معافی اور عافیت و سلامتی کا سوال کرتا ہوں۔",
+    english: "O Allah, I ask You for pardon and well-being in this world and the Hereafter.",
+    category: "Peace of Mind",
+    ref: "Sunan Ibn Majah 3849 | Sahih",
   },
   {
     id: 5,
-    title: "Dua and Action for Success",
-    arabic: "اعْمَلُوا فَسَيَرَى اللَّهُ عَمَلَكُمْ وَرَسُولُهُ وَالْمُؤْمِنُونَ",
-    urdu: "عمل کرو، اللہ تمہارے اعمال، اس کا رسول اور مؤمن دیکھیں گے۔",
-    english: "Act, for Allah, His Messenger, and the believers will see your deeds.",
-    category: "Success",
-    ref: "Sahih al-Bukhari 67 | Sahih Muslim 171"
-  },
-  //peace of mind
-   {
-    id: 1,
     title: "Supplication for a Steadfast Heart",
-    arabic: "يَا مُقَلِّبَ الْقُلُوبِ ثَبِّتْ قَلْبِي عَلَى دِينِكَ",
-    urdu: "اے دلوں کو پلٹنے والے! میرے دل کو اپنے دین پر ثابت قدم رکھ۔",
-    english: "O Turner of the hearts, keep my heart steadfast upon Your religion.",
+    arabic: "يَا مُقَلِّبَ الْقُلُوبِ ثَبِّتْ قَلْبِي عَلَىٰ دِينِكَ",
+    urdu: "اے دلوں کو پھیرنے والے! میرے دل کو اپنے دین پر ثابت قدم رکھ۔",
+    english: "O Turner of the hearts, make my heart firm upon Your religion.",
     category: "Peace of Mind",
-    ref: "Jami` at-Tirmidhi 2140 | Hasan"
+    ref: "Jami` at-Tirmidhi 2140 | Hasan",
   },
   {
-    id: 2,
-    title: "Reliance on Allah Brings Peace",
-    arabic: "مَنْ يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ",
-    urdu: "جو شخص اللہ پر بھروسہ کرے، اللہ اس کے لیے کافی ہے۔",
-    english: "Whoever relies upon Allah, He is sufficient for him.",
+    id: 6,
+    title: "Relief from Anxiety and Sorrow",
+    arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ وَالْعَجْزِ وَالْكَسَلِ وَالْجُبْنِ وَالْبُخْلِ وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ",
+    urdu: "اے اللہ! میں غم، پریشانی، عاجزی، سستی، بزدلی، کنجوسی، قرض کے بوجھ اور لوگوں کے دباؤ سے تیری پناہ مانگتا ہوں۔",
+    english: "O Allah, I seek refuge in You from grief, anxiety, incapacity, laziness, cowardice, miserliness, the burden of debt and overpowering of men.",
     category: "Peace of Mind",
-    ref: "Sahih al-Bukhari 2 | Sahih Muslim 2672"
+    ref: "Sahih al-Bukhari 6369",
   },
   {
-    id: 3,
-    title: "Remembrance of Allah Brings Tranquility",
-    arabic: "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ",
-    urdu: "یقیناً دل اللہ کے ذکر سے مطمئن ہوتے ہیں۔",
-    english: "Indeed, the hearts find tranquility in the remembrance of Allah.",
+    id: 7,
+    title: "Tranquility of the Heart",
+    arabic: "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ",
+    urdu: "یاد رکھو! اللہ کے ذکر ہی سے دلوں کو اطمینان اور سکون حاصل ہوتا ہے۔",
+    english: "Unquestionably, by the remembrance of Allah hearts are assured.",
     category: "Peace of Mind",
-    ref: "Qur’an 13:28"
+    ref: "Surah Ar-Ra'd 13:28",
   },
   {
-    id: 4,
-    title: "Supplication Against Worries",
-    arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ",
-    urdu: "اے اللہ! میں تجھ سے غم اور پریشانی سے پناہ مانگتا ہوں۔",
-    english: "O Allah, I seek refuge in You from anxiety and sorrow.",
-    category: "Peace of Mind",
-    ref: "Sahih al-Bukhari 6369"
+    id: 8,
+    title: "Seeking Beneficial Knowledge & Success",
+    arabic: "رَّبِّ زِدْنِي عِلْمًا",
+    urdu: "اے میرے پروردگار! میرے علم میں مزید اضافہ فرما۔",
+    english: "My Lord, increase me in knowledge.",
+    category: "Success",
+    ref: "Surah Taha 20:114",
   },
   {
-    id: 5,
-    title: "Patience and Peace",
-    arabic: "وَاصْبِرْ وَمَا صَبْرُكَ إِلَّا بِاللَّهِ",
-    urdu: "صبر کرو اور تمہارا صبر اللہ کی مدد سے ہی ہے۔",
-    english: "Be patient, and your patience is only through Allah.",
-    category: "Peace of Mind",
-    ref: "Qur’an 16:127"
+    id: 9,
+    title: "Dua for Ease in Every Task",
+    arabic: "اللَّهُمَّ لَا سَهْلَ إِلَّا مَا جَعَلْتَهُ سَهْلًا وَأَنْتَ تَجْعَلُ الْحَزْنَ إِذَا شِئْتَ سَهْلًا",
+    urdu: "اے اللہ! کوئی کام آسان نہیں سوائے اس کے جسے تو آسان بنا دے، اور تو جب چاہے مشکل کو آسان کر دیتا ہے۔",
+    english: "O Allah, there is no ease other than what You make easy, and You make hardship easy if You will.",
+    category: "Success",
+    ref: "Sahih Ibn Hibban 974",
   },
-  //forgivness
-   {
-    id: 1,
-    title: "Dua for Forgiveness",
-    arabic: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ",
-    urdu: "اے میرے رب! مجھے بخش دے اور میری توبہ قبول فرما، بے شک تو بہت توبہ قبول کرنے والا، نہایت رحم والا ہے۔",
+  {
+    id: 10,
+    title: "Relying Upon Allah (Tawakkul)",
+    arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+    urdu: "ہمیں اللہ ہی کافی ہے اور وہ بہترین کارساز ہے۔",
+    english: "Sufficient for us is Allah, and [He is] the best Disposer of affairs.",
+    category: "Success",
+    ref: "Surah Ali 'Imran 3:173",
+  },
+  {
+    id: 11,
+    title: "Sayyid al-Istighfar (Chief of Forgiveness)",
+    arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+    urdu: "اے اللہ! تو ہی میرا رب ہے، تیرے سوا کوئی معبود نہیں۔ تو نے مجھے پیدا کیا اور میں تیرا بندہ ہوں، اور میں اپنی طاقت کے مطابق تیرے عہد پر قائم ہوں۔ میں اپنے گناہوں کا اعتراف کرتا ہوں اور تیری نعمتوں کا شکر گزار ہوں، پس مجھے بخش دے کیونکہ تیرے سوا کوئی گناہوں کو معاف نہیں کر سکتا۔",
+    english: "O Allah, You are my Lord, none has the right to be worshiped but You created me and I am Your slave. I abide by Your covenant and promise as best I can. Forgive me, for none forgives sins except You.",
+    category: "Forgiveness",
+    ref: "Sahih al-Bukhari 6306",
+  },
+  {
+    id: 12,
+    title: "Dua for Parents and Family",
+    arabic: "رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ",
+    urdu: "اے ہمارے پروردگار! مجھے، میرے والدین کو اور تمام مومنوں کو اس دن بخش دینا جس دن حساب قائم ہوگا۔",
+    english: "Our Lord, forgive me and my parents and the believers the Day the account is established.",
+    category: "Forgiveness",
+    ref: "Surah Ibrahim 14:41",
+  },
+  {
+    id: 13,
+    title: "Dua for Guidance and Righteousness",
+    arabic: "اللَّهُمَّ اهْدِنِي وَسَدِّدْنِي",
+    urdu: "اے اللہ! مجھے سیدھی راہ کی ہدایت عطا فرما اور مجھے درست راہ پر ثابت قدم رکھ۔",
+    english: "O Allah, guide me and keep me steadfast on the right path.",
+    category: "Guidance",
+    ref: "Sahih Muslim 2725",
+  },
+  {
+    id: 14,
+    title: "Supplication for Success in Both Worlds",
+    arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+    urdu: "اے ہمارے رب! ہمیں دنیا میں بھی بھلائی عطا فرما اور آخرت میں بھی بھلائی عطا فرما اور ہمیں آگ کے عذاب سے بچا۔",
+    english: "Our Lord, give us in this world [that which is] good and in the Hereafter [that which is] good and protect us from the punishment of the Fire.",
+    category: "Success",
+    ref: "Surah Al-Baqarah 2:201",
+  },
+  {
+    id: 15,
+    title: "Dua When Leaving the House",
+    arabic: "بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+    urdu: "اللہ کے نام سے، میں نے اللہ پر بھروسہ کیا، گناہوں سے بچنے کی طاقت اور نیکی کرنے کی قوت صرف اللہ ہی کی مدد سے ہے۔",
+    english: "In the name of Allah, I place my trust in Allah; there is no might nor power except with Allah.",
+    category: "Protection",
+    ref: "Sunan Abi Dawood 5095 | Sahih",
+  },
+  {
+    id: 16,
+    title: "Dua for Sincere Repentance",
+    arabic: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ",
+    urdu: "اے میرے پروردگار! میری مغفرت فرما اور میری توبہ قبول فرما، بے شک تو ہی توبہ قبول کرنے والا، نہایت رحم فرمانے والا ہے۔",
     english: "My Lord, forgive me and accept my repentance. Indeed, You are the Accepter of repentance, the Most Merciful.",
     category: "Forgiveness",
-    ref: "Sunan Abi Dawood 1516 | Sahih"
+    ref: "Sunan Abi Dawood 1516 | Sahih",
   },
-  {
-    id: 2,
-    title: "Asking Forgiveness Before Prayer",
-    arabic: "مَنْ غَفَرَ لَهُ قَبْلَ الصَّلَاةِ غُفِرَ لَهُ بَعْدَهَا",
-    urdu: "جو شخص نماز سے پہلے اللہ سے معافی مانگے، نماز کے بعد اس کی معافی کر دی جاتی ہے۔",
-    english: "Whoever seeks forgiveness before prayer, his sins are forgiven after it.",
-    category: "Forgiveness",
-    ref: "Jami` at-Tirmidhi 3484 | Hasan"
-  },
-  {
-    id: 3,
-    title: "Forgiveness Through Duas",
-    arabic: "الدُّعَاءُ هُوَ سَلَامَةُ الْعَبْدِ وَنَجَاتُهُ",
-    urdu: "دعا بندے کی حفاظت اور نجات کا ذریعہ ہے، اور گناہوں کی معافی کا سبب بنتی ہے۔",
-    english: "Supplication is the servant’s protection and means of salvation, and leads to forgiveness of sins.",
-    category: "Forgiveness",
-    ref: "Sunan Abu Dawood 1476 | Hasan"
-  },
-  {
-    id: 4,
-    title: "Allah Forgives Those Who Forgive",
-    arabic: "مَنْ عَفَا وَأَصْلَحَ فَسَيَجْعَلُ اللَّهُ لَهُ نُورًا فِي قَلْبِهِ",
-    urdu: "جو شخص معاف کرے اور اصلاح کرے، اللہ اس کے دل میں نور ڈال دے گا۔",
-    english: "Whoever forgives and reconciles, Allah will place light in his heart.",
-    category: "Forgiveness",
-    ref: "Sunan al-Darimi 293 | Hasan"
-  },
-  {
-    id: 5,
-    title: "Repentance is Always Accepted",
-    arabic: "إِنَّ اللَّهَ يُحِبُّ التَّوَّابِينَ وَيُحِبُّ الْمُتَطَهِّرِينَ",
-    urdu: "بے شک اللہ توبہ کرنے والوں سے محبت کرتا ہے اور پاکیزگی اختیار کرنے والوں سے بھی۔",
-    english: "Indeed, Allah loves those who repent and loves those who purify themselves.",
-    category: "Forgiveness",
-    ref: "Sahih Muslim 2749"
-  }, 
-
 ];

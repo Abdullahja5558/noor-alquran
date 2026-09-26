@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Amiri, Noto_Nastaliq_Urdu } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,12 +13,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const amiri = Amiri({
+  variable: "--font-arabic",
+  weight: ["400", "700"],
+  subsets: ["arabic"],
+});
+
+const notoUrdu = Noto_Nastaliq_Urdu({
+  variable: "--font-urdu",
+  weight: ["400", "500", "600", "700"],
+  subsets: ["arabic"],
+});
+
 export const metadata: Metadata = {
   title: "Noor Al-Quran – Read & Listen to Quran with Tafsir",
   description:
-    "Noor Al-Quran: Read all 114 Surahs, listen to Quran recitations, view Islamic calendar, prayer timings, Seerah, and daily duas.",
+    "Noor Al-Quran: Read all 114 Surahs, listen to Quran recitations with translation, view Islamic calendar, prayer timings, Seerah, and daily duas.",
   keywords:
-    "Quran, Surah, Tafsir, Quran Audio, Islamic Calendar, Prayer Times, Seerah, Daily Dua, Noor Al-Quran, Quran Recitations, Quran Recitations Online, Quran Recitations in Urdu, Quran Recitations in Urdu Online, Quran with Tafsir, Islamic Resources Online for Quran, Quran with Tafsir in Urdu ",
+    "Quran, Surah, Tafsir, Quran Audio, Islamic Calendar, Prayer Times, Seerah, Daily Dua, Noor Al-Quran, Quran Recitations Online, Quran with Urdu Translation",
   icons: {
     icon: [
       {
@@ -32,7 +45,7 @@ export const metadata: Metadata = {
     url: "https://www.noor.alquran.vercel.app",
     title: "Noor Al-Quran – Read & Listen to Quran with Tafsir",
     description:
-      "Read, listen, and explore Quran with tafsir, Islamic calendar, prayer timings, Seerah, and daily duas.",
+      "Read, listen, and explore Quran with translations, Islamic calendar, prayer timings, Seerah, and daily duas.",
   },
 };
 
@@ -44,36 +57,16 @@ export default function RootLayout({
   return (
     <html 
       lang="en" 
-      suppressHydrationWarning={true}
+      suppressHydrationWarning
       style={{ scrollBehavior: "smooth" }}
     >
-      <head>
-        {/* --- ANTI-WHITE FLASH SCRIPT --- */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme');
-                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-                  if (!theme && supportDarkMode) theme = 'dark';
-                  
-                  if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                  }
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
-      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        suppressHydrationWarning={true}
+        className={`${geistSans.variable} ${geistMono.variable} ${amiri.variable} ${notoUrdu.variable} antialiased min-h-screen selection:bg-emerald-500/30 selection:text-emerald-900 dark:selection:text-emerald-200 bg-[#f8fafc] dark:bg-[#030712] text-slate-900 dark:text-slate-100`}
+        suppressHydrationWarning
       >
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
