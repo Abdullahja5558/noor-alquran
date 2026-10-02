@@ -21,6 +21,7 @@ export default function QuranPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<"ALL" | "Meccan" | "Medinan">("ALL");
+  const [navigatingId, setNavigatingId] = useState<number | null>(null);
 
   useEffect(() => {
     fetch("https://api.alquran.cloud/v1/surah")
@@ -127,53 +128,83 @@ export default function QuranPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-            {filteredSurahs.map((surah) => (
-              <motion.div
-                key={surah.number}
-                layout
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Link
-                  href={`/quran/${surah.number}`}
-                  className="block relative p-5 sm:p-6 rounded-[1.8rem] sm:rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/70 dark:hover:border-emerald-500/70 transition-all duration-200 group shadow-sm hover:shadow-md overflow-hidden"
-                >
-                  {/* Surah Number Background Watermark */}
-                  <span className="absolute -right-2 -bottom-4 text-6xl sm:text-7xl font-black text-slate-100 dark:text-slate-800/40 select-none pointer-events-none group-hover:scale-105 transition-transform">
-                    {surah.number}
-                  </span>
+            {filteredSurahs.map((surah) => {
+              const isOpening = navigatingId === surah.number;
 
-                  <div className="flex items-center justify-between relative z-10 gap-3">
-                    <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-                      {/* Number Badge with Crisp Border */}
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center font-bold text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all shadow-sm shrink-0">
-                        {surah.number}
+              return (
+                <motion.div
+                  key={surah.number}
+                  layout
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Link
+                    href={`/quran/${surah.number}`}
+                    onClick={() => setNavigatingId(surah.number)}
+                    className={`block relative p-5 sm:p-6 rounded-[1.8rem] sm:rounded-[2rem] bg-white dark:bg-slate-900 border transition-all duration-200 group shadow-sm hover:shadow-md overflow-hidden ${
+                      isOpening
+                        ? "border-emerald-500 ring-2 ring-emerald-500/40 bg-emerald-50/50 dark:bg-slate-800/90"
+                        : "border-slate-200 dark:border-slate-800 hover:border-emerald-500/70 dark:hover:border-emerald-500/70"
+                    }`}
+                  >
+                    {/* Surah Number Background Watermark */}
+                    <span className="absolute -right-2 -bottom-4 text-6xl sm:text-7xl font-black text-slate-100 dark:text-slate-800/40 select-none pointer-events-none group-hover:scale-105 transition-transform">
+                      {surah.number}
+                    </span>
+
+                    <div className="flex items-center justify-between relative z-10 gap-3">
+                      <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                        {/* Number Badge or Spinner when opening */}
+                        <div
+                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center font-bold text-xs sm:text-sm transition-all shadow-sm shrink-0 ${
+                            isOpening
+                              ? "bg-emerald-600 text-white border-emerald-600 ring-2 ring-emerald-400/40 animate-pulse"
+                              : "bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600"
+                          }`}
+                        >
+                          {isOpening ? (
+                            <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            surah.number
+                          )}
+                        </div>
+
+                        <div className="min-w-0">
+                          <h3
+                            className={`text-base sm:text-lg font-bold transition-colors truncate ${
+                              isOpening
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400"
+                            }`}
+                          >
+                            {surah.englishName}
+                          </h3>
+                          <p className="text-[10px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1 sm:gap-1.5 truncate">
+                            <span>{surah.revelationType}</span>
+                            <span>•</span>
+                            <span>{surah.numberOfAyahs} Verses</span>
+                            {isOpening && (
+                              <span className="text-emerald-600 dark:text-emerald-400 font-bold ml-1">
+                                • Loading...
+                              </span>
+                            )}
+                          </p>
+                        </div>
                       </div>
 
-                      <div className="min-w-0">
-                        <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
-                          {surah.englishName}
-                        </h3>
-                        <p className="text-[10px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1 sm:gap-1.5 truncate">
-                          <span>{surah.revelationType}</span>
-                          <span>•</span>
-                          <span>{surah.numberOfAyahs} Verses</span>
+                      <div className="text-right shrink-0">
+                        <h4 className="font-arabic text-xl sm:text-2xl text-slate-900 dark:text-emerald-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors">
+                          {surah.name}
+                        </h4>
+                        <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                          {surah.englishNameTranslation}
                         </p>
                       </div>
                     </div>
-
-                    <div className="text-right shrink-0">
-                      <h4 className="font-arabic text-xl sm:text-2xl text-slate-900 dark:text-emerald-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors">
-                        {surah.name}
-                      </h4>
-                      <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                        {surah.englishNameTranslation}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
         )}
       </main>

@@ -2,25 +2,30 @@
 
 import React, { useEffect, useState, useRef, useCallback, use } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
   Play,
   Pause,
   Square,
-  Sparkles,
   Loader2,
-  Volume2,
   ChevronLeft,
   ChevronRight,
   Disc,
-  Waves,
   Copy,
   Check,
   Bookmark,
+  Repeat,
+  SlidersHorizontal,
+  CloudRain,
+  Flame,
+  Trees,
+  Waves,
+  Volume2,
+  VolumeX,
+  X,
+  Headphones,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 interface Ayah {
   numberInSurah: number;
@@ -43,8 +48,48 @@ interface SurahMeta {
 
 type AudioMode = "ar_ur" | "ar_en" | "ar" | "ur" | "en";
 type AudioPhase = "arabic" | "translation";
+type AmbientType = "none" | "rain" | "birds" | "fire" | "river";
 
-// Global cache to prevent re-fetching Surah metadata
+interface AmbientTrack {
+  id: AmbientType;
+  title: string;
+  src: string;
+  icon: React.ElementType;
+}
+
+const AMBIENT_TRACKS: AmbientTrack[] = [
+  {
+    id: "none",
+    title: "Off",
+    src: "",
+    icon: VolumeX,
+  },
+  {
+    id: "rain",
+    title: "Rain",
+    src: "/ambient/rain.mp3",
+    icon: CloudRain,
+  },
+  {
+    id: "birds",
+    title: "Birds",
+    src: "/ambient/birds.mp3",
+    icon: Trees,
+  },
+  {
+    id: "fire",
+    title: "Fire",
+    src: "/ambient/fire.mp3",
+    icon: Flame,
+  },
+  {
+    id: "river",
+    title: "River",
+    src: "/ambient/river.mp3",
+    icon: Waves,
+  },
+];
+
 let cachedSurahList: SurahMeta[] | null = null;
 
 export default function SurahDetailPage({
@@ -58,7 +103,6 @@ export default function SurahDetailPage({
 
   const [ayahs, setAyahs] = useState<Ayah[]>([]);
   const [surahInfo, setSurahInfo] = useState<SurahMeta | null>(null);
-  const [allSurahs, setAllSurahs] = useState<SurahMeta[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Audio Playback State
@@ -68,12 +112,19 @@ export default function SurahDetailPage({
   const [audioMode, setAudioMode] = useState<AudioMode>("ar_ur"); // Arabic + Urdu Sequential
   const [audioPhase, setAudioPhase] = useState<AudioPhase>("arabic");
   const [playbackRate, setPlaybackRate] = useState(1);
+  const [isLoopingSingleAyah, setIsLoopingSingleAyah] = useState(false);
   const [copiedAyah, setCopiedAyah] = useState<number | null>(null);
   const [bookmarkedAyah, setBookmarkedAyah] = useState<number | null>(null);
 
-  // Mutable refs to prevent any stale closure issues in continuous playback
+  // Ambient & Mixer State
+  const [selectedAmbience, setSelectedAmbience] = useState<AmbientType>("none");
+  const [ambienceVolume, setAmbienceVolume] = useState<number>(0.3);
+  const [quranVolume, setQuranVolume] = useState<number>(1);
+  const [isMixerOpen, setIsMixerOpen] = useState(false);
+
+  // Refs for continuous uninterrupted playback
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const ayahRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedUrls = useRef<Set<string>>(new Set());
 
   const currentIndexRef = useRef(0);
@@ -81,8 +132,10 @@ export default function SurahDetailPage({
   const currentModeRef = useRef<AudioMode>("ar_ur");
   const isPlayingRef = useRef(false);
   const ayahsRef = useRef<Ayah[]>([]);
+  const isLoopingRef = useRef(false);
+  const quranVolRef = useRef(1);
 
-  // Synchronize refs
+  // Sync refs
   useEffect(() => {
     currentIndexRef.current = activeAyahIndex;
   }, [activeAyahIndex]);
@@ -102,6 +155,43 @@ export default function SurahDetailPage({
   useEffect(() => {
     ayahsRef.current = ayahs;
   }, [ayahs]);
+
+  useEffect(() => {
+    isLoopingRef.current = isLoopingSingleAyah;
+  }, [isLoopingSingleAyah]);
+
+  useEffect(() => {
+    quranVolRef.current = quranVolume;
+    if (audioRef.current) {
+      audioRef.current.volume = quranVolume;
+    }
+  }, [quranVolume]);
+
+  useEffect(() => {
+    if (ambientAudioRef.current) {
+      ambientAudioRef.current.volume = ambienceVolume;
+    }
+  }, [ambienceVolume]);
+
+  // Handle ambient sound selection
+  const handleSelectAmbience = (type: AmbientType) => {
+    setSelectedAmbience(type);
+    const sound = AMBIENT_TRACKS.find((t) => t.id === type);
+
+    if (!ambientAudioRef.current) return;
+
+    if (!sound || type === "none" || !sound.src) {
+      ambientAudioRef.current.pause();
+      ambientAudioRef.current.src = "";
+    } else {
+      ambientAudioRef.current.src = sound.src;
+      ambientAudioRef.current.volume = ambienceVolume;
+      ambientAudioRef.current.load();
+      ambientAudioRef.current
+        .play()
+        .catch((e) => console.warn("Ambient play prevented", e));
+    }
+  };
 
   // Converts western digits to Arabic numeral symbols
   const toArabicNumber = (num: number) => {
@@ -129,12 +219,10 @@ export default function SurahDetailPage({
     }
   };
 
-  // Ultra-Fast Cached Surah Fetcher
+  // Fetch Surah data
   useEffect(() => {
     let isMounted = true;
-
-    // Check Local Storage Cache first for Instant 0ms Load
-    const cacheKey = `surah_data_v3_${surahId}`;
+    const cacheKey = `surah_data_v4_${surahId}`;
     const cachedData = typeof window !== "undefined" ? localStorage.getItem(cacheKey) : null;
 
     if (cachedData) {
@@ -146,7 +234,7 @@ export default function SurahDetailPage({
         setLoading(false);
         fastPreload(parsed.ayahs, 0, 5);
       } catch (e) {
-        console.warn("Cache parse failed, fetching fresh", e);
+        console.warn("Cache parse error", e);
       }
     }
 
@@ -154,19 +242,6 @@ export default function SurahDetailPage({
       try {
         if (!cachedData) setLoading(true);
 
-        // Fetch Surah List if not in memory
-        if (!cachedSurahList) {
-          const listRes = await fetch("https://api.alquran.cloud/v1/surah");
-          const listData = await listRes.json();
-          if (listData.data) {
-            cachedSurahList = listData.data;
-          }
-        }
-        if (isMounted && cachedSurahList) {
-          setAllSurahs(cachedSurahList);
-        }
-
-        // Fetch full 6-edition Surah audio and texts
         const res = await fetch(
           `https://api.alquran.cloud/v1/surah/${surahId}/editions/quran-uthmani,ur.jalandhry,en.asad,ar.alafasy,ur.khan,en.walk`
         );
@@ -191,7 +266,6 @@ export default function SurahDetailPage({
           setAyahs(combinedAyahs);
           ayahsRef.current = combinedAyahs;
 
-          // Save to local cache for instant future loads
           if (typeof window !== "undefined") {
             localStorage.setItem(
               cacheKey,
@@ -212,9 +286,7 @@ export default function SurahDetailPage({
     };
 
     fetchSurahData();
-    window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // Load Bookmark
     const savedBookmark = localStorage.getItem(`bookmark_surah_${surahId}`);
     if (savedBookmark) {
       setBookmarkedAyah(parseInt(savedBookmark, 10));
@@ -245,7 +317,7 @@ export default function SurahDetailPage({
     [ayahs]
   );
 
-  // Play a specific Ayah (with fail-safe skipping so it NEVER gets stuck)
+  // Play Ayah
   const playAyah = useCallback(
     (index: number, phase: AudioPhase = "arabic", mode: AudioMode = currentModeRef.current) => {
       const currentAyahs = ayahsRef.current.length > 0 ? ayahsRef.current : ayahs;
@@ -260,13 +332,11 @@ export default function SurahDetailPage({
 
       let targetUrl = getAudioUrl(index, phase, mode);
 
-      // If translation track is missing, fallback to next track/phase seamlessly
       if (!targetUrl) {
         if (mode === "ar_ur" || mode === "ar_en") {
           if (phase === "arabic") {
             targetUrl = currentAyahs[index].audio;
           } else {
-            // Skip directly to next ayah arabic if translation audio is missing
             if (index < currentAyahs.length - 1) {
               playAyah(index + 1, "arabic", mode);
               return;
@@ -282,6 +352,7 @@ export default function SurahDetailPage({
 
       audioRef.current.src = targetUrl;
       audioRef.current.playbackRate = playbackRate;
+      audioRef.current.volume = quranVolRef.current;
       audioRef.current.load();
 
       audioRef.current
@@ -290,83 +361,90 @@ export default function SurahDetailPage({
           setIsBuffering(false);
           setIsPlaying(true);
           isPlayingRef.current = true;
+          // Resume ambient background audio if enabled
+          if (ambientAudioRef.current && ambientAudioRef.current.src && ambientAudioRef.current.paused) {
+            ambientAudioRef.current.play().catch(() => {});
+          }
         })
         .catch((e) => {
-          console.warn("Audio play prevented or interrupted", e);
+          console.warn("Audio play error", e);
           setIsBuffering(false);
         });
 
-      // Preload next batch
       fastPreload(currentAyahs, index + 1, 4);
-
-      // Auto-scroll to active Ayah
-      const ayahElement = ayahRefs.current[currentAyahs[index].numberInSurah];
-      if (ayahElement) {
-        ayahElement.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
     },
     [ayahs, getAudioUrl, playbackRate]
   );
 
-  // Uninterrupted Audio Ended Handler (Guaranteed by Refs)
+  // Handle Audio Ended
   const handleAudioEnded = useCallback(() => {
     const currentAyahs = ayahsRef.current;
     const curIndex = currentIndexRef.current;
     const curPhase = currentPhaseRef.current;
     const curMode = currentModeRef.current;
+    const isLooping = isLoopingRef.current;
 
     if (!currentAyahs || currentAyahs.length === 0) return;
 
-    if (curMode === "ar_ur") {
-      if (curPhase === "arabic") {
-        // Play Urdu translation for this same Ayah
+    if (isLooping) {
+      if (curMode === "ar_ur" && curPhase === "arabic") {
         playAyah(curIndex, "translation", curMode);
       } else {
-        // Translation finished, move to next Ayah Arabic
+        playAyah(curIndex, "arabic", curMode);
+      }
+      return;
+    }
+
+    if (curMode === "ar_ur") {
+      if (curPhase === "arabic") {
+        playAyah(curIndex, "translation", curMode);
+      } else {
         if (curIndex < currentAyahs.length - 1) {
           playAyah(curIndex + 1, "arabic", curMode);
         } else {
           setIsPlaying(false);
           isPlayingRef.current = false;
+          ambientAudioRef.current?.pause();
         }
       }
     } else if (curMode === "ar_en") {
       if (curPhase === "arabic") {
-        // Play English translation for this same Ayah
         playAyah(curIndex, "translation", curMode);
       } else {
-        // Move to next Ayah Arabic
         if (curIndex < currentAyahs.length - 1) {
           playAyah(curIndex + 1, "arabic", curMode);
         } else {
           setIsPlaying(false);
           isPlayingRef.current = false;
+          ambientAudioRef.current?.pause();
         }
       }
     } else {
-      // Single track modes (Arabic only, Urdu only, English only)
       if (curIndex < currentAyahs.length - 1) {
         playAyah(curIndex + 1, "arabic", curMode);
       } else {
         setIsPlaying(false);
         isPlayingRef.current = false;
+        ambientAudioRef.current?.pause();
       }
     }
   }, [playAyah]);
 
-  // Fail-safe: If an audio URL errors out, auto-skip without freezing
   const handleAudioError = useCallback(() => {
-    console.warn("Track failed to load, automatically progressing to next track...");
     handleAudioEnded();
   }, [handleAudioEnded]);
 
   const togglePlayback = () => {
     if (isPlaying) {
       audioRef.current?.pause();
+      ambientAudioRef.current?.pause();
       setIsPlaying(false);
       isPlayingRef.current = false;
     } else {
       playAyah(activeAyahIndex, audioPhase, audioMode);
+      if (selectedAmbience !== "none" && ambientAudioRef.current && ambientAudioRef.current.src) {
+        ambientAudioRef.current.play().catch(() => {});
+      }
     }
   };
 
@@ -408,18 +486,106 @@ export default function SurahDetailPage({
     }
   };
 
-  const currentSurahNumber = parseInt(surahId, 10);
-  const prevSurah = allSurahs.find((s) => s.number === currentSurahNumber - 1);
-  const nextSurah = allSurahs.find((s) => s.number === currentSurahNumber + 1);
+  // Keyboard navigation shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (e.code === "Space") {
+        e.preventDefault();
+        togglePlayback();
+      } else if (e.code === "ArrowRight") {
+        e.preventDefault();
+        handleNextAyah();
+      } else if (e.code === "ArrowLeft") {
+        e.preventDefault();
+        handlePrevAyah();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isPlaying, activeAyahIndex, ayahs.length]);
+
+  const currentAyah = ayahs[activeAyahIndex];
+  const activeAmbientItem = AMBIENT_TRACKS.find((t) => t.id === selectedAmbience);
+
+  // MediaSession API & Screen WakeLock (Guarantees uninterrupted background tab & lock screen playback)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if ("mediaSession" in navigator && currentAyah && surahInfo) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: `${surahInfo.englishName} • Verse ${currentAyah.numberInSurah}`,
+        artist:
+          audioPhase === "arabic"
+            ? "Mishary Rashid Alafasy"
+            : "Fateh Muhammad Jalandhry (Urdu)",
+        album: "Noor Al-Quran الكريم",
+        artwork: [
+          { src: "/favicon5.png", sizes: "512x512", type: "image/png" },
+        ],
+      });
+
+      navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+
+      try {
+        navigator.mediaSession.setActionHandler("play", () => {
+          if (!isPlayingRef.current) togglePlayback();
+        });
+        navigator.mediaSession.setActionHandler("pause", () => {
+          if (isPlayingRef.current) togglePlayback();
+        });
+        navigator.mediaSession.setActionHandler("nexttrack", () => handleNextAyah());
+        navigator.mediaSession.setActionHandler("previoustrack", () => handlePrevAyah());
+      } catch (e) {
+        // Safe fallback for older browsers
+      }
+    }
+  }, [currentAyah, surahInfo, audioPhase, isPlaying]);
+
+  // Keep screen awake while Quran is playing
+  useEffect(() => {
+    let wakeLockSentinel: any = null;
+
+    const requestWakeLock = async () => {
+      try {
+        if (typeof window !== "undefined" && "wakeLock" in navigator && isPlaying) {
+          wakeLockSentinel = await (navigator as any).wakeLock.request("screen");
+        }
+      } catch (err) {
+        // Wake lock is optional
+      }
+    };
+
+    if (isPlaying) {
+      requestWakeLock();
+    }
+
+    return () => {
+      if (wakeLockSentinel) {
+        wakeLockSentinel.release().catch(() => {});
+        wakeLockSentinel = null;
+      }
+    };
+  }, [isPlaying]);
 
   if (loading && ayahs.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <Navbar />
+      <div className="h-screen h-[100dvh] w-full relative flex flex-col items-center justify-center overflow-hidden bg-black text-white">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover -z-10"
+        >
+          <source src="/bg.mp4" type="video/mp4" />
+        </video>
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 text-emerald-500 animate-spin" />
-          <p className="text-xs uppercase tracking-widest font-black text-emerald-600 dark:text-emerald-400">
-            Loading Sacred Verses...
+          <Loader2 className="w-8 h-8 text-white animate-spin drop-shadow-md" />
+          <p className="text-xs uppercase tracking-widest font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
+            Loading Surah...
           </p>
         </div>
       </div>
@@ -427,10 +593,19 @@ export default function SurahDetailPage({
   }
 
   return (
-    <div className="min-h-screen font-sans selection:bg-emerald-500/30 pb-36 text-slate-900 dark:text-white">
-      <Navbar />
+    <div className="h-screen h-[100dvh] w-full relative font-sans text-white overflow-hidden flex flex-col justify-between select-none p-3 sm:p-5 md:p-6">
+      {/* --- NATURAL BACKGROUND VIDEO --- */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover -z-20 pointer-events-none"
+      >
+        <source src="/bg.mp4" type="video/mp4" />
+      </video>
 
-      {/* Robust Native Audio Element with continuous handlers */}
+      {/* Hidden Native Audio Element for Quran Recitation */}
       <audio
         ref={audioRef}
         onEnded={handleAudioEnded}
@@ -440,364 +615,391 @@ export default function SurahDetailPage({
         preload="auto"
       />
 
-      {/* --- SURAH HERO HEADER --- */}
-      <section className="pt-28 sm:pt-32 pb-8 sm:pb-12 px-3 sm:px-6 max-w-5xl mx-auto text-center">
-        <div className="flex items-center justify-between mb-6 sm:mb-8">
-          <button
-            onClick={() => router.push("/quran")}
-            className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer active:scale-95 shadow-sm"
-          >
-            <ArrowLeft size={15} />
-            <span>All Surahs</span>
-          </button>
+      {/* Hidden Native Audio Element for Ambient Vocals/Soundscape */}
+      <audio ref={ambientAudioRef} loop preload="auto" />
 
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-bold text-emerald-600 dark:text-emerald-400 shadow-sm">
-            <Sparkles size={13} />
-            <span>Surah {surahInfo?.number} of 114</span>
-          </div>
-        </div>
+      {/* --- TOP COMPACT HEADER --- */}
+      <header className="z-30 w-full flex items-center justify-between pointer-events-auto">
+        {/* Left: Back Button */}
+        <button
+          onClick={() => router.push("/quran")}
+          className="flex items-center gap-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white hover:text-emerald-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] transition-colors cursor-pointer active:scale-95"
+        >
+          <ArrowLeft size={16} />
+          <span>Surahs</span>
+        </button>
 
-        {/* Surah Title Banner with Crisp Border */}
-        <div className="relative p-6 sm:p-10 md:p-14 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-          <div className="relative z-10 space-y-2.5 sm:space-y-4">
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em] text-emerald-600 dark:text-emerald-400 block">
-              {surahInfo?.revelationType} Revelation • {surahInfo?.numberOfAyahs} Verses
+        {/* Center: Surah Title */}
+        <div className="text-center drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] px-2">
+          <h1 className="text-xs sm:text-sm md:text-base font-black tracking-wide text-white">
+            {surahInfo?.englishName}{" "}
+            <span className="font-arabic text-emerald-300 font-normal ml-1">
+              ({surahInfo?.name})
             </span>
-
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight">
-              {surahInfo?.englishName}
-            </h1>
-
-            <h2 className="font-arabic text-2xl sm:text-4xl md:text-5xl text-emerald-600 dark:text-emerald-400 font-normal">
-              {surahInfo?.name}
-            </h2>
-
-            <p className="text-xs sm:text-sm uppercase tracking-widest text-slate-600 dark:text-slate-400 font-bold">
-              {surahInfo?.englishNameTranslation}
-            </p>
-          </div>
+          </h1>
+          <p className="text-[9px] sm:text-[10px] font-bold tracking-widest text-emerald-200/90 uppercase">
+            Ayah {activeAyahIndex + 1} of {ayahs.length}
+          </p>
         </div>
 
-        {/* Bismillah */}
-        {surahId !== "1" && surahId !== "9" && (
-          <div className="my-8 sm:my-12 text-center">
-            <h3 className="font-arabic text-2xl sm:text-4xl md:text-5xl text-slate-900 dark:text-emerald-100 leading-loose">
-              بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-            </h3>
-            <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 mt-1 sm:mt-2 font-medium">
-              In the Name of Allah, the Most Compassionate, the Most Merciful
-            </p>
-          </div>
-        )}
-      </section>
+        {/* Right: Quick Tools */}
+        <div className="flex items-center gap-1 sm:gap-1.5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+          {currentAyah && (
+            <>
+              <button
+                onClick={() => toggleBookmark(currentAyah.numberInSurah)}
+                title="Bookmark"
+                className={`p-1.5 transition-colors cursor-pointer ${
+                  bookmarkedAyah === currentAyah.numberInSurah
+                    ? "text-amber-400"
+                    : "text-white/80 hover:text-amber-300"
+                }`}
+              >
+                <Bookmark
+                  size={16}
+                  fill={bookmarkedAyah === currentAyah.numberInSurah ? "currentColor" : "none"}
+                />
+              </button>
 
-      {/* --- AYAH LIST SECTION --- */}
-      <main className="px-3 sm:px-6 md:px-8 max-w-5xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
-        {ayahs.map((ayah, index) => {
-          const isActive = isPlaying && activeAyahIndex === index;
-          const isSelected = activeAyahIndex === index;
-          const isBookmarked = bookmarkedAyah === ayah.numberInSurah;
+              <button
+                onClick={() => copyAyahText(currentAyah)}
+                title="Copy Ayah"
+                className="p-1.5 text-white/80 hover:text-emerald-300 transition-colors cursor-pointer"
+              >
+                {copiedAyah === currentAyah.numberInSurah ? (
+                  <Check size={16} className="text-emerald-400" />
+                ) : (
+                  <Copy size={16} />
+                )}
+              </button>
 
-          return (
+              <button
+                onClick={() => setIsLoopingSingleAyah(!isLoopingSingleAyah)}
+                title={isLoopingSingleAyah ? "Loop Single Ayah: ON" : "Loop Single Ayah: OFF"}
+                className={`p-1.5 transition-colors cursor-pointer ${
+                  isLoopingSingleAyah ? "text-emerald-400" : "text-white/80 hover:text-white"
+                }`}
+              >
+                <Repeat size={16} />
+              </button>
+            </>
+          )}
+        </div>
+      </header>
+
+      {/* --- CENTER STAGE: BALANCED & RESPONSIVE PROPORTIONED TYPOGRAPHY (ZERO BOXES) --- */}
+      <main className="flex-1 flex flex-col items-center justify-center px-2 sm:px-6 md:px-12 max-w-4xl lg:max-w-5xl mx-auto w-full text-center z-10 my-auto overflow-y-auto no-scrollbar max-h-[68vh] sm:max-h-[72vh]">
+        {currentAyah && (
+          <AnimatePresence mode="wait">
             <motion.div
-              key={ayah.numberInSurah}
-              ref={(el) => {
-                ayahRefs.current[ayah.numberInSurah] = el;
-              }}
-              onClick={() => playAyah(index, "arabic", audioMode)}
-              className={`relative p-5 sm:p-8 md:p-10 rounded-[1.8rem] sm:rounded-[2.2rem] transition-all duration-200 border cursor-pointer group shadow-sm ${
-                isActive
-                  ? "bg-white dark:bg-slate-900 border-2 border-emerald-500 shadow-lg scale-[1.01]"
-                  : isSelected
-                  ? "bg-white dark:bg-slate-900 border border-emerald-500/50"
-                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-emerald-500/50"
-              }`}
+              key={currentAyah.numberInSurah}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              className="w-full flex flex-col items-center justify-center gap-2 sm:gap-3.5 md:gap-4 py-2"
             >
-              {/* Header inside Card */}
-              <div className="flex items-center justify-between mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-2.5 sm:gap-3">
-                  <span
-                    className={`w-8 h-8 sm:w-9 sm:h-9 rounded-2xl flex items-center justify-center font-bold text-xs transition-all border ${
-                      isActive
-                        ? "bg-emerald-600 border-emerald-600 text-white shadow-md shadow-emerald-600/40"
-                        : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"
-                    }`}
-                  >
-                    {ayah.numberInSurah}
-                  </span>
-
-                  {isActive && (
-                    <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[9px] sm:text-[10px] font-black uppercase tracking-wider">
-                      <Waves size={11} className="animate-pulse" />
-                      <span>
-                        {audioPhase === "arabic"
-                          ? "Reciting Arabic"
-                          : audioMode.includes("ur")
-                          ? "Urdu Tarjuma"
-                          : "English Meaning"}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Card Quick Actions */}
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleBookmark(ayah.numberInSurah);
-                    }}
-                    title="Bookmark Ayah"
-                    className={`p-1.5 sm:p-2 rounded-xl border transition-all ${
-                      isBookmarked
-                        ? "text-amber-500 bg-amber-500/10 border-amber-500/30"
-                        : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 hover:text-amber-400"
-                    }`}
-                  >
-                    <Bookmark size={14} fill={isBookmarked ? "currentColor" : "none"} />
-                  </button>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      copyAyahText(ayah);
-                    }}
-                    title="Copy Ayah"
-                    className="p-1.5 sm:p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition-all"
-                  >
-                    {copiedAyah === ayah.numberInSurah ? (
-                      <Check size={14} className="text-emerald-500" />
-                    ) : (
-                      <Copy size={14} />
-                    )}
-                  </button>
-
-                  <div className="p-1.5 sm:p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all">
-                    {isActive ? <Volume2 size={15} /> : <Play size={15} fill="currentColor" />}
-                  </div>
-                </div>
-              </div>
-
-              {/* Arabic Verse Text */}
-              <div className="text-center md:text-right mb-6 sm:mb-8">
+              {/* --- ARABIC TEXT (PERFECTLY SIZED & CRISP) --- */}
+              <div className="w-full">
                 <p
-                  className={`font-arabic text-xl sm:text-3xl md:text-4xl leading-[2] sm:leading-[2.2] transition-colors ${
-                    isActive
-                      ? "text-emerald-700 dark:text-emerald-300 font-bold"
-                      : "text-slate-900 dark:text-slate-100"
-                  }`}
+                  dir="rtl"
+                  className="font-arabic text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white font-normal text-center leading-[1.8] sm:leading-[1.9] md:leading-[2] drop-shadow-[0_4px_20px_rgba(0,0,0,0.95)]"
                 >
-                  {ayah.text}
+                  {currentAyah.text}
                   {/* End Ayah Symbol */}
-                  <span className="inline-flex items-center justify-center relative mx-2 sm:mx-3 text-emerald-600 dark:text-emerald-400 select-none align-middle font-serif">
-                    <span className="text-xl sm:text-3xl">۝</span>
-                    <span className="absolute text-[9px] sm:text-xs font-bold top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-0.5">
-                      {toArabicNumber(ayah.numberInSurah)}
+                  <span className="inline-flex items-center justify-center relative mx-1.5 sm:mx-2 text-emerald-300 align-middle font-serif">
+                    <span className="text-lg sm:text-2xl md:text-3xl">۝</span>
+                    <span className="absolute text-[8px] sm:text-[10px] md:text-xs font-bold top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-0.5 text-emerald-200">
+                      {toArabicNumber(currentAyah.numberInSurah)}
                     </span>
                   </span>
                 </p>
               </div>
 
-              {/* Urdu Translation */}
-              <div className="text-right mb-3 sm:mb-4 pt-3 sm:pt-4 border-t border-slate-200 dark:border-slate-800">
+              {/* --- URDU TRANSLATION (COMPACT & BEAUTIFULLY PROPORTIONED) --- */}
+              <div className="w-full">
                 <p
-                  className={`font-urdu text-base sm:text-xl md:text-2xl leading-relaxed sm:leading-loose ${
-                    isActive && audioPhase === "translation" && audioMode.includes("ur")
-                      ? "text-emerald-700 dark:text-emerald-300 font-semibold"
-                      : "text-slate-800 dark:text-slate-200"
+                  dir="rtl"
+                  className={`font-urdu text-base sm:text-lg md:text-xl lg:text-2xl text-center leading-normal sm:leading-relaxed transition-colors duration-300 drop-shadow-[0_3px_14px_rgba(0,0,0,0.95)] ${
+                    isPlaying && audioPhase === "translation" && audioMode.includes("ur")
+                      ? "text-emerald-300 font-bold"
+                      : "text-emerald-100/95 font-medium"
                   }`}
                 >
-                  {ayah.urduText}
+                  {currentAyah.urduText}
                 </p>
               </div>
 
-              {/* English Translation */}
-              <div className="text-left pt-1.5 sm:pt-2">
-                <p
-                  className={`text-xs sm:text-sm font-light leading-relaxed italic ${
-                    isActive && audioPhase === "translation" && audioMode.includes("en")
-                      ? "text-emerald-700 dark:text-emerald-300 font-medium"
-                      : "text-slate-700 dark:text-slate-300"
-                  }`}
-                >
-                  &quot;{ayah.englishText}&quot;
-                </p>
-              </div>
+              {/* --- ENGLISH TRANSLATION (CLEAN SUBTITLE) --- */}
+              {currentAyah.englishText && (
+                <div className="w-full max-w-2xl px-2">
+                  <p
+                    className={`text-[11px] sm:text-xs md:text-sm italic text-center font-light leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
+                      isPlaying && audioPhase === "translation" && audioMode.includes("en")
+                        ? "text-emerald-300 font-normal"
+                        : "text-slate-200/85"
+                    }`}
+                  >
+                    &quot;{currentAyah.englishText}&quot;
+                  </p>
+                </div>
+              )}
             </motion.div>
-          );
-        })}
-
-        {/* --- BOTTOM SURAH NAVIGATION --- */}
-        <div className="pt-8 sm:pt-12 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-          {prevSurah ? (
-            <button
-              onClick={() => router.push(`/quran/${prevSurah.number}`)}
-              className="w-full sm:w-auto flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 transition-all cursor-pointer group active:scale-95 shadow-sm"
-            >
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all shrink-0">
-                <ChevronLeft size={18} />
-              </div>
-              <div className="text-left">
-                <span className="text-[8.5px] sm:text-[9px] font-black uppercase tracking-widest text-slate-500 block">
-                  Previous Surah
-                </span>
-                <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
-                  {prevSurah.englishName}
-                </span>
-              </div>
-            </button>
-          ) : (
-            <div />
-          )}
-
-          {nextSurah ? (
-            <button
-              onClick={() => router.push(`/quran/${nextSurah.number}`)}
-              className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 transition-all cursor-pointer group active:scale-95 shadow-sm"
-            >
-              <div className="text-right">
-                <span className="text-[8.5px] sm:text-[9px] font-black uppercase tracking-widest text-slate-500 block">
-                  Next Surah
-                </span>
-                <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
-                  {nextSurah.englishName}
-                </span>
-              </div>
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all shrink-0">
-                <ChevronRight size={18} />
-              </div>
-            </button>
-          ) : (
-            <div />
-          )}
-        </div>
+          </AnimatePresence>
+        )}
       </main>
 
-      {/* --- SOLID FLOATING RESPONSIVE AUDIO BAR --- */}
-      {ayahs.length > 0 && (
-        <div className="fixed bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 z-40 w-[96%] sm:w-[92%] max-w-2xl flex flex-col gap-1.5 sm:gap-2">
-          {/* Top Audio Mode Selector Pill */}
-          <div className="flex items-center justify-center gap-1 p-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md self-center overflow-x-auto max-w-full">
-            {[
-              { id: "ar_ur", label: "Arabic + Urdu Translation", short: "Ar + Urdu" },
-              { id: "ar_en", label: "Arabic + English", short: "Ar + Eng" },
-              { id: "ar", label: "Arabic Only", short: "Arabic" },
-              { id: "ur", label: "Urdu Only", short: "Urdu" },
-            ].map((m) => (
-              <button
-                key={m.id}
-                onClick={() => {
-                  const newMode = m.id as AudioMode;
-                  setAudioMode(newMode);
-                  currentModeRef.current = newMode;
-                  if (isPlaying) {
-                    playAyah(activeAyahIndex, "arabic", newMode);
-                  }
-                }}
-                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
-                  audioMode === m.id
-                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
-                    : "text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-                }`}
-              >
-                {m.short}
-              </button>
-            ))}
-          </div>
-
-          {/* Main Solid Audio Player Bar */}
-          <div className="p-2.5 sm:p-4 rounded-[1.8rem] sm:rounded-[2.2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex items-center justify-between gap-2 sm:gap-3">
-            {/* Left: Surah & Ayah Info */}
-            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white shadow-md shrink-0 overflow-hidden">
-                <motion.div
-                  animate={isPlaying ? { rotate: 360 } : {}}
-                  transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+      {/* --- MINIMALIST, PREMIUM & CLEAN SOUNDSCAPES MODAL (ALL ENGLISH / NO CLUTTER) --- */}
+      <AnimatePresence>
+        {isMixerOpen && (
+          <div
+            onClick={() => setIsMixerOpen(false)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
+          >
+            <motion.div
+              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.2 }}
+              className="w-full max-w-xs sm:max-w-sm rounded-3xl bg-[#090d16]/95 border border-white/10 p-5 shadow-[0_25px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex flex-col gap-4 text-white"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between pb-2.5 border-b border-white/10">
+                <div className="flex items-center gap-2">
+                  <Headphones size={16} className="text-emerald-400" />
+                  <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">
+                    Soundscapes & Mixer
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setIsMixerOpen(false)}
+                  className="p-1 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
                 >
-                  <Disc size={18} />
-                </motion.div>
+                  <X size={15} />
+                </button>
               </div>
 
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <p className="text-xs sm:text-sm font-black truncate text-slate-900 dark:text-white">
-                    {surahInfo?.englishName} • {ayahs[activeAyahIndex]?.numberInSurah}
-                  </p>
-                  {isPlaying && (
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-ping shrink-0" />
-                  )}
+              {/* Sound Selector Row / Grid */}
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                  Background Ambience
+                </span>
+                <div className="grid grid-cols-5 gap-1.5">
+                  {AMBIENT_TRACKS.map((t) => {
+                    const Icon = t.icon;
+                    const isSelected = selectedAmbience === t.id;
+
+                    return (
+                      <button
+                        key={t.id}
+                        onClick={() => handleSelectAmbience(t.id)}
+                        className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl border transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-emerald-600 border-emerald-400 text-white shadow-md shadow-emerald-950 scale-[1.03]"
+                            : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white"
+                        }`}
+                      >
+                        <Icon size={16} />
+                        <span className="text-[9px] font-bold mt-1 tracking-tight">
+                          {t.title}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Dual Volume Sliders */}
+              <div className="flex flex-col gap-3 pt-2.5 border-t border-white/10">
+                {/* Quran Recitation Volume */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-1.5 font-bold text-slate-200">
+                      <Volume2 size={13} className="text-emerald-400" />
+                      <span>Quran Volume</span>
+                    </span>
+                    <span className="font-mono text-[11px] font-bold text-emerald-400">
+                      {Math.round(quranVolume * 100)}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={quranVolume}
+                    onChange={(e) => setQuranVolume(parseFloat(e.target.value))}
+                    className="w-full h-1.5 bg-white/15 rounded-full appearance-none cursor-pointer accent-emerald-400 focus:outline-none"
+                  />
                 </div>
 
-                <p className="text-[9px] sm:text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider truncate">
-                  {audioPhase === "arabic"
-                    ? "Mishary (Ar)"
-                    : audioMode.includes("ur")
-                    ? "Jalandhry (Ur)"
-                    : "Ibrahim Walk (En)"}
-                </p>
+                {/* Ambience Volume */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-1.5 font-bold text-slate-200">
+                      <Headphones size={13} className="text-emerald-400" />
+                      <span>
+                        Ambience ({activeAmbientItem && activeAmbientItem.id !== "none" ? activeAmbientItem.title : "Off"})
+                      </span>
+                    </span>
+                    <span className="font-mono text-[11px] font-bold text-emerald-400">
+                      {selectedAmbience === "none" ? "Muted" : `${Math.round(ambienceVolume * 100)}%`}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    disabled={selectedAmbience === "none"}
+                    value={ambienceVolume}
+                    onChange={(e) => setAmbienceVolume(parseFloat(e.target.value))}
+                    className={`w-full h-1.5 rounded-full appearance-none cursor-pointer accent-emerald-400 focus:outline-none ${
+                      selectedAmbience === "none"
+                        ? "bg-white/10 opacity-30 cursor-not-allowed"
+                        : "bg-white/15"
+                    }`}
+                  />
+                </div>
               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* --- BOTTOM COMPACT CONTROLLER (CLEAN & SLEEK) --- */}
+      <footer className="z-30 w-full flex flex-col items-center gap-2 max-w-xl mx-auto">
+        {/* Audio Mode Switcher */}
+        <div className="flex items-center justify-center gap-1 p-0.5 rounded-full bg-black/40 border border-white/10 backdrop-blur-md">
+          {[
+            { id: "ar_ur", short: "Ar + Urdu" },
+            { id: "ar_en", short: "Ar + Eng" },
+            { id: "ar", short: "Arabic" },
+            { id: "ur", short: "Urdu" },
+          ].map((m) => (
+            <button
+              key={m.id}
+              onClick={() => {
+                const newMode = m.id as AudioMode;
+                setAudioMode(newMode);
+                currentModeRef.current = newMode;
+                if (isPlaying) {
+                  playAyah(activeAyahIndex, "arabic", newMode);
+                }
+              }}
+              className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[8.5px] sm:text-[9.5px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                audioMode === m.id
+                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-950"
+                  : "text-white/80 hover:text-white"
+              }`}
+            >
+              {m.short}
+            </button>
+          ))}
+        </div>
+
+        {/* Floating Player Controls Bar */}
+        <div className="w-full p-2 sm:p-2.5 rounded-full bg-black/55 border border-white/15 backdrop-blur-xl shadow-2xl flex items-center justify-between gap-2">
+          {/* Left: Info & Disc */}
+          <div className="flex items-center gap-2 pl-1.5 min-w-0 flex-1">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white shadow-md shrink-0">
+              <motion.div
+                animate={isPlaying ? { rotate: 360 } : {}}
+                transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+              >
+                <Disc size={14} />
+              </motion.div>
             </div>
-
-            {/* Right: Audio Playback Controls */}
-            <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 shrink-0">
-              {/* Speed Controller */}
-              <button
-                onClick={handleSpeedChange}
-                title="Playback Speed"
-                className="px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-[9px] sm:text-[10px] font-black text-slate-800 dark:text-slate-200 hover:text-emerald-500 cursor-pointer border border-slate-200/60 dark:border-slate-700/60"
-              >
-                {playbackRate}x
-              </button>
-
-              {/* Prev Ayah */}
-              <button
-                onClick={handlePrevAyah}
-                disabled={activeAyahIndex === 0}
-                className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-emerald-500 disabled:opacity-30 cursor-pointer active:scale-90 transition-transform border border-slate-200/60 dark:border-slate-700/60"
-              >
-                <ChevronLeft size={15} />
-              </button>
-
-              {/* Main Play / Pause */}
-              <button
-                onClick={togglePlayback}
-                className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-lg shadow-emerald-600/35 cursor-pointer active:scale-95 transition-all"
-              >
-                {isBuffering ? (
-                  <Loader2 size={16} className="animate-spin" />
-                ) : isPlaying ? (
-                  <Pause size={16} fill="currentColor" />
-                ) : (
-                  <Play size={16} fill="currentColor" className="ml-0.5" />
-                )}
-              </button>
-
-              {/* Next Ayah */}
-              <button
-                onClick={handleNextAyah}
-                disabled={activeAyahIndex === ayahs.length - 1}
-                className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-emerald-500 disabled:opacity-30 cursor-pointer active:scale-90 transition-transform border border-slate-200/60 dark:border-slate-700/60"
-              >
-                <ChevronRight size={15} />
-              </button>
-
-              {/* Stop Button */}
-              <button
-                onClick={() => {
-                  audioRef.current?.pause();
-                  setIsPlaying(false);
-                  isPlayingRef.current = false;
-                }}
-                className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-rose-500 cursor-pointer active:scale-90 transition-transform border border-slate-200/60 dark:border-slate-700/60"
-              >
-                <Square size={11} fill="currentColor" />
-              </button>
+            <div className="flex flex-col min-w-0">
+              <p className="text-[11px] sm:text-xs font-bold text-white truncate">
+                Ayah {activeAyahIndex + 1} of {ayahs.length}
+              </p>
+              <p className="text-[8.5px] sm:text-[9px] text-emerald-300 uppercase tracking-widest font-medium truncate">
+                {audioPhase === "arabic"
+                  ? "Mishary Alafasy"
+                  : audioMode.includes("ur")
+                  ? "Urdu Tarjuma"
+                  : "English Audio"}
+              </p>
             </div>
           </div>
-        </div>
-      )}
 
-      <Footer />
+          {/* Right: Action Buttons */}
+          <div className="flex items-center gap-1 sm:gap-1.5 pr-1 shrink-0">
+            {/* Ambient Sound / Mixer Button */}
+            <button
+              onClick={() => setIsMixerOpen(true)}
+              title="Ambience & Mixer"
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-full border text-[9px] sm:text-[10px] font-bold transition-all cursor-pointer ${
+                selectedAmbience !== "none"
+                  ? "bg-emerald-600/30 border-emerald-400 text-emerald-300 shadow-sm"
+                  : "bg-white/10 border-white/10 text-white/90 hover:text-emerald-300 hover:bg-white/15"
+              }`}
+            >
+              <SlidersHorizontal size={12} className={selectedAmbience !== "none" ? "text-emerald-400" : ""} />
+              <span className="hidden xs:inline">
+                {activeAmbientItem && activeAmbientItem.id !== "none" ? activeAmbientItem.title : "Ambience"}
+              </span>
+            </button>
+
+            {/* Speed */}
+            <button
+              onClick={handleSpeedChange}
+              title="Speed"
+              className="px-1.5 py-0.5 rounded-full bg-white/10 text-[8.5px] sm:text-[9px] font-bold text-white hover:text-emerald-400 cursor-pointer"
+            >
+              {playbackRate}x
+            </button>
+
+            {/* Prev */}
+            <button
+              onClick={handlePrevAyah}
+              disabled={activeAyahIndex === 0}
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-emerald-400 disabled:opacity-30 cursor-pointer active:scale-90 transition-transform"
+            >
+              <ChevronLeft size={14} />
+            </button>
+
+            {/* Main Play / Pause */}
+            <button
+              onClick={togglePlayback}
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-600/50 cursor-pointer active:scale-95 transition-all"
+            >
+              {isBuffering ? (
+                <Loader2 size={15} className="animate-spin" />
+              ) : isPlaying ? (
+                <Pause size={15} fill="currentColor" />
+              ) : (
+                <Play size={15} fill="currentColor" className="ml-0.5" />
+              )}
+            </button>
+
+            {/* Next */}
+            <button
+              onClick={handleNextAyah}
+              disabled={activeAyahIndex === ayahs.length - 1}
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-emerald-400 disabled:opacity-30 cursor-pointer active:scale-90 transition-transform"
+            >
+              <ChevronRight size={14} />
+            </button>
+
+            {/* Stop */}
+            <button
+              onClick={() => {
+                audioRef.current?.pause();
+                ambientAudioRef.current?.pause();
+                setIsPlaying(false);
+                isPlayingRef.current = false;
+              }}
+              title="Stop"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:text-rose-400 cursor-pointer active:scale-90 transition-transform"
+            >
+              <Square size={10} fill="currentColor" />
+            </button>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
