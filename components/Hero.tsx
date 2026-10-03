@@ -127,9 +127,9 @@ export default function UltimatePremiumHero() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 mb-6 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-emerald-700 dark:text-emerald-300 shadow-sm"
+          className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 mb-6 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-blue-700 dark:text-blue-300 shadow-sm"
         >
-          <Sparkles size={13} className="text-emerald-500 animate-pulse" />
+          <Sparkles size={13} className="text-blue-500 animate-pulse" />
           <span className="text-[9px] sm:text-[10px] md:text-xs font-black tracking-[0.2em] sm:tracking-[0.25em] uppercase">
             The Light of Guidance in Your Pocket
           </span>
@@ -143,7 +143,7 @@ export default function UltimatePremiumHero() {
           className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight mb-6 sm:mb-8 leading-[1.08] sm:leading-[1.02] text-slate-900 dark:text-white"
         >
           Experience the <br />
-          <span className="text-emerald-600 dark:text-emerald-400 italic font-serif">
+          <span className="text-blue-600 dark:text-blue-400 italic font-serif">
             Divine Beauty
           </span>
         </motion.h1>
@@ -156,26 +156,26 @@ export default function UltimatePremiumHero() {
             animate={{ opacity: 1, y: 0 }}
             className="absolute -top-4 sm:-top-5 left-1/2 -translate-x-1/2 z-20"
           >
-            <div className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white shadow-lg">
+            <div className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-slate-900 dark:text-white shadow-lg">
               <Star size={13} className="text-amber-400 fill-amber-400 animate-spin" style={{ animationDuration: "12s" }} />
-              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em] sm:tracking-[0.3em] whitespace-nowrap text-emerald-700 dark:text-emerald-300">
+              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em] sm:tracking-[0.3em] whitespace-nowrap text-blue-700 dark:text-blue-300">
                 Ayah of the Day
               </span>
             </div>
           </motion.div>
 
           {/* Ayah Card with Crisp Border */}
-          <div className="relative w-full rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 md:p-12 lg:p-16 shadow-xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+          <div className="relative w-full rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 md:p-12 lg:p-16 shadow-2xl overflow-hidden bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b]">
             <AnimatePresence mode="wait">
               {loading ? (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm"
+                  className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-white/80 dark:bg-[#07090e]/80 backdrop-blur-sm"
                 >
-                  <Loader2 className="text-emerald-500 animate-spin mb-3" size={32} />
-                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 font-bold">
+                  <Loader2 className="text-blue-500 animate-spin mb-3" size={32} />
+                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-blue-600 dark:text-blue-400 font-bold">
                     Fetching Wisdom...
                   </p>
                 </motion.div>
@@ -186,20 +186,20 @@ export default function UltimatePremiumHero() {
               {ayah && (
                 <>
                   <div className="flex justify-center mb-6 sm:mb-8">
-                    <span className="px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-emerald-700 dark:text-emerald-400">
+                    <span className="px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-blue-700 dark:text-blue-400">
                       Surah {ayah.surahName} • {ayah.surahNumber}:{ayah.ayahNumber}
                     </span>
                   </div>
 
                   {/* Arabic Ayah */}
-                  <h2 className="font-arabic text-2xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 sm:mb-12 text-center leading-[2] sm:leading-loose text-slate-900 dark:text-emerald-50">
+                  <h2 className="font-arabic text-2xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 sm:mb-12 text-center leading-[2] sm:leading-loose text-slate-900 dark:text-white">
                     {ayah.arabic}
                   </h2>
 
                   {/* English & Urdu Translations */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 text-left border-t border-slate-200 dark:border-slate-800 pt-8 sm:pt-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 text-left border-t border-slate-200 dark:border-[#141c2b] pt-8 sm:pt-10">
                     <div className="space-y-2 sm:space-y-3">
-                      <span className="text-[9.5px] sm:text-[10px] tracking-widest uppercase text-emerald-600 dark:text-emerald-400 font-black">
+                      <span className="text-[9.5px] sm:text-[10px] tracking-widest uppercase text-blue-600 dark:text-blue-400 font-black">
                         English Interpretation
                       </span>
                       <p className="text-sm sm:text-base md:text-lg font-light leading-relaxed italic text-slate-700 dark:text-slate-300">
@@ -208,7 +208,7 @@ export default function UltimatePremiumHero() {
                     </div>
 
                     <div className="space-y-2 sm:space-y-3 text-right">
-                      <span className="text-[9.5px] sm:text-[10px] tracking-widest uppercase text-emerald-600 dark:text-emerald-400 font-black">
+                      <span className="text-[9.5px] sm:text-[10px] tracking-widest uppercase text-blue-600 dark:text-blue-400 font-black">
                         اردو ترجمہ
                       </span>
                       <p className="font-urdu text-lg sm:text-xl md:text-2xl leading-loose text-slate-800 dark:text-slate-200">
@@ -218,11 +218,11 @@ export default function UltimatePremiumHero() {
                   </div>
 
                   {/* Bottom Action Buttons */}
-                  <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-5 sm:pt-6 gap-3 sm:gap-4">
+                  <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-between border-t border-slate-200 dark:border-[#141c2b] pt-5 sm:pt-6 gap-3 sm:gap-4">
                     <div className="flex gap-3 sm:gap-4">
                       <button
                         onClick={handleShare}
-                        className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-1.5 sm:py-2 cursor-pointer active:scale-95"
+                        className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-1.5 sm:py-2 cursor-pointer active:scale-95"
                       >
                         <Share2 size={14} />
                         <span>Share</span>
@@ -230,16 +230,16 @@ export default function UltimatePremiumHero() {
 
                       <button
                         onClick={handleCopy}
-                        className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-1.5 sm:py-2 cursor-pointer active:scale-95"
+                        className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-1.5 sm:py-2 cursor-pointer active:scale-95"
                       >
-                        {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+                        {copied ? <Check size={14} className="text-blue-500" /> : <Copy size={14} />}
                         <span>{copied ? "Copied!" : "Copy"}</span>
                       </button>
                     </div>
 
                     <Link
                       href={`/quran/${ayah.surahNumber}`}
-                      className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-sm"
+                      className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-sm"
                     >
                       <BookOpen size={13} />
                       <span>Read Full Surah</span>
@@ -261,7 +261,7 @@ export default function UltimatePremiumHero() {
           <button
             onClick={fetchAyah}
             disabled={loading}
-            className="w-full sm:w-auto group flex items-center justify-center gap-2.5 sm:gap-3 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm bg-emerald-600 text-white hover:bg-emerald-700 transition-all duration-300 shadow-lg shadow-emerald-600/30 active:scale-95 disabled:opacity-60 cursor-pointer"
+            className="w-full sm:w-auto group flex items-center justify-center gap-2.5 sm:gap-3 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-600/30 active:scale-95 disabled:opacity-60 cursor-pointer"
           >
             <RefreshCw size={15} className={`${loading ? "animate-spin" : "group-hover:rotate-180"} transition-transform duration-500`} />
             <span>{loading ? "Seeking Wisdom..." : "New Ayah"}</span>
@@ -269,7 +269,7 @@ export default function UltimatePremiumHero() {
 
           <Link
             href="/quran"
-            className="w-full sm:w-auto flex items-center justify-center gap-2.5 sm:gap-3 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:border-emerald-500/60 transition-all duration-300 shadow-sm active:scale-95"
+            className="w-full sm:w-auto flex items-center justify-center gap-2.5 sm:gap-3 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-slate-900 dark:text-white hover:border-blue-500/60 transition-all duration-300 shadow-sm active:scale-95"
           >
             <span>Explore All Surahs</span>
             <ArrowRight size={15} />

@@ -108,7 +108,9 @@ export default function TasbeehPage() {
   const playClickSound = useCallback(() => {
     if (!isSound) return;
     try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (!AudioCtx) return;
       const ctx = new AudioCtx();
       const osc = ctx.createOscillator();
@@ -165,7 +167,7 @@ export default function TasbeehPage() {
   const progress = Math.min((count / target) * 100, 100);
 
   return (
-    <div className="min-h-screen flex flex-col justify-between font-sans selection:bg-emerald-500/30 overflow-x-hidden">
+    <div className="min-h-screen flex flex-col justify-between font-sans selection:bg-blue-600/30 overflow-x-hidden">
       <Navbar />
 
       <main className="flex-1 pt-28 sm:pt-32 pb-16 sm:pb-24 px-3 sm:px-6 md:px-8 max-w-4xl w-full mx-auto flex flex-col items-center justify-center">
@@ -173,13 +175,13 @@ export default function TasbeehPage() {
         <div className="w-full flex items-center justify-between mb-6 sm:mb-8">
           <Link
             href="/"
-            className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors shadow-sm"
+            className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
           >
             <ArrowLeft size={15} />
             <span>Home</span>
           </Link>
 
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-bold text-emerald-600 dark:text-emerald-400 shadow-sm">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-xs font-bold text-blue-600 dark:text-blue-400 shadow-sm">
             <Trophy size={13} />
             <span>Lifetime: {totalLifetime.toLocaleString()}</span>
           </div>
@@ -188,8 +190,8 @@ export default function TasbeehPage() {
             <button
               onClick={() => setIsSound(!isSound)}
               aria-label="Toggle Sound"
-              className={`p-2 sm:p-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-all ${
-                isSound ? "text-emerald-600" : "text-slate-400"
+              className={`p-2 sm:p-2.5 rounded-2xl bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] transition-all ${
+                isSound ? "text-blue-600 dark:text-blue-400" : "text-slate-400"
               }`}
             >
               {isSound ? <Volume2 size={16} /> : <VolumeX size={16} />}
@@ -198,7 +200,7 @@ export default function TasbeehPage() {
             <button
               onClick={() => setIsSettingsOpen(true)}
               aria-label="Tasbeeh Settings"
-              className="p-2 sm:p-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-emerald-500 transition-all"
+              className="p-2 sm:p-2.5 rounded-2xl bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-slate-700 dark:text-slate-300 hover:text-blue-500 transition-all cursor-pointer"
             >
               <Settings2 size={16} />
             </button>
@@ -213,8 +215,8 @@ export default function TasbeehPage() {
               onClick={() => handleSelectDhikr(preset)}
               className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all border ${
                 activeDhikr.id === preset.id
-                  ? "bg-emerald-600 text-white border-emerald-500 shadow-md shadow-emerald-600/30"
-                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-emerald-500/50 shadow-sm"
+                  ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/30"
+                  : "bg-white dark:bg-[#07090e] border-slate-200 dark:border-[#141c2b] text-slate-600 dark:text-slate-400 hover:border-blue-500/50 shadow-sm"
               }`}
             >
               {preset.transliteration}
@@ -223,10 +225,10 @@ export default function TasbeehPage() {
         </div>
 
         {/* Dedicated Tasbeeh Center Card */}
-        <div className="w-full p-6 sm:p-10 md:p-12 rounded-[2.2rem] sm:rounded-[2.8rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl flex flex-col items-center text-center">
+        <div className="w-full p-6 sm:p-10 md:p-12 rounded-[2.2rem] sm:rounded-[2.8rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-xl flex flex-col items-center text-center">
           {/* Active Dhikr Title */}
           <div className="mb-6 sm:mb-8 space-y-1.5 sm:space-y-2">
-            <h2 className="font-arabic text-3xl sm:text-5xl md:text-6xl text-emerald-600 dark:text-emerald-400 leading-tight">
+            <h2 className="font-arabic text-3xl sm:text-5xl md:text-6xl text-blue-600 dark:text-blue-400 leading-tight">
               {activeDhikr.arabic}
             </h2>
             <p className="font-urdu text-lg sm:text-xl text-slate-800 dark:text-slate-200">
@@ -250,7 +252,7 @@ export default function TasbeehPage() {
                 stroke="currentColor"
                 strokeWidth="10"
                 fill="transparent"
-                className="text-slate-100 dark:text-slate-800"
+                className="text-slate-100 dark:text-[#0c111a]"
               />
               <motion.circle
                 cx="50%"
@@ -263,7 +265,7 @@ export default function TasbeehPage() {
                 animate={{ strokeDashoffset: 276 - (276 * progress) / 100 }}
                 transition={{ type: "spring", stiffness: 50, damping: 20 }}
                 strokeLinecap="round"
-                className="text-emerald-500"
+                className="text-blue-600"
               />
             </svg>
 
@@ -276,7 +278,7 @@ export default function TasbeehPage() {
               >
                 {count}
               </motion.span>
-              <span className="text-[9.5px] sm:text-[11px] font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-emerald-600 dark:text-emerald-400 mt-1 sm:mt-2">
+              <span className="text-[9.5px] sm:text-[11px] font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-blue-600 dark:text-blue-400 mt-1 sm:mt-2">
                 {count >= target ? "MashaAllah Target Met" : `Target: ${target}`}
               </span>
             </div>
@@ -287,7 +289,7 @@ export default function TasbeehPage() {
             <button
               onClick={resetCurrent}
               title="Reset Counter"
-              className="p-3.5 sm:p-4 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-rose-500 hover:border-rose-500/40 transition-all cursor-pointer active:scale-90 shadow-sm"
+              className="p-3.5 sm:p-4 rounded-full bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-slate-600 dark:text-slate-400 hover:text-rose-500 hover:border-rose-500/40 transition-all cursor-pointer active:scale-90 shadow-sm"
             >
               <RotateCcw size={18} />
             </button>
@@ -295,12 +297,12 @@ export default function TasbeehPage() {
             <motion.button
               whileTap={{ scale: 0.92 }}
               onClick={handleCountPress}
-              className="w-18 h-18 sm:w-22 sm:h-22 p-4 rounded-full bg-emerald-600 hover:bg-emerald-700 flex items-center justify-center text-white shadow-xl shadow-emerald-600/30 border-4 border-emerald-500/40 cursor-pointer"
+              className="w-18 h-18 sm:w-22 sm:h-22 p-4 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-white shadow-xl shadow-blue-600/30 border-4 border-blue-500/40 cursor-pointer"
             >
               <Fingerprint className="w-8 h-8 sm:w-10 sm:h-10" />
             </motion.button>
 
-            <div className="flex items-center gap-1 p-1 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+            <div className="flex items-center gap-1 p-1 rounded-full bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] shadow-sm">
               {[33, 100, 1000].map((t) => (
                 <button
                   key={t}
@@ -310,8 +312,8 @@ export default function TasbeehPage() {
                   }}
                   className={`px-2.5 sm:px-3 py-1.5 rounded-full text-[9px] sm:text-[10px] font-black tracking-wider transition-all cursor-pointer ${
                     target === t
-                      ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
-                      : "text-slate-600 dark:text-slate-400 hover:text-emerald-500"
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                      : "text-slate-600 dark:text-slate-400 hover:text-blue-500"
                   }`}
                 >
                   {t === 1000 ? "1k" : t}
@@ -325,26 +327,26 @@ export default function TasbeehPage() {
       {/* Settings Modal */}
       <AnimatePresence>
         {isSettingsOpen && (
-          <div 
+          <div
             onClick={() => setIsSettingsOpen(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-md overflow-hidden"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md overflow-hidden"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl relative"
+              className="w-full max-w-md p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-2xl relative"
             >
               <button
                 onClick={() => setIsSettingsOpen(false)}
-                className="absolute top-4 sm:top-6 right-4 sm:right-6 p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-800 dark:hover:text-white"
+                className="absolute top-4 sm:top-6 right-4 sm:right-6 p-2 rounded-full bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-slate-400 hover:text-slate-800 dark:hover:text-white"
               >
                 <X size={18} />
               </button>
 
               <h3 className="text-lg sm:text-xl font-bold mb-5 sm:mb-6 text-slate-900 dark:text-white flex items-center gap-2">
-                <Settings2 size={18} className="text-emerald-500" />
+                <Settings2 size={18} className="text-blue-500" />
                 <span>Tasbeeh Settings</span>
               </h3>
 
@@ -357,7 +359,7 @@ export default function TasbeehPage() {
                     type="number"
                     value={customTargetInput}
                     onChange={(e) => setCustomTargetInput(e.target.value)}
-                    className="flex-1 rounded-2xl py-2.5 sm:py-3 px-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm outline-none focus:border-emerald-500"
+                    className="flex-1 rounded-2xl py-2.5 sm:py-3 px-4 bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-slate-900 dark:text-white text-sm outline-none focus:border-blue-500"
                   />
                   <button
                     onClick={() => {
@@ -368,14 +370,14 @@ export default function TasbeehPage() {
                         setIsSettingsOpen(false);
                       }
                     }}
-                    className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                    className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
                   >
                     Set
                   </button>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200 dark:border-[#141c2b] flex items-center justify-between">
                 <span className="text-xs text-slate-500">Clear Lifetime History</span>
                 <button
                   onClick={() => {

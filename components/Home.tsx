@@ -1,20 +1,22 @@
-
-import Feature from '@/components/Feature'
-import Footer from '@/components/Footer'
-import Hero from '@/components/Hero'
-import Navbar from '@/components/Navbar'
-import Topics from '@/components/Topic'
 import React from 'react'
+import Navbar from '@/components/Navbar'
+import Hero from '@/components/Hero'
+import RecitersSection from '@/components/RecitersSection'
+import CollectionsSection from '@/components/CollectionsSection'
+import Feature from '@/components/Feature'
+import Topics from '@/components/Topic'
+import Footer from '@/components/Footer'
 
 const Home = () => {
   return (
     <>
-    <Navbar />
-    <Hero />
-    <Feature  />
-    <Topics />   
-    <Footer />
-    
+      <Navbar />
+      <Hero />
+      <RecitersSection />
+      <CollectionsSection />
+      <Feature />
+      <Topics />
+      <Footer />
     </>
   )
 }

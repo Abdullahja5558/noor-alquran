@@ -14,12 +14,12 @@
   }
 
   .dark {
-    --background: #030712;
+    --background: #000000;
     --foreground: #f8fafc;
-    --card-bg: #0f172a;
-    --card-border: #1e293b;
-    --card-subtle-bg: #1e293b;
-    --card-subtle-border: #334155;
+    --card-bg: #07090e;
+    --card-border: #141c2b;
+    --card-subtle-bg: #0c111a;
+    --card-subtle-border: #1a2538;
   }
 
   body {
@@ -28,6 +28,18 @@
     font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
     transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .dark body {
+    background-color: #000000;
+    background-image: 
+      radial-gradient(ellipse 65% 55% at 0% 0%, rgba(30, 58, 138, 0.28) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 100% 0%, rgba(29, 78, 216, 0.22) 0%, transparent 55%),
+      radial-gradient(ellipse 65% 55% at 0% 100%, rgba(15, 23, 42, 0.7) 0%, transparent 60%),
+      radial-gradient(ellipse 65% 55% at 100% 100%, rgba(30, 58, 138, 0.25) 0%, transparent 60%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    color: #f8fafc;
   }
 }
 
@@ -49,9 +61,9 @@
 
 .dark .liquid-glass,
 .dark .clean-card {
-  background-color: #0f172a;
-  border: 1px solid #1e293b !important;
-  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.5);
+  background-color: rgba(7, 9, 14, 0.85);
+  border: 1px solid #141c2b !important;
+  box-shadow: 0 4px 25px -4px rgba(0, 0, 0, 0.7);
 }
 
 /* --- PILLS & SUBTLE BADGES BORDERS --- */
@@ -70,8 +82,8 @@
 
 .dark .liquid-glass-subtle,
 .dark .glass-pill {
-  background-color: #1e293b;
-  border: 1px solid #334155 !important;
+  background-color: #0c111a;
+  border: 1px solid #1a2538 !important;
   color: #f8fafc;
 }
 
@@ -82,8 +94,9 @@
 }
 
 .dark .glass-navbar {
-  background-color: #0f172a;
-  border: 1px solid #1e293b !important;
+  background-color: rgba(7, 9, 14, 0.9);
+  border: 1px solid #141c2b !important;
+  backdrop-filter: blur(16px);
 }
 
 .glass-audio-player {
@@ -92,8 +105,9 @@
 }
 
 .dark .glass-audio-player {
-  background-color: #0f172a;
-  border: 1px solid #1e293b !important;
+  background-color: rgba(7, 9, 14, 0.95);
+  border: 1px solid #141c2b !important;
+  backdrop-filter: blur(20px);
 }
 
 /* --- ARABIC & URDU TYPOGRAPHY --- */
@@ -118,11 +132,11 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(16, 185, 129, 0.35);
+  background: rgba(37, 99, 235, 0.4);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 185, 129, 0.6);
+  background: rgba(37, 99, 235, 0.75);
 }
 
 .no-scrollbar::-webkit-scrollbar {

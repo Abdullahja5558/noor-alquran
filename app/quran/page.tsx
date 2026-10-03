@@ -52,7 +52,7 @@ export default function QuranPage() {
   });
 
   return (
-    <div className="min-h-screen font-sans selection:bg-emerald-500/30">
+    <div className="min-h-screen font-sans selection:bg-blue-600/30">
       <Navbar />
 
       <main className="pt-28 sm:pt-32 pb-20 sm:pb-24 px-3 sm:px-6 md:px-8 max-w-7xl mx-auto">
@@ -60,7 +60,7 @@ export default function QuranPage() {
         <div className="mb-8 sm:mb-12">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 mb-6 sm:mb-8 transition-colors active:scale-95 shadow-sm"
+            className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 mb-6 sm:mb-8 transition-colors active:scale-95 shadow-sm"
           >
             <ArrowLeft size={15} />
             <span>Return Home</span>
@@ -68,12 +68,12 @@ export default function QuranPage() {
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[9.5px] sm:text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-3 sm:mb-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9.5px] sm:text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-3 sm:mb-4">
                 <Sparkles size={12} />
                 <span>Holy Scripture</span>
               </div>
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-slate-900 dark:text-white">
-                Al-Quran <span className="font-arabic text-emerald-500 text-2xl sm:text-4xl md:text-5xl ml-2 font-normal">الكريم</span>
+                Al-Quran <span className="font-arabic text-blue-500 text-2xl sm:text-4xl md:text-5xl ml-2 font-normal">الكريم</span>
               </h1>
               <p className="mt-2 sm:mt-3 max-w-xl text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 font-light">
                 Explore all 114 Surahs with authentic text, verse-by-verse recitation audio, and English/Urdu translations.
@@ -89,20 +89,20 @@ export default function QuranPage() {
                   placeholder="Search Surah (e.g. Yaseen, 36)..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full rounded-2xl py-3 sm:py-3.5 pl-11 pr-4 outline-none transition-all text-xs md:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:border-emerald-500 shadow-sm"
+                  className="w-full rounded-2xl py-3 sm:py-3.5 pl-11 pr-4 outline-none transition-all text-xs md:text-sm bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-slate-900 dark:text-white focus:border-blue-500 shadow-sm"
                 />
               </div>
 
               {/* Type Filter Pill */}
-              <div className="flex items-center justify-center gap-1 p-1 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm self-start sm:self-auto w-full sm:w-auto">
+              <div className="flex items-center justify-center gap-1 p-1 rounded-2xl bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-sm self-start sm:self-auto w-full sm:w-auto">
                 {(["ALL", "Meccan", "Medinan"] as const).map((type) => (
                   <button
                     key={type}
                     onClick={() => setFilterType(type)}
                     className={`flex-1 sm:flex-none px-3.5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer text-center ${
                       filterType === type
-                        ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
-                        : "text-slate-600 dark:text-slate-400 hover:text-emerald-600"
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                        : "text-slate-600 dark:text-slate-400 hover:text-blue-600"
                     }`}
                   >
                     {type}
@@ -117,12 +117,12 @@ export default function QuranPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {[...Array(9)].map((_, i) => (
-              <div key={i} className="h-28 sm:h-32 rounded-[1.8rem] sm:rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 animate-pulse" />
+              <div key={i} className="h-28 sm:h-32 rounded-[1.8rem] sm:rounded-[2rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] animate-pulse" />
             ))}
           </div>
         ) : filteredSurahs.length === 0 ? (
-          <div className="p-12 sm:p-16 text-center rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <BookOpen size={44} className="mx-auto text-emerald-500/40 mb-3 sm:mb-4" />
+          <div className="p-12 sm:p-16 text-center rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-sm">
+            <BookOpen size={44} className="mx-auto text-blue-500/40 mb-3 sm:mb-4" />
             <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2">No Surah Found</h3>
             <p className="text-xs sm:text-sm text-slate-500">Try searching with a different Surah name or number.</p>
           </div>
@@ -141,14 +141,14 @@ export default function QuranPage() {
                   <Link
                     href={`/quran/${surah.number}`}
                     onClick={() => setNavigatingId(surah.number)}
-                    className={`block relative p-5 sm:p-6 rounded-[1.8rem] sm:rounded-[2rem] bg-white dark:bg-slate-900 border transition-all duration-200 group shadow-sm hover:shadow-md overflow-hidden ${
+                    className={`block relative p-5 sm:p-6 rounded-[1.8rem] sm:rounded-[2rem] bg-white dark:bg-[#07090e] border transition-all duration-200 group shadow-sm hover:shadow-md overflow-hidden ${
                       isOpening
-                        ? "border-emerald-500 ring-2 ring-emerald-500/40 bg-emerald-50/50 dark:bg-slate-800/90"
-                        : "border-slate-200 dark:border-slate-800 hover:border-emerald-500/70 dark:hover:border-emerald-500/70"
+                        ? "border-blue-500 ring-2 ring-blue-500/40 bg-blue-50/50 dark:bg-blue-950/40"
+                        : "border-slate-200 dark:border-[#141c2b] hover:border-blue-500/70 dark:hover:border-blue-500/70"
                     }`}
                   >
                     {/* Surah Number Background Watermark */}
-                    <span className="absolute -right-2 -bottom-4 text-6xl sm:text-7xl font-black text-slate-100 dark:text-slate-800/40 select-none pointer-events-none group-hover:scale-105 transition-transform">
+                    <span className="absolute -right-2 -bottom-4 text-6xl sm:text-7xl font-black text-slate-100 dark:text-slate-800/30 select-none pointer-events-none group-hover:scale-105 transition-transform">
                       {surah.number}
                     </span>
 
@@ -158,8 +158,8 @@ export default function QuranPage() {
                         <div
                           className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center font-bold text-xs sm:text-sm transition-all shadow-sm shrink-0 ${
                             isOpening
-                              ? "bg-emerald-600 text-white border-emerald-600 ring-2 ring-emerald-400/40 animate-pulse"
-                              : "bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600"
+                              ? "bg-blue-600 text-white border-blue-600 ring-2 ring-blue-400/40 animate-pulse"
+                              : "bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600"
                           }`}
                         >
                           {isOpening ? (
@@ -173,8 +173,8 @@ export default function QuranPage() {
                           <h3
                             className={`text-base sm:text-lg font-bold transition-colors truncate ${
                               isOpening
-                                ? "text-emerald-600 dark:text-emerald-400"
-                                : "text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400"
+                                ? "text-blue-600 dark:text-blue-400"
+                                : "text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400"
                             }`}
                           >
                             {surah.englishName}
@@ -184,7 +184,7 @@ export default function QuranPage() {
                             <span>•</span>
                             <span>{surah.numberOfAyahs} Verses</span>
                             {isOpening && (
-                              <span className="text-emerald-600 dark:text-emerald-400 font-bold ml-1">
+                              <span className="text-blue-600 dark:text-blue-400 font-bold ml-1">
                                 • Loading...
                               </span>
                             )}
@@ -193,7 +193,7 @@ export default function QuranPage() {
                       </div>
 
                       <div className="text-right shrink-0">
-                        <h4 className="font-arabic text-xl sm:text-2xl text-slate-900 dark:text-emerald-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors">
+                        <h4 className="font-arabic text-xl sm:text-2xl text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors">
                           {surah.name}
                         </h4>
                         <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">

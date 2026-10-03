@@ -23,7 +23,7 @@ export default function SurahLoading() {
           بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
         </h2>
 
-        <div className="flex items-center gap-2.5 text-emerald-300 text-xs sm:text-sm font-bold tracking-widest uppercase mt-2">
+        <div className="flex items-center gap-2.5 text-blue-300 text-xs sm:text-sm font-bold tracking-widest uppercase mt-2">
           <Loader2 size={18} className="animate-spin text-white" />
           <span>Opening Surah...</span>
         </div>

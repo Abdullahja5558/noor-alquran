@@ -38,7 +38,7 @@ const TOPICS: TopicItem[] = [
     title: "Gratitude (Shukr)",
     arabicTitle: "الشُّكْرُ",
     icon: <Heart size={22} />,
-    color: "from-emerald-500/20 to-teal-500/20",
+    color: "from-blue-500/20 to-indigo-500/20",
     badge: "Countless Blessings",
     ayahArabic: "لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ",
     ayahUrdu: "اگر تم شکر ادا کرو گے تو میں تمہیں ضرور زیادہ دوں گا۔",
@@ -105,12 +105,12 @@ export default function Topics() {
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header Section */}
         <div className="text-center mb-12 sm:mb-16">
-          <span className="text-[9px] sm:text-[10px] md:text-xs font-black tracking-[0.25em] sm:tracking-[0.3em] uppercase px-4 sm:px-5 py-2 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-emerald-700 dark:text-emerald-300 shadow-sm">
+          <span className="text-[9px] sm:text-[10px] md:text-xs font-black tracking-[0.25em] sm:tracking-[0.3em] uppercase px-4 sm:px-5 py-2 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-blue-700 dark:text-blue-300 shadow-sm">
             Divine Guidance
           </span>
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-black mt-4 sm:mt-6 tracking-tight text-slate-900 dark:text-white">
             Wisdom for every <br />
-            <span className="text-emerald-600 dark:text-emerald-400 italic">
+            <span className="text-blue-600 dark:text-blue-400 italic">
               human emotion.
             </span>
           </h2>
@@ -129,13 +129,13 @@ export default function Topics() {
               onClick={() => setSelectedTopic(item)}
               className="group relative cursor-pointer"
             >
-              <div className="relative h-full py-8 sm:py-10 px-5 sm:px-6 rounded-[2rem] sm:rounded-[2.2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/70 dark:hover:border-emerald-500/70 overflow-hidden flex flex-col items-center text-center transition-all duration-200 shadow-sm hover:shadow-md">
+              <div className="relative h-full py-8 sm:py-10 px-5 sm:px-6 rounded-[2rem] sm:rounded-[2.2rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] hover:border-blue-500/70 dark:hover:border-blue-500/70 overflow-hidden flex flex-col items-center text-center transition-all duration-200 shadow-sm hover:shadow-md">
                 {/* Icon Box with Border */}
-                <div className="mb-5 sm:mb-6 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 text-emerald-600 dark:text-emerald-400 group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all shadow-sm">
+                <div className="mb-5 sm:mb-6 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-blue-600 dark:text-blue-400 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all shadow-sm">
                   {item.icon}
                 </div>
 
-                <span className="font-arabic text-xl sm:text-2xl mb-1 text-emerald-600 dark:text-emerald-400 font-normal">
+                <span className="font-arabic text-xl sm:text-2xl mb-1 text-blue-600 dark:text-blue-400 font-normal">
                   {item.arabicTitle}
                 </span>
 
@@ -147,7 +147,7 @@ export default function Topics() {
                   {item.badge}
                 </span>
 
-                <div className="mt-auto pt-3 sm:pt-4 flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                <div className="mt-auto pt-3 sm:pt-4 flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400">
                   <span>Read Verse</span>
                   <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -162,48 +162,48 @@ export default function Topics() {
         {selectedTopic && (
           <div 
             onClick={() => setSelectedTopic(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-md overflow-hidden"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md overflow-hidden"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 md:p-12 bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-800 overscroll-contain"
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 md:p-12 bg-white dark:bg-[#07090e] shadow-2xl border border-slate-200 dark:border-[#141c2b] overscroll-contain"
             >
               {/* Close Button */}
               <button
                 onClick={() => setSelectedTopic(null)}
                 aria-label="Close modal"
-                className="absolute top-4 sm:top-6 right-4 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors cursor-pointer"
+                className="absolute top-4 sm:top-6 right-4 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-blue-500 transition-colors cursor-pointer"
               >
                 <X size={18} />
               </button>
 
               <div className="flex items-center gap-3 mb-6 pr-10">
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-blue-500/15 border border-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                   {selectedTopic.icon}
                 </div>
                 <div>
                   <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
                     {selectedTopic.title}
                   </h3>
-                  <span className="text-[10px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+                  <span className="text-[10px] sm:text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">
                     {selectedTopic.reference}
                   </span>
                 </div>
               </div>
 
               {/* Arabic Verse */}
-              <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-center mb-5 sm:mb-6">
-                <p className="font-arabic text-xl sm:text-2xl md:text-3xl leading-loose text-slate-900 dark:text-emerald-50">
+              <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-slate-50 dark:bg-[#0c111a]/60 border border-slate-200 dark:border-[#141c2b] text-center mb-5 sm:mb-6">
+                <p className="font-arabic text-xl sm:text-2xl md:text-3xl leading-loose text-slate-900 dark:text-white">
                   {selectedTopic.ayahArabic}
                 </p>
               </div>
 
               {/* Urdu Translation */}
               <div className="mb-4 text-right">
-                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block mb-1">
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
                   اردو ترجمہ
                 </span>
                 <p className="font-urdu text-lg sm:text-xl leading-relaxed text-slate-800 dark:text-slate-200">
@@ -213,7 +213,7 @@ export default function Topics() {
 
               {/* English Translation */}
               <div className="mb-6 sm:mb-8">
-                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block mb-1">
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
                   English Meaning
                 </span>
                 <p className="text-xs sm:text-sm md:text-base italic text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -222,11 +222,11 @@ export default function Topics() {
               </div>
 
               {/* Modal Actions */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-5 sm:pt-6 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-5 sm:pt-6 border-t border-slate-200 dark:border-[#141c2b]">
                 <Link
                   href={selectedTopic.surahLink}
                   onClick={() => setSelectedTopic(null)}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-emerald-600/30 text-center"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-blue-600/30 text-center"
                 >
                   <BookOpen size={15} />
                   <span>Open Full Surah</span>
@@ -234,7 +234,7 @@ export default function Topics() {
 
                 <button
                   onClick={() => setSelectedTopic(null)}
-                  className="px-6 py-3 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs uppercase tracking-wider hover:bg-emerald-500/10 transition-all cursor-pointer text-center"
+                  className="px-6 py-3 rounded-full bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-slate-700 dark:text-slate-300 font-bold text-xs uppercase tracking-wider hover:bg-blue-500/10 transition-all cursor-pointer text-center"
                 >
                   Close
                 </button>
