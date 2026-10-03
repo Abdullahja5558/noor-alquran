@@ -203,21 +203,24 @@ export default function SurahDetailPage({
       .join("");
   };
 
-  const fastPreload = (data: Ayah[], startIndex: number, count: number) => {
+  const audioCache = useRef<Map<string, HTMLAudioElement>>(new Map());
+
+  const fastPreload = useCallback((data: Ayah[], startIndex: number, count: number) => {
+    if (!data || data.length === 0) return;
     const end = Math.min(startIndex + count, data.length);
     for (let i = startIndex; i < end; i++) {
       if (!data[i]) continue;
       const urls = [data[i].audio, data[i].audioUrdu, data[i].audioEnglish].filter(Boolean);
       urls.forEach((url) => {
-        if (url && !preloadedUrls.current.has(url)) {
+        if (url && !audioCache.current.has(url)) {
           const audioObj = new Audio();
-          audioObj.src = url;
           audioObj.preload = "auto";
-          preloadedUrls.current.add(url);
+          audioObj.src = url;
+          audioCache.current.set(url, audioObj);
         }
       });
     }
-  };
+  }, []);
 
   // Fetch Surah data
   useEffect(() => {
@@ -232,7 +235,7 @@ export default function SurahDetailPage({
         setAyahs(parsed.ayahs);
         ayahsRef.current = parsed.ayahs;
         setLoading(false);
-        fastPreload(parsed.ayahs, 0, 5);
+        fastPreload(parsed.ayahs, 0, 8);
       } catch (e) {
         console.warn("Cache parse error", e);
       }
@@ -276,7 +279,7 @@ export default function SurahDetailPage({
             );
           }
 
-          fastPreload(combinedAyahs, 0, 5);
+          fastPreload(combinedAyahs, 0, 8);
         }
       } catch (err) {
         console.error("Fetch Surah Error:", err);
@@ -295,7 +298,7 @@ export default function SurahDetailPage({
     return () => {
       isMounted = false;
     };
-  }, [surahId]);
+  }, [surahId, fastPreload]);
 
   // Determine current audio URL based on mode and phase
   const getAudioUrl = useCallback(
@@ -317,13 +320,12 @@ export default function SurahDetailPage({
     [ayahs]
   );
 
-  // Play Ayah
+  // Play Ayah - Instant & Gapless Transition
   const playAyah = useCallback(
     (index: number, phase: AudioPhase = "arabic", mode: AudioMode = currentModeRef.current) => {
       const currentAyahs = ayahsRef.current.length > 0 ? ayahsRef.current : ayahs;
       if (!currentAyahs[index] || !audioRef.current) return;
 
-      setIsBuffering(true);
       setActiveAyahIndex(index);
       setAudioPhase(phase);
       currentIndexRef.current = index;
@@ -350,33 +352,38 @@ export default function SurahDetailPage({
         return;
       }
 
-      audioRef.current.src = targetUrl;
+      // Seamless switch without discarding buffer
+      if (audioRef.current.src !== targetUrl) {
+        audioRef.current.src = targetUrl;
+      }
       audioRef.current.playbackRate = playbackRate;
       audioRef.current.volume = quranVolRef.current;
-      audioRef.current.load();
 
-      audioRef.current
-        .play()
-        .then(() => {
-          setIsBuffering(false);
-          setIsPlaying(true);
-          isPlayingRef.current = true;
-          // Resume ambient background audio if enabled
-          if (ambientAudioRef.current && ambientAudioRef.current.src && ambientAudioRef.current.paused) {
-            ambientAudioRef.current.play().catch(() => {});
-          }
-        })
-        .catch((e) => {
-          console.warn("Audio play error", e);
-          setIsBuffering(false);
-        });
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsBuffering(false);
+            setIsPlaying(true);
+            isPlayingRef.current = true;
+            // Resume ambient background audio if enabled
+            if (ambientAudioRef.current && ambientAudioRef.current.src && ambientAudioRef.current.paused) {
+              ambientAudioRef.current.play().catch(() => {});
+            }
+          })
+          .catch((e) => {
+            console.warn("Audio play error", e);
+            setIsBuffering(false);
+          });
+      }
 
-      fastPreload(currentAyahs, index + 1, 4);
+      // Preload upcoming 6 audio files immediately into memory
+      fastPreload(currentAyahs, index, 6);
     },
-    [ayahs, getAudioUrl, playbackRate]
+    [ayahs, getAudioUrl, playbackRate, fastPreload]
   );
 
-  // Handle Audio Ended
+  // Handle Audio Ended - 0ms instant transition to next track
   const handleAudioEnded = useCallback(() => {
     const currentAyahs = ayahsRef.current;
     const curIndex = currentIndexRef.current;
@@ -469,11 +476,41 @@ export default function SurahDetailPage({
     }
   };
 
+  const fallbackCopyText = (text: string, ayahNum: number) => {
+    try {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      setCopiedAyah(ayahNum);
+      setTimeout(() => setCopiedAyah(null), 2000);
+    } catch (err) {
+      console.warn("Fallback copy failed:", err);
+    }
+  };
+
   const copyAyahText = (ayah: Ayah) => {
     const text = `📖 Surah ${surahInfo?.englishName} (${surahInfo?.number}:${ayah.numberInSurah})\n\n${ayah.text}\n\nاردو: ${ayah.urduText}\n\nEnglish: ${ayah.englishText}`;
-    navigator.clipboard.writeText(text);
-    setCopiedAyah(ayah.numberInSurah);
-    setTimeout(() => setCopiedAyah(null), 2000);
+    
+    if (typeof navigator !== "undefined" && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          setCopiedAyah(ayah.numberInSurah);
+          setTimeout(() => setCopiedAyah(null), 2000);
+        })
+        .catch(() => {
+          fallbackCopyText(text, ayah.numberInSurah);
+        });
+    } else {
+      fallbackCopyText(text, ayah.numberInSurah);
+    }
   };
 
   const toggleBookmark = (num: number) => {
@@ -593,17 +630,22 @@ export default function SurahDetailPage({
   }
 
   return (
-    <div className="h-screen h-[100dvh] w-full relative font-sans text-white overflow-hidden flex flex-col justify-between select-none p-3 sm:p-5 md:p-6">
+    <div className="fixed inset-0 w-full h-[100dvh] max-h-[100dvh] font-sans text-white overflow-hidden flex flex-col justify-between select-none pt-[max(0.4rem,env(safe-area-inset-top))] pb-[max(0.4rem,env(safe-area-inset-bottom))] px-2.5 sm:px-5 md:px-6 z-10 overscroll-none">
       {/* --- NATURAL BACKGROUND VIDEO --- */}
       <video
         autoPlay
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover -z-20 pointer-events-none"
+        webkit-playsinline="true"
+        preload="auto"
+        className="fixed inset-0 w-full h-full object-cover -z-20 pointer-events-none"
       >
         <source src="/bg.mp4" type="video/mp4" />
       </video>
+
+      {/* Atmospheric Contrast Backdrop */}
+      <div className="fixed inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/65 -z-10 pointer-events-none" />
 
       {/* Hidden Native Audio Element for Quran Recitation */}
       <audio
@@ -612,6 +654,9 @@ export default function SurahDetailPage({
         onError={handleAudioError}
         onWaiting={() => setIsBuffering(true)}
         onPlaying={() => setIsBuffering(false)}
+        onCanPlay={() => setIsBuffering(false)}
+        onCanPlayThrough={() => setIsBuffering(false)}
+        onLoadedData={() => setIsBuffering(false)}
         preload="auto"
       />
 
@@ -619,7 +664,7 @@ export default function SurahDetailPage({
       <audio ref={ambientAudioRef} loop preload="auto" />
 
       {/* --- TOP COMPACT HEADER --- */}
-      <header className="z-30 w-full flex items-center justify-between pointer-events-auto">
+      <header className="shrink-0 flex-none z-30 w-full flex items-center justify-between pointer-events-auto py-0.5 sm:py-1">
         {/* Left: Back Button */}
         <button
           onClick={() => router.push("/quran")}
@@ -637,7 +682,7 @@ export default function SurahDetailPage({
               ({surahInfo?.name})
             </span>
           </h1>
-          <p className="text-[9px] sm:text-[10px] font-bold tracking-widest text-emerald-200/90 uppercase">
+          <p className="text-[8.5px] sm:text-[10px] font-bold tracking-widest text-emerald-200/90 uppercase">
             Ayah {activeAyahIndex + 1} of {ayahs.length}
           </p>
         </div>
@@ -688,7 +733,7 @@ export default function SurahDetailPage({
       </header>
 
       {/* --- CENTER STAGE: BALANCED & RESPONSIVE PROPORTIONED TYPOGRAPHY (ZERO BOXES) --- */}
-      <main className="flex-1 flex flex-col items-center justify-center px-2 sm:px-6 md:px-12 max-w-4xl lg:max-w-5xl mx-auto w-full text-center z-10 my-auto overflow-y-auto no-scrollbar max-h-[68vh] sm:max-h-[72vh]">
+      <main className="flex-1 min-h-0 w-full flex flex-col items-center justify-center px-2 sm:px-6 md:px-12 max-w-4xl lg:max-w-5xl mx-auto text-center z-20 overflow-y-auto no-scrollbar py-0.5 sm:py-2">
         {currentAyah && (
           <AnimatePresence mode="wait">
             <motion.div
@@ -697,7 +742,7 @@ export default function SurahDetailPage({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.2 }}
-              className="w-full flex flex-col items-center justify-center gap-2 sm:gap-3.5 md:gap-4 py-2"
+              className="w-full flex flex-col items-center justify-center gap-1.5 sm:gap-3 md:gap-4 m-auto py-1"
             >
               {/* --- ARABIC TEXT (PERFECTLY SIZED & CRISP) --- */}
               <div className="w-full">
@@ -869,7 +914,7 @@ export default function SurahDetailPage({
       </AnimatePresence>
 
       {/* --- BOTTOM COMPACT CONTROLLER (CLEAN & SLEEK) --- */}
-      <footer className="z-30 w-full flex flex-col items-center gap-2 max-w-xl mx-auto">
+      <footer className="shrink-0 flex-none z-30 w-full flex flex-col items-center gap-1.5 sm:gap-2 max-w-xl mx-auto pb-0.5">
         {/* Audio Mode Switcher */}
         <div className="flex items-center justify-center gap-1 p-0.5 rounded-full bg-black/40 border border-white/10 backdrop-blur-md">
           {[
@@ -900,9 +945,9 @@ export default function SurahDetailPage({
         </div>
 
         {/* Floating Player Controls Bar */}
-        <div className="w-full p-2 sm:p-2.5 rounded-full bg-black/55 border border-white/15 backdrop-blur-xl shadow-2xl flex items-center justify-between gap-2">
+        <div className="w-full p-1.5 sm:p-2.5 rounded-full bg-black/55 border border-white/15 backdrop-blur-xl shadow-2xl flex items-center justify-between gap-1.5 sm:gap-2">
           {/* Left: Info & Disc */}
-          <div className="flex items-center gap-2 pl-1.5 min-w-0 flex-1">
+          <div className="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-1.5 min-w-0 flex-1">
             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white shadow-md shrink-0">
               <motion.div
                 animate={isPlaying ? { rotate: 360 } : {}}
@@ -912,10 +957,10 @@ export default function SurahDetailPage({
               </motion.div>
             </div>
             <div className="flex flex-col min-w-0">
-              <p className="text-[11px] sm:text-xs font-bold text-white truncate">
+              <p className="text-[10px] sm:text-xs font-bold text-white truncate">
                 Ayah {activeAyahIndex + 1} of {ayahs.length}
               </p>
-              <p className="text-[8.5px] sm:text-[9px] text-emerald-300 uppercase tracking-widest font-medium truncate">
+              <p className="text-[8px] sm:text-[9px] text-emerald-300 uppercase tracking-widest font-medium truncate">
                 {audioPhase === "arabic"
                   ? "Mishary Alafasy"
                   : audioMode.includes("ur")
@@ -926,12 +971,12 @@ export default function SurahDetailPage({
           </div>
 
           {/* Right: Action Buttons */}
-          <div className="flex items-center gap-1 sm:gap-1.5 pr-1 shrink-0">
+          <div className="flex items-center gap-0.5 sm:gap-1.5 pr-0.5 sm:pr-1 shrink-0">
             {/* Ambient Sound / Mixer Button */}
             <button
               onClick={() => setIsMixerOpen(true)}
               title="Ambience & Mixer"
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-full border text-[9px] sm:text-[10px] font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full border text-[8.5px] sm:text-[10px] font-bold transition-all cursor-pointer ${
                 selectedAmbience !== "none"
                   ? "bg-emerald-600/30 border-emerald-400 text-emerald-300 shadow-sm"
                   : "bg-white/10 border-white/10 text-white/90 hover:text-emerald-300 hover:bg-white/15"
@@ -947,7 +992,7 @@ export default function SurahDetailPage({
             <button
               onClick={handleSpeedChange}
               title="Speed"
-              className="px-1.5 py-0.5 rounded-full bg-white/10 text-[8.5px] sm:text-[9px] font-bold text-white hover:text-emerald-400 cursor-pointer"
+              className="px-1.5 py-0.5 rounded-full bg-white/10 text-[8px] sm:text-[9px] font-bold text-white hover:text-emerald-400 cursor-pointer"
             >
               {playbackRate}x
             </button>

@@ -77,19 +77,29 @@ export default function UltimatePremiumHero() {
   };
 
   const handleCopy = async () => {
+    const shareText = getShareText();
+    if (typeof navigator !== "undefined" && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      try {
+        await navigator.clipboard.writeText(shareText);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        return;
+      } catch {
+        // Fallback below
+      }
+    }
+    
     try {
-      await navigator.clipboard.writeText(getShareText());
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
       const textArea = document.createElement("textarea");
-      textArea.value = getShareText();
+      textArea.value = shareText;
       document.body.appendChild(textArea);
       textArea.select();
       document.execCommand("copy");
       document.body.removeChild(textArea);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      console.warn("Copy failed", e);
     }
   };
 
