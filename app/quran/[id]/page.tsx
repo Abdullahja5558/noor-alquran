@@ -49,7 +49,7 @@ interface SurahMeta {
 }
 
 type AudioMode = "ar" | "ar_ur" | "ar_en" | "ur";
-type AudioPhase = "arabic" | "translation";
+type AudioPhase = "bismillah" | "arabic" | "translation";
 type AmbientType = "none" | "rain" | "birds" | "fire";
 
 interface AmbientTrack {
@@ -91,19 +91,28 @@ const EVERYAYAH_RECITERS: Record<string, string> = {
   "ar.abdulbasitmurattal": "Abdul_Basit_Murattal_192kbps",
   "ar.minshawi": "Minshawy_Murattal_128kbps",
   "ar.husary": "Husary_128kbps",
-  "ar.yasseraldossari": "Yasser_Ad-Dussary_128kbps",
+  "ar.muhammadjibreel": "Muhammad_Jibreel_128kbps",
   "ar.mahermuaiqly": "Maher_AlMuaiqly_64kbps",
   "ar.abdurrahmaansudais": "Abdurrahmaan_As-Sudais_192kbps",
   "ar.saoodshuraym": "Saood_ash-Shuraym_128kbps",
+  "ar.yasseraldossari": "Yasser_Ad-Dussary_128kbps",
   "ar.hudhaify": "Hudhaify_128kbps",
+  "ar.shaatree": "Abu_Bakr_Ash-Shaatree_128kbps",
   "ar.ahmedajamy": "Ahmed_ibn_Ali_al-Ajamy_128kbps_ketaballah.net",
-  "ar.abdullahbasfar": "Abdullah_Basfar_192kbps",
-  "ar.aymanswoid": "Ayman_Sowaid_64kbps",
-  "ar.muhammadayyoub": "Muhammad_Ayyoob_128kbps",
-  "ar.haniurrifai": "Hani_Rifai_192kbps",
-  "ar.abubakrashshaatree": "Abu_Bakr_Ash-Shaatree_128kbps",
-  "ar.idrisabkar": "Idrees_Abkar_64kbps",
-  "ar.muhammadjibreel": "Muhammad_Jibreel_128kbps",
+  "ar.muhammadayyoub": "Muhammad_Ayyoub_64kbps",
+  "ar.hanirifai": "Hani_Rifai_192kbps",
+  "ar.aymanswoaid": "Ayman_Sowaid_64kbps",
+};
+
+const NO_000_RECITERS = new Set(["ar.husary", "ar.hanirifai", "ar.aymanswoaid"]);
+
+const getBismillahAudioUrl = (reciterId: string, surahNum: number) => {
+  const folder = EVERYAYAH_RECITERS[reciterId] || "Alafasy_128kbps";
+  if (NO_000_RECITERS.has(reciterId)) {
+    return `https://everyayah.com/data/${folder}/001001.mp3`;
+  }
+  const s = String(surahNum).padStart(3, "0");
+  return `https://everyayah.com/data/${folder}/${s}000.mp3`;
 };
 
 const getEveryAyahUrl = (reciterId: string, surahNum: number, ayahNum: number) => {
@@ -175,25 +184,11 @@ export default function SurahDetailPage({
     return RECITERS_LIST[0]; // Mishary Rashid Alafasy
   });
 
-  // Keep reciter synchronized if query parameter changes
-  useEffect(() => {
-    if (reciterParam) {
-      const found = RECITERS_LIST.find((r) => r.id === reciterParam);
-      if (found && found.id !== selectedReciter.id) {
-        setSelectedReciter(found);
-        if (typeof window !== "undefined") {
-          localStorage.setItem("noor_selected_reciter", found.id);
-        }
-        audioCache.current.clear();
-      }
-    }
-  }, [reciterParam, selectedReciter.id]);
-
   const [activeMixerTab, setActiveMixerTab] = useState<"reciters" | "soundscapes">("reciters");
 
   // Zero-Wait State: Initialize immediately with static meta & instant audio URLs
   const [surahInfo, setSurahInfo] = useState<SurahMeta>(() => {
-    const cacheKey = `surah_fast_v11_${surahId}_${selectedReciter.id}`;
+    const cacheKey = `surah_fast_v12_${surahId}_${selectedReciter.id}`;
     if (globalSurahMemoryCache.has(cacheKey)) {
       return globalSurahMemoryCache.get(cacheKey)!.surahInfo;
     }
@@ -201,7 +196,7 @@ export default function SurahDetailPage({
   });
 
   const [ayahs, setAyahs] = useState<Ayah[]>(() => {
-    const cacheKey = `surah_fast_v11_${surahId}_${selectedReciter.id}`;
+    const cacheKey = `surah_fast_v12_${surahId}_${selectedReciter.id}`;
     if (globalSurahMemoryCache.has(cacheKey)) {
       return globalSurahMemoryCache.get(cacheKey)!.ayahs;
     }
@@ -212,7 +207,9 @@ export default function SurahDetailPage({
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeAyahIndex, setActiveAyahIndex] = useState(0);
   const [audioMode, setAudioMode] = useState<AudioMode>("ar_ur"); // Default: Arabic + Urdu
-  const [audioPhase, setAudioPhase] = useState<AudioPhase>("arabic");
+  const [audioPhase, setAudioPhase] = useState<AudioPhase>(() => {
+    return currentSNum !== 1 && currentSNum !== 9 ? "bismillah" : "arabic";
+  });
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isLoopingSingleAyah, setIsLoopingSingleAyah] = useState(false);
   const [copiedAyah, setCopiedAyah] = useState<number | null>(null);
@@ -231,12 +228,13 @@ export default function SurahDetailPage({
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const currentIndexRef = useRef(0);
-  const currentPhaseRef = useRef<AudioPhase>("arabic");
+  const currentPhaseRef = useRef<AudioPhase>(currentSNum !== 1 && currentSNum !== 9 ? "bismillah" : "arabic");
   const currentModeRef = useRef<AudioMode>("ar_ur");
   const isPlayingRef = useRef(false);
   const ayahsRef = useRef<Ayah[]>(ayahs);
   const isLoopingRef = useRef(false);
   const quranVolRef = useRef(1);
+  const isTransitioningRef = useRef(false);
 
   // Audio Preload Cache
   const audioCache = useRef<Map<string, HTMLAudioElement>>(new Map());
@@ -258,26 +256,94 @@ export default function SurahDetailPage({
     }
   }, []);
 
-  // Handle live reciter selection
+  // Determine current audio URL based on mode and phase
+  const getAudioUrl = useCallback(
+    (index: number, phase: AudioPhase, mode: AudioMode, reciterId: string = selectedReciter.id) => {
+      if (phase === "bismillah") {
+        return getBismillahAudioUrl(reciterId, currentSNum);
+      }
+      const currentAyahs = ayahsRef.current.length > 0 ? ayahsRef.current : ayahs;
+      if (!currentAyahs[index]) return "";
+
+      if (mode === "ar") return getEveryAyahUrl(reciterId, currentSNum, currentAyahs[index].numberInSurah);
+      if (mode === "ur") return currentAyahs[index].audioUrdu;
+      if (mode === "ar_ur") {
+        return phase === "arabic"
+          ? getEveryAyahUrl(reciterId, currentSNum, currentAyahs[index].numberInSurah)
+          : currentAyahs[index].audioUrdu;
+      }
+      if (mode === "ar_en") {
+        return phase === "arabic"
+          ? getEveryAyahUrl(reciterId, currentSNum, currentAyahs[index].numberInSurah)
+          : currentAyahs[index].audioEnglish;
+      }
+      return getEveryAyahUrl(reciterId, currentSNum, currentAyahs[index].numberInSurah);
+    },
+    [ayahs, currentSNum, selectedReciter.id]
+  );
+
+  // Play Ayah - Instant & 0ms Zero-Lag Audio Engine
+  const playAyah = useCallback(
+    (index: number, phase: AudioPhase = "arabic", mode: AudioMode = currentModeRef.current, reciterId: string = selectedReciter.id) => {
+      isTransitioningRef.current = false;
+      const currentAyahs = ayahsRef.current.length > 0 ? ayahsRef.current : ayahs;
+      if (!currentAyahs[index] || !audioRef.current) return;
+
+      setActiveAyahIndex(index);
+      setAudioPhase(phase);
+      currentIndexRef.current = index;
+      currentPhaseRef.current = phase;
+      currentModeRef.current = mode;
+      setIsPlaying(true);
+      isPlayingRef.current = true;
+
+      const targetUrl = getAudioUrl(index, phase, mode, reciterId);
+      if (!targetUrl) return;
+
+      if (audioRef.current.src !== targetUrl) {
+        audioRef.current.src = targetUrl;
+      }
+      audioRef.current.playbackRate = playbackRate;
+      audioRef.current.volume = quranVolRef.current;
+
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            if (ambientAudioRef.current && ambientAudioRef.current.src && ambientAudioRef.current.paused) {
+              ambientAudioRef.current.play().catch(() => {});
+            }
+          })
+          .catch((e) => {
+            console.warn("Audio play error", e);
+          });
+      }
+
+      fastPreload(currentAyahs, index, 10);
+    },
+    [ayahs, getAudioUrl, playbackRate, fastPreload, selectedReciter.id]
+  );
+
+  // Handle live reciter selection (Works seamlessly in playlists & regular mode)
   const handleSelectReciter = (reciter: Reciter) => {
     setSelectedReciter(reciter);
     if (typeof window !== "undefined") {
       localStorage.setItem("noor_selected_reciter", reciter.id);
+      const url = new URL(window.location.href);
+      url.searchParams.set("reciter", reciter.id);
+      window.history.replaceState({}, "", url.toString());
     }
     audioCache.current.clear();
-    setAyahs((prev) => {
-      const updated = prev.map((a) => ({
-        ...a,
-        audio: getEveryAyahUrl(reciter.id, currentSNum, a.numberInSurah),
-      }));
-      ayahsRef.current = updated;
-      return updated;
-    });
+
+    const updated = (ayahsRef.current.length > 0 ? ayahsRef.current : ayahs).map((a) => ({
+      ...a,
+      audio: getEveryAyahUrl(reciter.id, currentSNum, a.numberInSurah),
+    }));
+    ayahsRef.current = updated;
+    setAyahs(updated);
 
     if (isPlayingRef.current && audioRef.current) {
-      const nextUrl = getEveryAyahUrl(reciter.id, currentSNum, activeAyahIndex + 1);
-      audioRef.current.src = nextUrl;
-      audioRef.current.play().catch(() => {});
+      playAyah(currentIndexRef.current, currentPhaseRef.current, currentModeRef.current, reciter.id);
     }
   };
 
@@ -349,80 +415,6 @@ export default function SurahDetailPage({
       .join("");
   };
 
-  // Determine current audio URL based on mode and phase
-  const getAudioUrl = useCallback(
-    (index: number, phase: AudioPhase, mode: AudioMode) => {
-      const currentAyahs = ayahsRef.current.length > 0 ? ayahsRef.current : ayahs;
-      if (!currentAyahs[index]) return "";
-
-      if (mode === "ar") return currentAyahs[index].audio;
-      if (mode === "ur") return currentAyahs[index].audioUrdu;
-      if (mode === "ar_ur") {
-        return phase === "arabic" ? currentAyahs[index].audio : currentAyahs[index].audioUrdu;
-      }
-      if (mode === "ar_en") {
-        return phase === "arabic" ? currentAyahs[index].audio : currentAyahs[index].audioEnglish;
-      }
-      return currentAyahs[index].audio;
-    },
-    [ayahs]
-  );
-
-  // Play Ayah - Instant & 0ms Zero-Lag Audio Engine
-  const playAyah = useCallback(
-    (index: number, phase: AudioPhase = "arabic", mode: AudioMode = currentModeRef.current) => {
-      const currentAyahs = ayahsRef.current.length > 0 ? ayahsRef.current : ayahs;
-      if (!currentAyahs[index] || !audioRef.current) return;
-
-      setActiveAyahIndex(index);
-      setAudioPhase(phase);
-      currentIndexRef.current = index;
-      currentPhaseRef.current = phase;
-      currentModeRef.current = mode;
-      setIsPlaying(true);
-      isPlayingRef.current = true;
-
-      let targetUrl = getAudioUrl(index, phase, mode);
-
-      if (!targetUrl) {
-        if (mode === "ar_ur" || mode === "ar_en") {
-          if (phase === "arabic") {
-            targetUrl = currentAyahs[index].audio;
-          } else {
-            if (index < currentAyahs.length - 1) {
-              playAyah(index + 1, "arabic", mode);
-              return;
-            }
-          }
-        }
-      }
-
-      if (!targetUrl) return;
-
-      if (audioRef.current.src !== targetUrl) {
-        audioRef.current.src = targetUrl;
-      }
-      audioRef.current.playbackRate = playbackRate;
-      audioRef.current.volume = quranVolRef.current;
-
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            if (ambientAudioRef.current && ambientAudioRef.current.src && ambientAudioRef.current.paused) {
-              ambientAudioRef.current.play().catch(() => {});
-            }
-          })
-          .catch((e) => {
-            console.warn("Audio play error", e);
-          });
-      }
-
-      fastPreload(currentAyahs, index, 10);
-    },
-    [ayahs, getAudioUrl, playbackRate, fastPreload]
-  );
-
   // Next and Previous Surah Navigation
   const handleGoToNextSurah = useCallback(() => {
     if (nextSurahNum) {
@@ -465,8 +457,11 @@ export default function SurahDetailPage({
     }
   }, [playlistParam, surahId, selectedReciter.id, router, nextSurahNum, handleGoToNextSurah]);
 
-  // Handle Audio Ended - 0ms instant transition
-  const handleAudioEnded = useCallback(() => {
+  // Core Transition Engine: Bismillah -> Arabic -> Translation -> Next Ayah
+  const triggerNextPhase = useCallback(() => {
+    if (isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
+
     const currentAyahs = ayahsRef.current;
     const curIndex = currentIndexRef.current;
     const curPhase = currentPhaseRef.current;
@@ -474,6 +469,12 @@ export default function SurahDetailPage({
     const isLooping = isLoopingRef.current;
 
     if (!currentAyahs || currentAyahs.length === 0) return;
+
+    // 1. If Bismillah finished: Transition immediately to Ayah 1 Arabic recitation!
+    if (curPhase === "bismillah") {
+      playAyah(0, "arabic", curMode);
+      return;
+    }
 
     if (isLooping) {
       if (curMode === "ar_ur" && curPhase === "arabic") {
@@ -513,14 +514,38 @@ export default function SurahDetailPage({
     }
   }, [playAyah, handleSurahCompletion]);
 
+  const handleAudioEnded = useCallback(() => {
+    triggerNextPhase();
+  }, [triggerNextPhase]);
+
+  // Handle Time Update - Cleanly trim trailing 0.32s wasl bleed in EveryAyah audio slices during Arabic recitation
+  const handleTimeUpdate = useCallback(() => {
+    if (!audioRef.current || isTransitioningRef.current) return;
+    const { currentTime, duration } = audioRef.current;
+    if (!duration || isNaN(duration)) return;
+
+    // Apply wasl trim ONLY to regular Arabic Ayah recitation (never Bismillah, so Bismillah plays smoothly to completion)
+    if (currentPhaseRef.current === "arabic") {
+      if (duration > 2.5 && duration - currentTime <= 0.32) {
+        triggerNextPhase();
+      }
+    }
+  }, [triggerNextPhase]);
+
   const handleAudioError = useCallback(() => {
-    handleAudioEnded();
-  }, [handleAudioEnded]);
+    isTransitioningRef.current = false;
+    // If Bismillah was not found, smoothly skip directly to Ayah 1 Arabic recitation
+    if (currentPhaseRef.current === "bismillah") {
+      playAyah(0, "arabic", currentModeRef.current);
+      return;
+    }
+    triggerNextPhase();
+  }, [triggerNextPhase, playAyah]);
 
   // Fetch full Surah text in background without blocking audio or player
   useEffect(() => {
     let isMounted = true;
-    const cacheKey = `surah_fast_v11_${surahId}_${selectedReciter.id}`;
+    const cacheKey = `surah_fast_v12_${surahId}_${selectedReciter.id}`;
 
     // Immediately preload first 12 audio files on mount
     fastPreload(ayahsRef.current, 0, 12);
@@ -535,7 +560,8 @@ export default function SurahDetailPage({
 
       if (autoplayParam === "true" || autoplayParam === "1") {
         setTimeout(() => {
-          playAyah(0, "arabic", audioMode);
+          const initialPhase = currentSNum !== 1 && currentSNum !== 9 ? "bismillah" : "arabic";
+          playAyah(0, initialPhase, audioMode);
         }, 50);
       }
       return;
@@ -554,7 +580,8 @@ export default function SurahDetailPage({
 
         if (autoplayParam === "true" || autoplayParam === "1") {
           setTimeout(() => {
-            playAyah(0, "arabic", audioMode);
+            const initialPhase = currentSNum !== 1 && currentSNum !== 9 ? "bismillah" : "arabic";
+            playAyah(0, initialPhase, audioMode);
           }, 50);
         }
         return;
@@ -566,7 +593,8 @@ export default function SurahDetailPage({
     // Auto-play immediately if requested
     if (autoplayParam === "true" || autoplayParam === "1") {
       setTimeout(() => {
-        playAyah(0, "arabic", audioMode);
+        const initialPhase = currentSNum !== 1 && currentSNum !== 9 ? "bismillah" : "arabic";
+        playAyah(0, initialPhase, audioMode);
       }, 50);
     }
 
@@ -611,35 +639,6 @@ export default function SurahDetailPage({
           }
 
           fastPreload(combinedAyahs, currentIndexRef.current, 12);
-
-          // Background pre-fetch next Surah so next button is 0ms instant
-          if (currentSNum < 114) {
-            const nextSurahKey = `surah_fast_v11_${currentSNum + 1}_${selectedReciter.id}`;
-            if (!globalSurahMemoryCache.has(nextSurahKey)) {
-              fetch(`https://api.alquran.cloud/v1/surah/${currentSNum + 1}/editions/quran-uthmani,ur.jalandhry,en.asad`)
-                .then((r) => r.json())
-                .then((nd) => {
-                  if (nd.data && nd.data[0]) {
-                    const nextAyahs: Ayah[] = nd.data[0].ayahs.map(
-                      (na: { numberInSurah: number; text: string }, ni: number) => ({
-                        numberInSurah: na.numberInSurah,
-                        text: na.text,
-                        urduText: nd.data[1]?.ayahs[ni]?.text || "",
-                        englishText: nd.data[2]?.ayahs[ni]?.text || "",
-                        audio: getEveryAyahUrl(selectedReciter.id, currentSNum + 1, na.numberInSurah),
-                        audioUrdu: getUrduAudioUrl(currentSNum + 1, na.numberInSurah),
-                        audioEnglish: getEnglishAudioUrl(currentSNum + 1, na.numberInSurah),
-                      })
-                    );
-                    globalSurahMemoryCache.set(nextSurahKey, {
-                      surahInfo: nd.data[0],
-                      ayahs: nextAyahs,
-                    });
-                  }
-                })
-                .catch(() => {});
-            }
-          }
         }
       } catch (err) {
         console.error("Fetch Surah Error:", err);
@@ -773,9 +772,9 @@ export default function SurahDetailPage({
       navigator.mediaSession.metadata = new MediaMetadata({
         title: `${surahInfo.englishName} • Verse ${currentAyah.numberInSurah}`,
         artist:
-          audioPhase === "arabic"
-            ? `${selectedReciter.name} (${selectedReciter.city})`
-            : "Fateh Muhammad Jalandhry (Urdu)",
+          audioPhase === "translation"
+            ? "Fateh Muhammad Jalandhry (Urdu)"
+            : `${selectedReciter.name} (${selectedReciter.city})`,
         album: "Noor Al-Quran الكريم",
         artwork: [
           { src: "/favicon5.png", sizes: "512x512", type: "image/png" },
@@ -846,6 +845,7 @@ export default function SurahDetailPage({
       <audio
         ref={audioRef}
         onEnded={handleAudioEnded}
+        onTimeUpdate={handleTimeUpdate}
         onError={handleAudioError}
         preload="auto"
       />
@@ -927,85 +927,102 @@ export default function SurahDetailPage({
         {currentAyah && (
           <AnimatePresence mode="wait">
             <motion.div
-              key={`${currentAyah.numberInSurah}-${audioMode}`}
+              key={`${currentAyah.numberInSurah}-${audioMode}-${audioPhase}`}
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.15 }}
               className="w-full flex flex-col items-center justify-center gap-2.5 sm:gap-3.5 my-auto py-1"
             >
-              {/* --- 1. ARABIC TEXT (Balanced Size, Crisp & Elegant) --- */}
-              {(audioMode === "ar" || audioMode === "ar_ur" || audioMode === "ar_en") && (
-                <div className="w-full">
+              {/* --- BISMILLAH INTRO STAGE (When Bismillah Phase is Active) --- */}
+              {audioPhase === "bismillah" ? (
+                <div className="w-full py-3">
                   <p
                     dir="rtl"
-                    className={`font-arabic text-white font-normal text-center drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] ${
-                      audioMode === "ar"
-                        ? currentAyah.text.length > 250
-                          ? "text-base sm:text-lg md:text-2xl lg:text-3xl leading-[1.8] sm:leading-[1.9]"
-                          : currentAyah.text.length > 120
-                          ? "text-lg sm:text-2xl md:text-3xl lg:text-4xl leading-[1.8] sm:leading-[2]"
-                          : "text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.8] sm:leading-[2]"
-                        : currentAyah.text.length > 250
-                        ? "text-xs sm:text-sm md:text-base lg:text-lg leading-[1.7] sm:leading-[1.8]"
-                        : currentAyah.text.length > 120
-                        ? "text-sm sm:text-base md:text-lg lg:text-xl leading-[1.7] sm:leading-[1.8]"
-                        : "text-base sm:text-xl md:text-2xl lg:text-3xl leading-[1.7] sm:leading-[1.8]"
-                    }`}
+                    className="font-arabic text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-blue-200 font-normal text-center drop-shadow-[0_4px_20px_rgba(0,0,0,0.95)] leading-loose"
                   >
-                    {currentAyah.text}
-                    {/* End Ayah Symbol */}
-                    <span className="inline-flex items-center justify-center relative mx-1 sm:mx-1.5 text-blue-300 align-middle font-serif">
-                      <span className="text-sm sm:text-base md:text-xl">۝</span>
-                      <span className="absolute text-[7px] sm:text-[8px] md:text-[9.5px] font-bold top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-0.5 text-blue-200">
-                        {toArabicNumber(currentAyah.numberInSurah)}
-                      </span>
-                    </span>
+                    بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+                  </p>
+                  <p className="text-xs sm:text-sm text-blue-300/80 font-mono tracking-widest uppercase mt-2">
+                    In the Name of Allah, the Most Gracious, the Most Merciful
                   </p>
                 </div>
-              )}
+              ) : (
+                <>
+                  {/* --- 1. ARABIC TEXT (Balanced Size, Crisp & Elegant) --- */}
+                  {(audioMode === "ar" || audioMode === "ar_ur" || audioMode === "ar_en") && (
+                    <div className="w-full">
+                      <p
+                        dir="rtl"
+                        className={`font-arabic text-white font-normal text-center drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] ${
+                          audioMode === "ar"
+                            ? currentAyah.text.length > 250
+                              ? "text-base sm:text-lg md:text-2xl lg:text-3xl leading-[1.8] sm:leading-[1.9]"
+                              : currentAyah.text.length > 120
+                              ? "text-lg sm:text-2xl md:text-3xl lg:text-4xl leading-[1.8] sm:leading-[2]"
+                              : "text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.8] sm:leading-[2]"
+                            : currentAyah.text.length > 250
+                            ? "text-xs sm:text-sm md:text-base lg:text-lg leading-[1.7] sm:leading-[1.8]"
+                            : currentAyah.text.length > 120
+                            ? "text-sm sm:text-base md:text-lg lg:text-xl leading-[1.7] sm:leading-[1.8]"
+                            : "text-base sm:text-xl md:text-2xl lg:text-3xl leading-[1.7] sm:leading-[1.8]"
+                        }`}
+                      >
+                        {currentAyah.text}
+                        {/* End Ayah Symbol */}
+                        <span className="inline-flex items-center justify-center relative mx-1 sm:mx-1.5 text-blue-300 align-middle font-serif">
+                          <span className="text-sm sm:text-base md:text-xl">۝</span>
+                          <span className="absolute text-[7px] sm:text-[8px] md:text-[9.5px] font-bold top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-0.5 text-blue-200">
+                            {toArabicNumber(currentAyah.numberInSurah)}
+                          </span>
+                        </span>
+                      </p>
+                    </div>
+                  )}
 
-              {/* --- 2. URDU TRANSLATION (Shown ONLY in 'ar_ur' and 'ur' modes) --- */}
-              {(audioMode === "ar_ur" || audioMode === "ur") && currentAyah.urduText && (
-                <div className="w-full max-w-2xl px-2">
-                  <p
-                    dir="rtl"
-                    className={`font-urdu text-center transition-colors duration-300 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
-                      audioMode === "ur"
-                        ? "text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed text-white font-semibold"
-                        : currentAyah.urduText.length > 250
-                        ? "text-[10px] sm:text-xs md:text-sm leading-relaxed"
-                        : currentAyah.urduText.length > 120
-                        ? "text-xs sm:text-sm md:text-base leading-relaxed"
-                        : "text-sm sm:text-base md:text-lg leading-relaxed"
-                    } ${
-                      isPlaying && audioPhase === "translation" && audioMode.includes("ur")
-                        ? "text-blue-300 font-bold"
-                        : "text-slate-100/95 font-medium"
-                    }`}
-                  >
-                    {currentAyah.urduText}
-                  </p>
-                </div>
-              )}
+                  {/* --- 2. URDU TRANSLATION (Shown ONLY in 'ar_ur' and 'ur' modes) --- */}
+                  {(audioMode === "ar_ur" || audioMode === "ur") && currentAyah.urduText && (
+                    <div className="w-full max-w-2xl px-2">
+                      <p
+                        dir="rtl"
+                        className={`font-urdu text-center transition-colors duration-300 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
+                          audioMode === "ur"
+                            ? "text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed text-white font-semibold"
+                            : currentAyah.urduText.length > 250
+                            ? "text-[10px] sm:text-xs md:text-sm leading-relaxed"
+                            : currentAyah.urduText.length > 120
+                            ? "text-xs sm:text-sm md:text-base leading-relaxed"
+                            : "text-sm sm:text-base md:text-lg leading-relaxed"
+                        } ${
+                          isPlaying && audioPhase === "translation" && audioMode.includes("ur")
+                            ? "text-blue-300 font-bold"
+                            : "text-slate-100/95 font-medium"
+                        }`}
+                      >
+                        {currentAyah.urduText}
+                      </p>
+                    </div>
+                  )}
 
-              {/* --- 3. ENGLISH TRANSLATION (Shown ONLY in 'ar_en' mode) --- */}
-              {audioMode === "ar_en" && currentAyah.englishText && (
-                <div className="w-full max-w-xl px-2">
-                  <p
-                    className={`italic text-center font-light drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
-                      currentAyah.englishText.length > 250
-                        ? "text-[9px] sm:text-[10.5px] md:text-xs leading-snug"
-                        : "text-[10px] sm:text-xs md:text-sm leading-relaxed"
-                    } ${
-                      isPlaying && audioPhase === "translation" && audioMode === "ar_en"
-                        ? "text-blue-300 font-normal"
-                        : "text-slate-200/85"
-                    }`}
-                  >
-                    &quot;{currentAyah.englishText}&quot;
-                  </p>
-                </div>
+                  {/* --- 3. ENGLISH TRANSLATION (Shown ONLY in 'ar_en' mode) --- */}
+                  {audioMode === "ar_en" && currentAyah.englishText && (
+                    <div className="w-full max-w-xl px-2">
+                      <p
+                        className={`italic text-center font-light drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] ${
+                          currentAyah.englishText.length > 250
+                            ? "text-[9px] sm:text-[10.5px] md:text-xs leading-snug"
+                            : "text-[10px] sm:text-xs md:text-sm leading-relaxed"
+                        } ${
+                          isPlaying && audioPhase === "translation" && audioMode === "ar_en"
+                            ? "text-blue-300 font-normal"
+                            : "text-slate-200/85"
+                        }`}
+                      >
+                        &quot;{currentAyah.englishText}&quot;
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
             </motion.div>
           </AnimatePresence>
@@ -1017,7 +1034,7 @@ export default function SurahDetailPage({
         {isMixerOpen && (
           <div
             onClick={() => setIsMixerOpen(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md"
           >
             <motion.div
               onClick={(e) => e.stopPropagation()}
@@ -1025,7 +1042,7 @@ export default function SurahDetailPage({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2 }}
-              className="w-full max-w-sm sm:max-w-md max-h-[85vh] rounded-3xl bg-[#07090e]/95 border border-white/10 p-4 sm:p-5 shadow-[0_25px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex flex-col gap-3 text-white overflow-hidden"
+              className="w-full max-w-md sm:max-w-xl max-h-[85vh] rounded-3xl bg-[#07090e]/95 border border-white/10 p-4 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex flex-col gap-3 text-white overflow-hidden"
             >
               {/* Header */}
               <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
@@ -1037,7 +1054,7 @@ export default function SurahDetailPage({
                 </div>
                 <button
                   onClick={() => setIsMixerOpen(false)}
-                  className="p-1 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  className="p-1.5 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
                 >
                   <X size={15} />
                 </button>
@@ -1047,78 +1064,81 @@ export default function SurahDetailPage({
               <div className="grid grid-cols-2 p-1 rounded-2xl bg-white/5 border border-white/10 text-xs font-bold shrink-0">
                 <button
                   onClick={() => setActiveMixerTab("reciters")}
-                  className={`py-1.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeMixerTab === "reciters"
                       ? "bg-blue-600 text-white shadow-md shadow-blue-950"
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
-                  <Mic size={13} />
+                  <Mic size={14} />
                   <span>Reciters ({RECITERS_LIST.length})</span>
                 </button>
                 <button
                   onClick={() => setActiveMixerTab("soundscapes")}
-                  className={`py-1.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeMixerTab === "soundscapes"
                       ? "bg-blue-600 text-white shadow-md shadow-blue-950"
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
-                  <SlidersHorizontal size={13} />
+                  <SlidersHorizontal size={14} />
                   <span>Ambience & Mixer</span>
                 </button>
               </div>
 
-              {/* Tab 1: Reciters Selection */}
+              {/* Tab 1: Clean 2-Column Reciters Grid (Strict 2 Columns, No Blue Tick, Zero Glow) */}
               {activeMixerTab === "reciters" && (
-                <div className="flex-1 overflow-y-auto space-y-2 pr-1 no-scrollbar max-h-[50vh]">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1">
-                    Select Voice of Reciter (مشاهير القراء)
-                  </p>
-                  <div className="grid grid-cols-1 gap-2">
+                <div className="flex-1 overflow-y-auto px-1 py-1 no-scrollbar max-h-[58vh]">
+                  <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
                     {RECITERS_LIST.map((reciter) => {
                       const isSelected = selectedReciter.id === reciter.id;
                       return (
                         <button
                           key={reciter.id}
                           onClick={() => handleSelectReciter(reciter)}
-                          className={`w-full flex items-center justify-between p-2.5 rounded-2xl border transition-all cursor-pointer text-left ${
+                          className={`group relative flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-2xl transition-colors cursor-pointer text-center ${
                             isSelected
-                              ? "bg-blue-600/30 border-blue-400 shadow-md shadow-blue-950/40"
-                              : "bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/20"
+                              ? "bg-[#161c28] border border-blue-500/80"
+                              : "bg-[#0d121c] border border-white/5 hover:border-white/20 hover:bg-[#121724]"
                           }`}
                         >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="relative w-9 h-9 rounded-xl overflow-hidden ring-1 ring-white/10 shrink-0 bg-slate-800">
-                              <Image
-                                src={reciter.image}
-                                alt={reciter.name}
-                                fill
-                                sizes="36px"
-                                className="object-cover"
-                                unoptimized
-                              />
-                            </div>
-                            <div className="min-w-0">
-                              <p className={`text-xs font-bold truncate ${isSelected ? "text-blue-300" : "text-white"}`}>
-                                {reciter.name}
-                              </p>
-                              <p className="text-[10px] text-slate-400 truncate">
-                                {reciter.flag} {reciter.city}, {reciter.country} • <span className="text-blue-400/90">{reciter.style}</span>
-                              </p>
-                            </div>
+                          {/* Reciter Photo - Clean Circular Avatar without any tick overlay or glow */}
+                          <div
+                            className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shrink-0 transition-transform duration-200 ${
+                              isSelected
+                                ? "ring-2 ring-blue-400"
+                                : "ring-1 ring-white/15 group-hover:ring-white/30"
+                            }`}
+                          >
+                            <Image
+                              src={reciter.image}
+                              alt={reciter.name}
+                              fill
+                              sizes="80px"
+                              className="object-cover"
+                              unoptimized
+                            />
                           </div>
 
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className="font-arabic text-xs text-slate-300">
-                              {reciter.arabicName}
-                            </span>
-                            {isSelected && (
-                              <div className="w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center">
-                                <Check size={12} strokeWidth={3} />
-                              </div>
-                            )}
-                          </div>
+                          {/* Reciter English Name Underneath */}
+                          <p
+                            className={`text-xs sm:text-[13px] font-semibold mt-2.5 px-1 w-full text-center leading-tight transition-colors line-clamp-1 ${
+                              isSelected
+                                ? "text-white font-bold"
+                                : "text-slate-300 group-hover:text-white"
+                            }`}
+                          >
+                            {reciter.name}
+                          </p>
+
+                          {/* Subtle Country/Style Subtitle */}
+                          <p
+                            className={`text-[9px] sm:text-[10px] mt-0.5 tracking-wider uppercase truncate w-full text-center ${
+                              isSelected ? "text-blue-300 font-medium" : "text-white/40 group-hover:text-white/60"
+                            }`}
+                          >
+                            {reciter.country}
+                          </p>
                         </button>
                       );
                     })}
