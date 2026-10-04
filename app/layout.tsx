@@ -69,17 +69,17 @@ export default function RootLayout({
           <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden select-none" aria-hidden="true">
             <div className="absolute inset-0 bg-[#f8fafc] dark:bg-[#000000] transition-colors duration-300" />
             
-            {/* Top-Left: Mobile compact & subtle (w-32, 7% opacity), Desktop full size (w-[550px], 18% opacity) */}
-            <div className="hidden dark:block absolute -top-12 -left-12 w-32 h-32 sm:-top-40 sm:-left-40 sm:w-[550px] sm:h-[550px] rounded-full bg-blue-700/[0.07] sm:bg-blue-700/18 blur-[45px] sm:blur-[140px] pointer-events-none" />
+            {/* Top-Left: Mobile compact & subtle (w-32), Desktop rich full size (w-[600px], 22% opacity) */}
+            <div className="hidden dark:block absolute -top-12 -left-12 w-32 h-32 sm:-top-40 sm:-left-40 sm:w-[600px] sm:h-[600px] rounded-full bg-blue-700/[0.07] sm:bg-blue-700/22 blur-[45px] sm:blur-[140px] pointer-events-none" />
 
-            {/* Top-Right: Desktop only */}
-            <div className="hidden sm:dark:block absolute -top-40 -right-40 sm:w-[550px] sm:h-[550px] rounded-full bg-indigo-700/15 sm:blur-[140px] pointer-events-none" />
+            {/* Top-Right: Desktop rich full size (20% opacity) */}
+            <div className="hidden sm:dark:block absolute -top-40 -right-40 sm:w-[600px] sm:h-[600px] rounded-full bg-indigo-700/20 sm:blur-[140px] pointer-events-none" />
 
-            {/* Bottom-Left: Desktop only */}
-            <div className="hidden sm:dark:block absolute -bottom-40 -left-40 sm:w-[550px] sm:h-[550px] rounded-full bg-blue-900/20 sm:blur-[150px] pointer-events-none" />
+            {/* Bottom-Left: Desktop rich full size (25% opacity) */}
+            <div className="hidden sm:dark:block absolute -bottom-40 -left-40 sm:w-[600px] sm:h-[600px] rounded-full bg-blue-900/28 sm:blur-[150px] pointer-events-none" />
 
-            {/* Bottom-Right: Mobile compact & subtle (w-32, 6% opacity), Desktop full size (w-[550px], 16% opacity) */}
-            <div className="hidden dark:block absolute -bottom-12 -right-12 w-32 h-32 sm:-bottom-40 sm:-right-40 sm:w-[550px] sm:h-[550px] rounded-full bg-blue-600/[0.06] sm:bg-blue-600/16 blur-[45px] sm:blur-[140px] pointer-events-none" />
+            {/* Bottom-Right: Mobile compact & subtle (w-32), Desktop rich full size (20% opacity) */}
+            <div className="hidden dark:block absolute -bottom-12 -right-12 w-32 h-32 sm:-bottom-40 sm:-right-40 sm:w-[600px] sm:h-[600px] rounded-full bg-blue-600/[0.06] sm:bg-blue-600/20 blur-[45px] sm:blur-[140px] pointer-events-none" />
           </div>
 
           {children}
