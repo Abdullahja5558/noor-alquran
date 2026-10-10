@@ -30,11 +30,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.verce
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Noor Al-Quran – Read, Listen to Holy Quran with Urdu & English Translation",
+    default: "Noor Al-Quran – Read Quran Surahs & Daily Prayer",
     template: "%s | Noor Al-Quran",
   },
   description:
-    "Noor Al-Quran is a free, modern Islamic web platform to read all 114 Surahs, listen to beautiful MP3 audio recitations by top Qaris (Mishary, Sudais, Abdul Basit), check accurate prayer timings, Islamic Hijri calendar, daily authentic duas, Seerah, and digital tasbeeh counter.",
+    "Read Holy Quran online with 114 Surahs, Urdu translation, audio MP3, daily Islamic duas, tasbeeh counter, and accurate namaz prayer times on Noor Al-Quran.",
   keywords: [
     "Quran",
     "Holy Quran",
@@ -94,9 +94,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: BASE_URL,
     siteName: "Noor Al-Quran",
-    title: "Noor Al-Quran – Read, Listen to Holy Quran with Urdu Translation",
+    title: "Noor Al-Quran – Read Quran Surahs & Daily Prayer",
     description:
-      "Explore all 114 Surahs, authentic audio recitations, prayer times, Hijri calendar, daily duas, and digital tasbeeh.",
+      "Read Holy Quran online with 114 Surahs, Urdu translation, audio MP3, daily Islamic duas, tasbeeh counter, and accurate namaz prayer times on Noor Al-Quran.",
     images: [
       {
         url: "/favicon5.png",
@@ -108,9 +108,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Noor Al-Quran – Read & Listen to Holy Quran Online",
+    title: "Noor Al-Quran – Read Quran Surahs & Daily Prayer",
     description:
-      "Explore 114 Surahs with Urdu translation, top reciters audio, prayer times, duas, and Islamic calendar.",
+      "Read Holy Quran online with 114 Surahs, Urdu translation, audio MP3, daily Islamic duas, tasbeeh counter, and accurate namaz prayer times on Noor Al-Quran.",
     images: ["/favicon5.png"],
   },
 };

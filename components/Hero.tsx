@@ -140,13 +140,22 @@ export default function UltimatePremiumHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight mb-6 sm:mb-8 leading-[1.08] sm:leading-[1.02] text-slate-900 dark:text-white"
+          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight mb-4 sm:mb-6 leading-[1.08] sm:leading-[1.02] text-slate-900 dark:text-white"
         >
-          Experience the <br />
+          Read Holy Quran & <br />
           <span className="text-blue-600 dark:text-blue-400 italic font-serif">
-            Divine Beauty
+            Daily Prayer Guidance
           </span>
         </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-6 sm:mb-8 font-normal"
+        >
+          Explore all 114 Quran Surahs with authentic audio recitations, Urdu translation, daily Islamic duas, and accurate prayer times.
+        </motion.p>
 
         {/* Ayah Card Section */}
         <div ref={ayahRef} className="relative mt-8 sm:mt-12 mb-6 sm:mb-8 group min-h-[340px] sm:min-h-[380px] flex items-center justify-center">

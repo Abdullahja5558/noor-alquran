@@ -1,0 +1,4 @@
+# Noor Al-Quran Ads.txt
+# https://noor-ulquran.vercel.app/ads.txt
+# If you monetize via Google AdSense, place your pub ID below:
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
