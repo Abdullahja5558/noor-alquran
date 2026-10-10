@@ -25,12 +25,46 @@ const notoUrdu = Noto_Nastaliq_Urdu({
   subsets: ["arabic"],
 });
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Noor Al-Quran – Read & Listen to Quran with Tafsir",
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: "Noor Al-Quran – Read, Listen to Holy Quran with Urdu & English Translation",
+    template: "%s | Noor Al-Quran",
+  },
   description:
-    "Noor Al-Quran: Read all 114 Surahs, listen to Quran recitations with translation, view Islamic calendar, prayer timings, Seerah, and daily duas.",
-  keywords:
-    "Quran, Surah, Tafsir, Quran Audio, Islamic Calendar, Prayer Times, Seerah, Daily Dua, Noor Al-Quran, Quran Recitations Online, Quran with Urdu Translation",
+    "Noor Al-Quran is a free, modern Islamic web platform to read all 114 Surahs, listen to beautiful MP3 audio recitations by top Qaris (Mishary, Sudais, Abdul Basit), check accurate prayer timings, Islamic Hijri calendar, daily authentic duas, Seerah, and digital tasbeeh counter.",
+  keywords: [
+    "Quran",
+    "Holy Quran",
+    "Quran with Urdu Translation",
+    "Quran Online",
+    "Listen Quran MP3",
+    "Surah Yaseen",
+    "Surah Al-Baqarah",
+    "Surah Rahman",
+    "Surah Mulk",
+    "Islamic Calendar",
+    "Prayer Times Pakistan",
+    "Namaz Timings",
+    "Daily Duas",
+    "Masnoon Duain",
+    "Digital Tasbeeh Counter",
+    "Seerah of Prophet Muhammad",
+    "Noor Al-Quran",
+    "Mishary Rashid Alafasy",
+    "Abdul Basit",
+    "Abdur Rahman As-Sudais",
+  ],
+  authors: [{ name: "Noor Al-Quran Team", url: BASE_URL }],
+  creator: "Noor Al-Quran",
+  publisher: "Noor Al-Quran",
+  applicationName: "Noor Al-Quran",
+  category: "Islamic Education & Quran",
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: [
       {
@@ -38,16 +72,83 @@ export const metadata: Metadata = {
         href: "/favicon5.png",
       },
     ],
+    shortcut: "/favicon5.png",
+    apple: "/favicon5.png",
   },
-  authors: [{ name: "Noor Al-Quran" }],
+  verification: {
+    google: "googlefc24be5cd256c9a9",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
     type: "website",
-    url: "https://www.noor.alquran.vercel.app",
-    title: "Noor Al-Quran – Read & Listen to Quran with Tafsir",
+    locale: "en_US",
+    url: BASE_URL,
+    siteName: "Noor Al-Quran",
+    title: "Noor Al-Quran – Read, Listen to Holy Quran with Urdu Translation",
     description:
-      "Read, listen, and explore Quran with translations, Islamic calendar, prayer timings, Seerah, and daily duas.",
+      "Explore all 114 Surahs, authentic audio recitations, prayer times, Hijri calendar, daily duas, and digital tasbeeh.",
+    images: [
+      {
+        url: "/favicon5.png",
+        width: 512,
+        height: 512,
+        alt: "Noor Al-Quran Emblem",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Noor Al-Quran – Read & Listen to Holy Quran Online",
+    description:
+      "Explore 114 Surahs with Urdu translation, top reciters audio, prayer times, duas, and Islamic calendar.",
+    images: ["/favicon5.png"],
   },
 };
+
+const jsonLdWebsite = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${BASE_URL}/#website`,
+      "url": BASE_URL,
+      "name": "Noor Al-Quran",
+      "description": "Read and listen to the Holy Quran with Urdu & English translations, prayer timings, Hijri calendar, and daily duas.",
+      "publisher": {
+        "@id": `${BASE_URL}/#organization`
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${BASE_URL}/quran?search={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": `${BASE_URL}/#organization`,
+      "name": "Noor Al-Quran",
+      "url": BASE_URL,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${BASE_URL}/favicon5.png`
+      }
+    }
+  ]
+};
+
 
 export default function RootLayout({
   children,
@@ -60,6 +161,12 @@ export default function RootLayout({
       suppressHydrationWarning
       style={{ scrollBehavior: "smooth" }}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebsite) }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${amiri.variable} ${notoUrdu.variable} antialiased min-h-screen selection:bg-blue-600/30 selection:text-blue-900 dark:selection:text-blue-200 bg-[#f8fafc] dark:bg-[#000000] text-slate-900 dark:text-slate-100 relative`}
         suppressHydrationWarning
