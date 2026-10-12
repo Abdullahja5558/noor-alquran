@@ -9,8 +9,6 @@ import {
   Play,
   Search,
   X,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import { RECITERS_LIST, Reciter } from "./recitersData";
 
@@ -36,7 +34,6 @@ export default function RecitersSection() {
     { number: number; name: string; englishName: string; numberOfAyahs: number }[]
   >([]);
   const [loadingSurahs, setLoadingSurahs] = useState(false);
-  const scrollTabsRef = useRef<HTMLDivElement>(null);
 
   // Country filter pills (clean names without flag emojis)
   const countries = useMemo(() => {
@@ -48,16 +45,6 @@ export default function RecitersSection() {
       { id: "sy", name: "Syria" },
     ];
   }, []);
-
-  const scrollTabs = (direction: "left" | "right") => {
-    if (scrollTabsRef.current) {
-      const scrollAmount = 140;
-      scrollTabsRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
 
   // Filter reciters
   const filteredReciters = useMemo(() => {
