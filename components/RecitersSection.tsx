@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,6 +9,8 @@ import {
   Play,
   Search,
   X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { RECITERS_LIST, Reciter } from "./recitersData";
 
@@ -34,6 +36,7 @@ export default function RecitersSection() {
     { number: number; name: string; englishName: string; numberOfAyahs: number }[]
   >([]);
   const [loadingSurahs, setLoadingSurahs] = useState(false);
+  const scrollTabsRef = useRef<HTMLDivElement>(null);
 
   // Country filter pills (clean names without flag emojis)
   const countries = useMemo(() => {
@@ -45,6 +48,16 @@ export default function RecitersSection() {
       { id: "sy", name: "Syria" },
     ];
   }, []);
+
+  const scrollTabs = (direction: "left" | "right") => {
+    if (scrollTabsRef.current) {
+      const scrollAmount = 140;
+      scrollTabsRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   // Filter reciters
   const filteredReciters = useMemo(() => {
@@ -62,7 +75,7 @@ export default function RecitersSection() {
     });
   }, [searchQuery, selectedCountry]);
 
-  // Group by country for organized view (clean headers without flag emojis)
+  // Group by country for organized view
   const groupedByCountry = useMemo(() => {
     const groups: { [key: string]: { country: string; list: Reciter[] } } = {
       kw: { country: "From Kuwait", list: [] },
@@ -121,25 +134,18 @@ export default function RecitersSection() {
       <div className="max-w-7xl mx-auto">
         {/* --- CENTERED SECTION HEADER --- */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-white/80 dark:bg-[#07090e]/80 backdrop-blur-md border border-slate-200/80 dark:border-[#141c2b] text-slate-800 dark:text-slate-200 shadow-sm">
-            <Mic size={14} className="text-blue-500" />
-            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-blue-700 dark:text-blue-300">
-              Renowned Quran Reciters • مشاهير القراء
-            </span>
-          </div>
-          
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+          <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
             Listen by Reciter{" "}
             <span className="font-arabic font-normal text-2xl sm:text-4xl text-blue-600 dark:text-blue-400 ml-2">
               القراء
             </span>
           </h2>
           
-          <p className="mt-3 text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-xl font-light leading-relaxed">
+          <p className="mt-3 text-sm sm:text-base md:text-lg text-slate-600 dark:text-neutral-400 max-w-xl font-normal leading-relaxed">
             Experience the recitation of all 114 Surahs by the most esteemed and beloved reciters of the Islamic world.
           </p>
 
-          {/* Centered Search Box */}
+          {/* Centered Borderless Search Box */}
           <div className="relative w-full max-w-md mt-6">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
@@ -147,33 +153,60 @@ export default function RecitersSection() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search reciter or city..."
-              className="w-full pl-11 pr-10 py-3 rounded-2xl bg-white/80 dark:bg-[#07090e]/80 backdrop-blur-xl border border-slate-200/80 dark:border-[#141c2b] text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all shadow-sm"
+              className="w-full pl-11 pr-10 py-3 rounded-full bg-slate-100 dark:bg-white/[0.06] border-none outline-none ring-0 focus:ring-0 focus:outline-none text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500 transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                aria-label="Clear reciter search"
               >
                 <X size={15} />
               </button>
             )}
           </div>
 
-          {/* Centered Country Filter Pills (Clean names, no flag emojis) */}
-          <div className="flex items-center justify-center flex-wrap gap-2.5 pt-6">
-            {countries.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setSelectedCountry(c.id)}
-                className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all backdrop-blur-md cursor-pointer ${
-                  selectedCountry === c.id
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 scale-105"
-                    : "bg-white/60 dark:bg-[#07090e]/60 text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-[#0c111a] border border-slate-200/80 dark:border-[#141c2b]"
-                }`}
-              >
-                <span>{c.name}</span>
-              </button>
-            ))}
+          {/* 
+            Horizontal Tab Slider:
+            - Exactly 2 full tabs visible + 3rd tab half visible (inviting scroll)
+            - Corner shadow/fade gradient on the right
+            - No left/right arrow buttons
+          */}
+          <div className="relative w-full max-w-[280px] sm:max-w-[290px] mx-auto mt-6 pt-1">
+            {/* Left subtle shadow (when scrolled) */}
+            <div className="pointer-events-none absolute left-0 inset-y-0 w-6 z-10 bg-gradient-to-r from-[#f8fafc] dark:from-black to-transparent" />
+
+            {/* Right corner shadow overlaying the half-visible 3rd item */}
+            <div className="pointer-events-none absolute right-0 inset-y-0 w-12 sm:w-14 z-10 bg-gradient-to-l from-[#f8fafc] dark:from-black to-transparent" />
+
+            {/* Scrollable Container (Shows 2 full + 3rd half) */}
+            <div
+              className="overflow-x-auto no-scrollbar scroll-smooth flex items-center gap-2 px-1 py-1 snap-x snap-mandatory select-none cursor-grab active:cursor-grabbing"
+            >
+              {countries.map((c) => {
+                const isSelected = selectedCountry === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    onClick={(e) => {
+                      setSelectedCountry(c.id);
+                      e.currentTarget.scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest",
+                        inline: "center",
+                      });
+                    }}
+                    className={`shrink-0 snap-center px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                      isSelected
+                        ? "bg-[#155DFC] text-white"
+                        : "bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-neutral-300 hover:text-slate-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <span>{c.name}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -182,27 +215,27 @@ export default function RecitersSection() {
           {groupedByCountry.map(([code, group]) => (
             <div key={code} className="space-y-6">
               {/* Category Header */}
-              <div className="flex items-center justify-between border-b border-slate-200/70 dark:border-[#141c2b] pb-3.5">
-                <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+              <div className="flex items-center justify-between border-b border-slate-200/70 dark:border-white/10 pb-3.5">
+                <h3 className="font-heading text-lg sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
                   {group.country}
                 </h3>
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                <span className="text-xs font-semibold text-slate-500 dark:text-neutral-400">
                   {group.list.length} {group.list.length === 1 ? "Reciter" : "Reciters"}
                 </span>
               </div>
 
-              {/* Liquid Glass Circular Avatars Grid */}
+              {/* Reciters Circular Avatars Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 pt-2">
                 {group.list.map((reciter) => (
                   <motion.div
                     key={reciter.id}
-                    whileHover={{ y: -6 }}
-                    transition={{ duration: 0.25 }}
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.2 }}
                     onClick={() => openReciterSurahs(reciter)}
                     className="group cursor-pointer flex flex-col items-center text-center select-none"
                   >
-                    {/* Clean Circular Avatar without outer border rings */}
-                    <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-full overflow-hidden bg-slate-100 dark:bg-[#0c111a] transition-all duration-300 shadow-md">
+                    {/* Clean Circular Avatar */}
+                    <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-full overflow-hidden bg-slate-100 dark:bg-neutral-900 transition-all duration-300">
                       <Image
                         src={reciter.image}
                         alt={reciter.name}
@@ -211,24 +244,21 @@ export default function RecitersSection() {
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
 
-                      {/* Liquid Glass Light Reflection Sheen */}
-                      <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
-
-                      {/* Frosted Liquid Glass Play Overlay */}
-                      <div className="absolute inset-0 bg-black/25 backdrop-blur-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/20 dark:bg-white/15 backdrop-blur-xl border border-white/40 dark:border-white/30 text-white flex items-center justify-center shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transform scale-80 group-hover:scale-100 transition-all duration-300">
+                      {/* Play Overlay */}
+                      <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/40 text-white flex items-center justify-center">
                           <Play size={17} className="fill-white text-white ml-0.5" />
                         </div>
                       </div>
                     </div>
 
                     {/* Centered Name Underneath */}
-                    <h4 className="mt-3.5 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug px-1 max-w-[170px]">
+                    <h4 className="mt-3.5 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white group-hover:text-[#155DFC] dark:group-hover:text-[#155DFC] transition-colors leading-snug px-1 max-w-[170px]">
                       {reciter.name}
                     </h4>
 
                     {/* City & Style */}
-                    <p className="mt-0.5 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    <p className="mt-0.5 text-[11px] sm:text-xs text-slate-500 dark:text-neutral-400 font-medium">
                       {reciter.city}
                     </p>
                   </motion.div>
@@ -240,7 +270,7 @@ export default function RecitersSection() {
           {groupedByCountry.length === 0 && (
             <div className="text-center py-16">
               <Mic size={40} className="mx-auto text-slate-400 mb-3" />
-              <p className="text-slate-500 dark:text-slate-400 font-medium">
+              <p className="text-slate-500 dark:text-neutral-400 font-medium">
                 No reciter found matching &quot;{searchQuery}&quot;.
               </p>
             </div>
@@ -251,26 +281,26 @@ export default function RecitersSection() {
       {/* --- SURAH PICKER MODAL (114 SURAHS) --- */}
       <AnimatePresence>
         {selectedReciterModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md">
             <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 15 }}
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 15 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-2xl bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh]"
+              className="relative w-full max-w-2xl bg-white dark:bg-black border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh]"
             >
               {/* Modal Header */}
-              <div className="p-5 sm:p-6 bg-slate-50/80 dark:bg-[#0c111a] border-b border-slate-200 dark:border-[#141c2b] relative">
+              <div className="p-5 sm:p-6 bg-slate-50 dark:bg-neutral-900 border-b border-slate-200 dark:border-white/10 relative">
                 <button
                   onClick={() => setSelectedReciterModal(null)}
-                  className="absolute right-4 top-4 w-9 h-9 rounded-full bg-slate-200/80 dark:bg-[#141c2b] hover:bg-slate-300 dark:hover:bg-[#1a2538] text-slate-600 dark:text-slate-300 flex items-center justify-center transition-all"
+                  className="absolute right-4 top-4 w-9 h-9 rounded-full bg-slate-200/80 dark:bg-white/10 hover:bg-slate-300 dark:hover:bg-white/20 text-slate-600 dark:text-neutral-300 flex items-center justify-center transition-all"
                   aria-label="Close modal"
                 >
                   <X size={18} />
                 </button>
 
                 <div className="flex items-center gap-4 sm:gap-5 pr-10">
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden p-1 bg-white dark:bg-[#0c111a] border-2 border-slate-300 dark:border-[#1a2538] shadow-md shrink-0">
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden p-0.5 bg-white dark:bg-neutral-900 border border-slate-300 dark:border-white/20 shrink-0">
                     <div className="relative w-full h-full rounded-full overflow-hidden">
                       <Image
                         src={selectedReciterModal.image}
@@ -281,21 +311,19 @@ export default function RecitersSection() {
                     </div>
                   </div>
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-                        {selectedReciterModal.country}
-                      </span>
-                    </div>
+                    <span className="text-xs font-semibold text-slate-600 dark:text-neutral-400 uppercase tracking-wider">
+                      {selectedReciterModal.country}
+                    </span>
                     <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white truncate">
                       {selectedReciterModal.name}
                     </h3>
-                    <p className="text-xs sm:text-sm font-arabic text-blue-600 dark:text-blue-400 mt-0.5">
+                    <p className="text-xs sm:text-sm font-arabic text-[#155DFC] mt-0.5">
                       {selectedReciterModal.arabicName} • {selectedReciterModal.city}
                     </p>
                   </div>
                 </div>
 
-                {/* Search Surah inside Modal */}
+                {/* Borderless Search Surah inside Modal */}
                 <div className="relative mt-4">
                   <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
@@ -303,7 +331,7 @@ export default function RecitersSection() {
                     value={surahSearch}
                     onChange={(e) => setSurahSearch(e.target.value)}
                     placeholder={`Search 114 Surahs for ${selectedReciterModal.name.split(" ")[0]}...`}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-full bg-slate-100 dark:bg-white/[0.06] border-none outline-none ring-0 focus:ring-0 focus:outline-none text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500"
                   />
                   {surahSearch && (
                     <button
@@ -331,28 +359,28 @@ export default function RecitersSection() {
                     <div
                       key={surah.number}
                       onClick={() => handlePlaySurah(surah.number, selectedReciterModal.id)}
-                      className="group flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-[#0c111a]/60 hover:bg-slate-100 dark:hover:bg-[#141c2b] border border-slate-200/80 dark:border-[#141c2b] hover:border-slate-300 dark:hover:border-[#1a2538] transition-all cursor-pointer"
+                      className="group flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-white/[0.04] hover:bg-slate-100 dark:hover:bg-white/[0.08] border border-slate-200/80 dark:border-white/10 transition-colors cursor-pointer"
                     >
                       <div className="flex items-center gap-3 sm:gap-4">
-                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white dark:bg-[#141c2b] text-slate-800 dark:text-slate-200 font-bold text-xs flex items-center justify-center shadow-sm border border-slate-200 dark:border-[#1a2538]">
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white dark:bg-white/10 text-slate-800 dark:text-white font-bold text-xs flex items-center justify-center border border-slate-200 dark:border-white/10">
                           {surah.number}
                         </div>
                         <div>
-                          <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                          <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#155DFC] transition-colors">
                             {surah.englishName}
                           </div>
-                          <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">
+                          <div className="text-[10px] sm:text-xs text-slate-500 dark:text-neutral-400">
                             {surah.numberOfAyahs} Verses
                           </div>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <span className="font-arabic text-base sm:text-lg text-slate-800 dark:text-slate-200">
+                        <span className="font-arabic text-base sm:text-lg text-slate-800 dark:text-neutral-200">
                           {surah.name}
                         </span>
-                        <div className="w-8 h-8 rounded-full bg-white dark:bg-[#141c2b] text-slate-700 dark:text-slate-200 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:bg-blue-600 dark:group-hover:text-white flex items-center justify-center transition-all shadow-sm">
-                          <Play size={14} className="fill-current ml-0.5" />
+                        <div className="w-8 h-8 rounded-full bg-white dark:bg-white/10 text-slate-700 dark:text-neutral-200 group-hover:bg-[#155DFC] group-hover:text-white flex items-center justify-center transition-colors">
+                          <Play size={13} className="fill-current ml-0.5" />
                         </div>
                       </div>
                     </div>
@@ -361,9 +389,9 @@ export default function RecitersSection() {
               </div>
 
               {/* Modal Footer */}
-              <div className="p-4 bg-slate-50 dark:bg-[#0c111a] border-t border-slate-200 dark:border-[#141c2b] flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+              <div className="p-4 bg-slate-50 dark:bg-neutral-900 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs text-slate-500 dark:text-neutral-400">
                 <span>Select any Surah to start audio playback</span>
-                <span className="font-semibold text-slate-700 dark:text-slate-300">
+                <span className="font-semibold text-slate-700 dark:text-neutral-300">
                   114 Surahs Available
                 </span>
               </div>

@@ -105,9 +105,6 @@ export default function Topics() {
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header Section */}
         <div className="text-center mb-12 sm:mb-16">
-          <span className="text-[9px] sm:text-[10px] md:text-xs font-black tracking-[0.25em] sm:tracking-[0.3em] uppercase px-4 sm:px-5 py-2 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-blue-700 dark:text-blue-300 shadow-sm">
-            Divine Guidance
-          </span>
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-black mt-4 sm:mt-6 tracking-tight text-slate-900 dark:text-white">
             Wisdom for every <br />
             <span className="text-blue-600 dark:text-blue-400 italic">

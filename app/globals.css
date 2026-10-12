@@ -1,4 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap');
 @import "tailwindcss";
+
+
+.font-heading,
+.font-bricolage,
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-bricolage), 'Bricolage Grotesque', system-ui, sans-serif;
+}
 
 /* --- TAILWIND V4 CLASS-BASED DARK MODE VARIANT --- */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -32,13 +40,6 @@
 
   .dark body {
     background-color: #000000;
-    background-image:
-      radial-gradient(ellipse 65% 55% at 0% 0%, rgba(30, 58, 138, 0.28) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 100% 0%, rgba(29, 78, 216, 0.22) 0%, transparent 55%),
-      radial-gradient(ellipse 65% 55% at 0% 100%, rgba(15, 23, 42, 0.7) 0%, transparent 60%),
-      radial-gradient(ellipse 65% 55% at 100% 100%, rgba(30, 58, 138, 0.25) 0%, transparent 60%);
-    background-attachment: fixed;
-    background-repeat: no-repeat;
     color: #f8fafc;
   }
 }

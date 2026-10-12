@@ -4,15 +4,15 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Menu, X, BookOpen, Sun, Moon, Sparkles } from "lucide-react";
+import { Menu, X, BookOpen, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const navLinks = [
+const NAV_LINKS = [
   { name: "Al-Quran", href: "/quran" },
   { name: "Prayer Times", href: "/prayer-time" },
   { name: "Daily Dua", href: "/dua" },
   { name: "Tasbeeh", href: "/tasbeeh" },
-  { name: "Islamic Calendar", href: "/calendar" },
+  { name: "Calendar", href: "/calendar" },
   { name: "Seerah", href: "/seerah" },
 ];
 
@@ -24,15 +24,16 @@ export default function Navbar() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const frameId = requestAnimationFrame(() => setMounted(true));
+    setMounted(true);
 
     const handleScroll = () => {
-      setScrolled(window.scrollY > 15);
+      setScrolled(window.scrollY > 20);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
     return () => {
-      cancelAnimationFrame(frameId);
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
@@ -49,171 +50,150 @@ export default function Navbar() {
   };
 
   return (
-    <nav
-      className={`fixed w-full z-50 transition-all duration-300 px-3 sm:px-6 md:px-8 ${
-        scrolled ? "top-2 sm:top-3" : "top-3 sm:top-5"
-      }`}
-    >
-      <div
-        className={`max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 md:px-8 py-3 rounded-[2rem] sm:rounded-[2.2rem] transition-all duration-300 bg-white/95 dark:bg-[#07090e]/95 backdrop-blur-xl border border-slate-200 dark:border-[#141c2b] ${
-          scrolled ? "shadow-lg shadow-black/5 dark:shadow-black/60" : "shadow-md shadow-black/3 dark:shadow-black/30"
+    <>
+      <header
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-out ${
+          scrolled
+            ? "pt-3 sm:pt-4 px-3 sm:px-6 md:px-8 pointer-events-none"
+            : "pt-0 px-4 sm:px-8 md:px-10 pointer-events-auto"
         }`}
       >
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group cursor-pointer shrink-0">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-md shadow-blue-600/25 group-hover:rotate-12 transition-transform duration-300 shrink-0">
-            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-0.5 sm:gap-1">
-              Noor<span className="text-blue-500 font-semibold">Quran</span>
-            </span>
-            <span className="text-[7.5px] sm:text-[8px] font-black uppercase tracking-[0.3em] text-blue-600 dark:text-blue-400 -mt-1">
-              Al-Kareem
-            </span>
-          </div>
-        </Link>
-
-        {/* Desktop Links (Large Screens) */}
-        <div className="hidden xl:flex items-center gap-1 p-1.5 rounded-full bg-slate-100 dark:bg-[#0c111a] border border-slate-200/80 dark:border-[#1a2538]">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href || (link.href === "/quran" && pathname.startsWith("/quran"));
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`relative px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide transition-all duration-200 ${
-                  isActive
-                    ? "text-white bg-blue-600 shadow-md shadow-blue-600/30"
-                    : "text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-800/70"
-                }`}
-              >
-                {link.name}
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Medium Screen Navigation (Tablet 1024px - 1280px) */}
-        <div className="hidden lg:flex xl:hidden items-center gap-1 p-1 rounded-full bg-slate-100 dark:bg-[#0c111a] border border-slate-200/80 dark:border-[#1a2538]">
-          {navLinks.slice(0, 4).map((link) => {
-            const isActive = pathname === link.href || (link.href === "/quran" && pathname.startsWith("/quran"));
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wide transition-all ${
-                  isActive
-                    ? "text-white bg-blue-600 shadow-sm"
-                    : "text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
-                }`}
-              >
-                {link.name}
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Right Actions */}
-        <div className="hidden md:flex items-center gap-2.5 sm:gap-3">
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-slate-700 dark:text-slate-200 hover:border-blue-500/40 transition-all cursor-pointer overflow-hidden active:scale-95"
+        <div
+          className={`transition-all duration-300 ease-out flex items-center justify-between ${
+            scrolled
+              ? "pointer-events-auto max-w-5xl lg:max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl sm:rounded-full bg-white/80 dark:bg-neutral-900/75 backdrop-blur-2xl border border-slate-200/90 dark:border-white/20 shadow-lg shadow-black/5 dark:shadow-[0_16px_40px_rgba(0,0,0,0.7)]"
+              : "w-full max-w-7xl mx-auto py-5 sm:py-6 px-4 sm:px-8 bg-transparent border-none"
+          }`}
+        >
+          {/* Logo */}
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 group cursor-pointer shrink-0 select-none"
           >
-            <AnimatePresence mode="wait" initial={false}>
-              {mounted && isDark ? (
-                <motion.div
-                  key="sun"
-                  initial={{ y: 12, opacity: 0, rotate: -45 }}
-                  animate={{ y: 0, opacity: 1, rotate: 0 }}
-                  exit={{ y: -12, opacity: 0, rotate: 45 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <Sun size={17} className="text-amber-400" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="moon"
-                  initial={{ y: 12, opacity: 0, rotate: 45 }}
-                  animate={{ y: 0, opacity: 1, rotate: 0 }}
-                  exit={{ y: -12, opacity: 0, rotate: -45 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <Moon size={17} className="text-blue-500" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </button>
-
-          <Link href="/about">
-            <button className="px-4 sm:px-5 py-2 sm:py-2.5 text-xs font-bold rounded-2xl border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-300 transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-sm">
-              <Sparkles size={13} className="text-blue-500" />
-              <span>About</span>
-            </button>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 flex items-center justify-center shadow-sm transition-transform duration-200 group-hover:scale-105 shrink-0">
+              <BookOpen className="w-4 h-4" />
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+                Noor<span className="font-normal text-slate-500 dark:text-neutral-400">Quran</span>
+              </span>
+              <span className="hidden sm:inline-block font-arabic text-xs text-slate-400 dark:text-neutral-500 opacity-80">
+                نور القرآن
+              </span>
+            </div>
           </Link>
+
+          {/* Desktop Navigation Links (Clean, No Box Container) */}
+          <nav className="hidden lg:flex items-center gap-1">
+            {NAV_LINKS.map((link) => {
+              const isActive =
+                pathname === link.href ||
+                (link.href === "/quran" && pathname.startsWith("/quran"));
+
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`px-3.5 py-1.5 rounded-full text-[13px] sm:text-sm font-medium transition-colors duration-150 ${
+                    isActive
+                      ? "text-slate-950 dark:text-white font-semibold bg-slate-100 dark:bg-white/10"
+                      : "text-slate-600 dark:text-neutral-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-white/[0.06]"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Right Action Controls */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle color theme"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-slate-600 dark:text-neutral-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer select-none"
+            >
+              {mounted ? (
+                isDark ? (
+                  <Sun size={17} className="text-amber-400" />
+                ) : (
+                  <Moon size={17} className="text-slate-700" />
+                )
+              ) : (
+                <div className="w-4 h-4 rounded-full bg-slate-200 dark:bg-neutral-800" />
+              )}
+            </button>
+
+            {/* Clean Minimalist About Link */}
+            <Link
+              href="/about"
+              className="hidden sm:inline-flex items-center px-4 py-1.5 text-xs font-medium rounded-full border border-slate-200 dark:border-white/10 text-slate-700 dark:text-neutral-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+            >
+              About
+            </Link>
+
+            {/* Mobile Hamburger Menu Button */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle mobile menu"
+              className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-slate-700 dark:text-neutral-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              {isOpen ? <X size={19} /> : <Menu size={19} />}
+            </button>
+          </div>
         </div>
+      </header>
 
-        {/* Mobile & Tablet Toggle Controls */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="p-2 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-slate-700 dark:text-slate-200 active:scale-95 transition-transform"
-          >
-            {mounted && isDark ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} className="text-blue-500" />}
-          </button>
-
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-            className="p-2 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-blue-600 dark:text-blue-400 active:scale-95 transition-transform"
-          >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Drawer Menu (Solid Background & Full Width Touch Targets) */}
+      {/* Mobile Drawer Menu (Real Glassmorphism & Clean Typography) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-16 sm:top-20 left-3 right-3 sm:left-4 sm:right-4 rounded-3xl p-5 sm:p-6 flex flex-col gap-2.5 lg:hidden bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-2xl z-50 max-h-[80vh] overflow-y-auto"
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className={`fixed ${
+              scrolled ? "top-16 sm:top-20" : "top-20"
+            } inset-x-3 sm:inset-x-6 max-w-md mx-auto rounded-3xl p-4 sm:p-5 flex flex-col gap-1.5 lg:hidden bg-white/95 dark:bg-neutral-950/90 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 shadow-2xl z-50`}
           >
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href || (link.href === "/quran" && pathname.startsWith("/quran"));
+            {NAV_LINKS.map((link) => {
+              const isActive =
+                pathname === link.href ||
+                (link.href === "/quran" && pathname.startsWith("/quran"));
+
               return (
                 <Link
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className={`px-4 py-3 rounded-2xl text-sm font-bold flex items-center justify-between transition-all active:scale-98 ${
+                  className={`px-4 py-3 rounded-2xl text-sm font-medium flex items-center justify-between transition-colors ${
                     isActive
-                      ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
-                      : "text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/70"
+                      ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-semibold shadow-sm"
+                      : "text-slate-700 dark:text-neutral-300 hover:bg-slate-100 dark:hover:bg-white/[0.06]"
                   }`}
                 >
                   <span>{link.name}</span>
-                  <span className="text-xs opacity-60">→</span>
+                  <span className="text-xs opacity-40">→</span>
                 </Link>
               );
             })}
-            <div className="pt-3 mt-1 border-t border-slate-200 dark:border-[#141c2b] flex justify-between items-center">
+
+            <div className="pt-3 mt-1.5 border-t border-slate-200/70 dark:border-white/10 flex justify-between items-center px-1">
               <Link
                 href="/about"
                 onClick={() => setIsOpen(false)}
-                className="text-xs font-bold text-blue-600 dark:text-blue-400 py-2 px-3 hover:underline"
+                className="text-xs font-medium text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white transition-colors"
               >
-                About Noor Al-Quran
+                About Project
               </Link>
+              <span className="text-[11px] font-arabic text-slate-400 dark:text-neutral-500">
+                نور القرآن الكريم
+              </span>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 }

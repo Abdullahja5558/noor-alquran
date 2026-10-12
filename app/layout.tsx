@@ -1,13 +1,20 @@
-import type { Metadata, Viewport } from "next";
-import { Geist, Amiri, Noto_Nastaliq_Urdu } from "next/font/google";
+import { Geist, Amiri, Noto_Nastaliq_Urdu, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Metadata, Viewport } from "next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "swap",
   preload: true,
+});
+
+const bricolageGrotesque = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  display: "swap",
 });
 
 const amiri = Amiri({
@@ -275,27 +282,10 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${amiri.variable} ${notoUrdu.variable} antialiased min-h-screen selection:bg-blue-600/30 selection:text-blue-900 dark:selection:text-blue-200 bg-[#f8fafc] dark:bg-[#000000] text-slate-900 dark:text-slate-100 relative`}
+        className={`${geistSans.variable} ${bricolageGrotesque.variable} ${amiri.variable} ${notoUrdu.variable} antialiased min-h-screen selection:bg-blue-600/30 selection:text-blue-900 dark:selection:text-blue-200 bg-[#f8fafc] dark:bg-[#000000] text-slate-900 dark:text-slate-100 relative`}
         suppressHydrationWarning
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          {/* Ambient Dark Mode Background: Desktop rich ambient lights, Mobile pure black with subtle corner blue */}
-          <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden select-none" aria-hidden="true">
-            <div className="absolute inset-0 bg-[#f8fafc] dark:bg-[#000000] transition-colors duration-300" />
-            
-            {/* Top-Left: Mobile compact & subtle (w-32), Desktop rich full size (w-[600px], 22% opacity) */}
-            <div className="hidden dark:block absolute -top-12 -left-12 w-32 h-32 sm:-top-40 sm:-left-40 sm:w-[600px] sm:h-[600px] rounded-full bg-blue-700/[0.07] sm:bg-blue-700/22 blur-[45px] sm:blur-[140px] pointer-events-none" />
-
-            {/* Top-Right: Desktop rich full size (20% opacity) */}
-            <div className="hidden sm:dark:block absolute -top-40 -right-40 sm:w-[600px] sm:h-[600px] rounded-full bg-indigo-700/20 sm:blur-[140px] pointer-events-none" />
-
-            {/* Bottom-Left: Desktop rich full size (25% opacity) */}
-            <div className="hidden sm:dark:block absolute -bottom-40 -left-40 sm:w-[600px] sm:h-[600px] rounded-full bg-blue-900/28 sm:blur-[150px] pointer-events-none" />
-
-            {/* Bottom-Right: Mobile compact & subtle (w-32), Desktop rich full size (20% opacity) */}
-            <div className="hidden dark:block absolute -bottom-12 -right-12 w-32 h-32 sm:-bottom-40 sm:-right-40 sm:w-[600px] sm:h-[600px] rounded-full bg-blue-600/[0.06] sm:bg-blue-600/20 blur-[45px] sm:blur-[140px] pointer-events-none" />
-          </div>
-
           {children}
         </ThemeProvider>
       </body>

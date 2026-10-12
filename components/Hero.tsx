@@ -1,289 +1,207 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ArrowRight, BookOpen, Share2, Copy, Check, Loader2, Star, RefreshCw } from "lucide-react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import { 
+  BookOpen, 
+  ArrowDown, 
+  Search, 
+  X, 
+  ChevronDown 
+} from "lucide-react";
+import { ALL_SURAHS_META, SurahStaticMeta } from "@/components/surahMeta";
 
-interface AyahData {
-  arabic: string;
-  english: string;
-  urdu: string;
-  surahName: string;
-  surahNumber: number;
-  ayahNumber: number;
-  timestamp: number;
-}
+const INITIAL_COUNT = 10;
 
-const DEFAULT_AYAH: AyahData = {
-  arabic: "إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالأَرْضِ وَاخْتِلافِ اللَّيْلِ وَالنَّهَارِ لآيَاتٍ لِّأُولِي الأَلْبَابِ",
-  english: "Indeed, in the creation of the heavens and the earth and the alternation of the night and the day are signs for those of understanding.",
-  urdu: "بے شک آسمانوں اور زمین کی پیدائش اور رات اور دن کے باری باری آنے جانے میں عقل والوں کے لیے نشانیاں ہیں",
-  surahName: "Aal-e-Imran",
-  surahNumber: 3,
-  ayahNumber: 190,
-  timestamp: 0,
-};
+export default function Hero() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showAll, setShowAll] = useState(false);
 
-// Top searched Surahs on Google worldwide
-const POPULAR_SURAHS = [
-  { number: 36, name: "Yaseen", urdu: "سورۃ یٰس", link: "/quran/36" },
-  { number: 67, name: "Al-Mulk", urdu: "سورۃ الملک", link: "/quran/67" },
-  { number: 55, name: "Ar-Rahman", urdu: "سورۃ الرحمن", link: "/quran/55" },
-  { number: 2, name: "Al-Baqarah", urdu: "سورۃ البقرۃ", link: "/quran/2" },
-  { number: 18, name: "Al-Kahf", urdu: "سورۃ الکہف", link: "/quran/18" },
-  { number: 56, name: "Al-Waqi'ah", urdu: "سورۃ الواقعہ", link: "/quran/56" },
-];
+  // Filter Surahs based on search query
+  const filteredSurahs = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return ALL_SURAHS_META;
 
-export default function UltimatePremiumHero() {
-  const [ayah, setAyah] = useState<AyahData>(DEFAULT_AYAH);
-  const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const ayahRef = useRef<HTMLDivElement>(null);
+    return ALL_SURAHS_META.filter((surah) => {
+      const matchName = surah.englishName.toLowerCase().includes(q);
+      const matchArabic = surah.name.includes(q);
+      const matchTranslation = surah.englishNameTranslation.toLowerCase().includes(q);
+      const matchNumber = surah.number.toString() === q;
 
-  const fetchAyah = useCallback(async () => {
-    try {
-      setLoading(true);
-      const randomId = Math.floor(Math.random() * 6236) + 1;
-      const res = await fetch(
-        `https://api.alquran.cloud/v1/ayah/${randomId}/editions/quran-uthmani,en.asad,ur.jalandhry`
-      );
-      const data = await res.json();
+      return matchName || matchArabic || matchTranslation || matchNumber;
+    });
+  }, [searchQuery]);
 
-      if (data.data && data.data.length >= 3) {
-        const newAyah: AyahData = {
-          arabic: data.data[0].text,
-          english: data.data[1].text,
-          urdu: data.data[2].text,
-          surahName: data.data[0].surah.englishName,
-          surahNumber: data.data[0].surah.number,
-          ayahNumber: data.data[0].numberInSurah,
-          timestamp: Date.now(),
-        };
-
-        if (typeof window !== "undefined") {
-          try {
-            localStorage.setItem("divine_ayah", JSON.stringify(newAyah));
-          } catch {}
-        }
-        setAyah(newAyah);
-      }
-    } catch (err) {
-      console.error("Fetch Error:", err);
-    } finally {
-      setLoading(false);
+  // Determine which Surahs to display
+  const displayedSurahs = useMemo(() => {
+    if (searchQuery.trim()) {
+      return filteredSurahs;
     }
-  }, []);
-
-  // Hydrate cached ayah if available without delaying initial paint
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const cached = localStorage.getItem("divine_ayah");
-    if (cached) {
-      try {
-        const parsed: AyahData = JSON.parse(cached);
-        const oneDay = 24 * 60 * 60 * 1000;
-        if (Date.now() - parsed.timestamp <= oneDay) {
-          setAyah(parsed);
-        }
-      } catch {
-        // Keep default ayah
-      }
-    }
-  }, []);
-
-  const getShareText = () => {
-    if (!ayah) return "";
-    return `✨ Ayah of the Day ✨\n\n📖 Arabic:\n${ayah.arabic}\n\n📝 English:\n${ayah.english}\n\n🖋️ Urdu:\n${ayah.urdu}\n\n📍 Surah ${ayah.surahName} (${ayah.surahNumber}:${ayah.ayahNumber})\n\nExplore at Noor Al-Quran`;
-  };
-
-  const handleCopy = async () => {
-    const shareText = getShareText();
-    if (typeof navigator !== "undefined" && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
-      try {
-        await navigator.clipboard.writeText(shareText);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-        return;
-      } catch {
-        // Fallback below
-      }
-    }
-    
-    try {
-      const textArea = document.createElement("textarea");
-      textArea.value = shareText;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (e) {
-      console.warn("Copy failed", e);
-    }
-  };
-
-  const handleShare = async () => {
-    const text = getShareText();
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `Ayah from Surah ${ayah?.surahName}`,
-          text: text,
-          url: window.location.href,
-        });
-      } catch (err) {
-        console.log("Share skipped or failed", err);
-      }
-    } else {
-      handleCopy();
-    }
-  };
+    return showAll ? filteredSurahs : filteredSurahs.slice(0, INITIAL_COUNT);
+  }, [filteredSurahs, showAll, searchQuery]);
 
   return (
-    <div className="relative min-h-[90vh] flex flex-col items-center pt-28 sm:pt-36 md:pt-40 pb-16 sm:pb-20 px-3 sm:px-6 md:px-8 overflow-hidden">
-      <div className="relative z-10 w-full max-w-5xl mx-auto text-center">
-        {/* Subtitle Badge */}
-        <div className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 mb-6 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-blue-700 dark:text-blue-300 shadow-sm">
-          <Sparkles size={13} className="text-blue-500 animate-pulse" />
-          <span className="text-[9px] sm:text-[10px] md:text-xs font-black tracking-[0.2em] sm:tracking-[0.25em] uppercase">
-            The Light of Guidance in Your Pocket • نور القرآن
+    <div className="relative pt-24 sm:pt-32 md:pt-36 pb-16 sm:pb-24 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
+      {/* --- HERO HEADER --- */}
+      <div className="text-center max-w-6xl mx-auto">
+        {/* Strictly 2-Line Desktop Heading with Bricolage Grotesque font */}
+        <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.2] sm:leading-[1.16] max-w-6xl mx-auto">
+          <span className="block whitespace-normal md:whitespace-nowrap">
+            Read, Listen & Explore the Holy Quran
           </span>
-        </div>
-
-        {/* Main Title - Immediate Semantic H1 for SEO & Instant Paint */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight mb-4 sm:mb-6 leading-[1.08] sm:leading-[1.02] text-slate-900 dark:text-white">
-          Read Holy Quran & <br />
-          <span className="text-blue-600 dark:text-blue-400 italic font-serif">
-            Daily Prayer Guidance
+          <span className="block mt-2 sm:mt-3">
+            with{" "}
+            <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white px-3.5 sm:px-5 py-0.5 sm:py-1 rounded-xl sm:rounded-2xl">
+              Divine Guidance
+            </span>
           </span>
         </h1>
 
-        <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-6 sm:mb-8 font-normal">
-          Explore all 114 Quran Surahs with authentic audio recitations, Urdu translation (قرآن مجید اردو ترجمہ), daily Islamic duas, and accurate namaz prayer times.
+        {/* Subtitle / Paragraph */}
+        <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg text-slate-600 dark:text-neutral-400 max-w-2xl mx-auto font-normal leading-relaxed">
+          Access all 114 Surahs with authentic Urdu and English translations, crystal-clear MP3 recitations, and verse-by-verse spiritual reflection.
         </p>
 
-        {/* Ayah Card Section - Zero-CLS Stable Dimensions */}
-        <div ref={ayahRef} className="relative mt-8 sm:mt-12 mb-6 sm:mb-8 group min-h-[320px] flex items-center justify-center">
-          {/* Top Floating Badge */}
-          <div className="absolute -top-4 sm:-top-5 left-1/2 -translate-x-1/2 z-20">
-            <div className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-slate-900 dark:text-white shadow-lg">
-              <Star size={13} className="text-amber-400 fill-amber-400" />
-              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em] sm:tracking-[0.3em] whitespace-nowrap text-blue-700 dark:text-blue-300">
-                Ayah of the Day
-              </span>
-            </div>
-          </div>
-
-          {/* Ayah Card with Crisp Border & Immediate SSR Content for <1s LCP */}
-          <div className="relative w-full rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 md:p-12 lg:p-16 shadow-2xl overflow-hidden bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b]">
-            <div className={`${loading ? "opacity-40" : "opacity-100"} transition-opacity duration-300`}>
-              <div className="flex justify-center mb-6 sm:mb-8">
-                <span className="px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-widest uppercase bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-blue-700 dark:text-blue-400">
-                  Surah {ayah.surahName} • {ayah.surahNumber}:{ayah.ayahNumber}
-                </span>
-              </div>
-
-              {/* Arabic Ayah - Pre-rendered for Instant Paint */}
-              <h2 className="font-arabic text-2xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 sm:mb-12 text-center leading-[2] sm:leading-loose text-slate-900 dark:text-white">
-                {ayah.arabic}
-              </h2>
-
-              {/* English & Urdu Translations */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 text-left border-t border-slate-200 dark:border-[#141c2b] pt-8 sm:pt-10">
-                <div className="space-y-2 sm:space-y-3">
-                  <span className="text-[9.5px] sm:text-[10px] tracking-widest uppercase text-blue-600 dark:text-blue-400 font-black">
-                    English Interpretation
-                  </span>
-                  <p className="text-sm sm:text-base md:text-lg font-light leading-relaxed italic text-slate-700 dark:text-slate-300">
-                    &quot;{ayah.english}&quot;
-                  </p>
-                </div>
-
-                <div className="space-y-2 sm:space-y-3 text-right">
-                  <span className="text-[9.5px] sm:text-[10px] tracking-widest uppercase text-blue-600 dark:text-blue-400 font-black">
-                    اردو ترجمہ
-                  </span>
-                  <p className="font-urdu text-lg sm:text-xl md:text-2xl leading-loose text-slate-800 dark:text-slate-200">
-                    {ayah.urdu}
-                  </p>
-                </div>
-              </div>
-
-              {/* Bottom Action Buttons */}
-              <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-between border-t border-slate-200 dark:border-[#141c2b] pt-5 sm:pt-6 gap-3 sm:gap-4">
-                <div className="flex gap-3 sm:gap-4">
-                  <button
-                    onClick={handleShare}
-                    className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-1.5 sm:py-2 cursor-pointer active:scale-95"
-                  >
-                    <Share2 size={14} />
-                    <span>Share</span>
-                  </button>
-
-                  <button
-                    onClick={handleCopy}
-                    className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-1.5 sm:py-2 cursor-pointer active:scale-95"
-                  >
-                    {copied ? <Check size={14} className="text-blue-500" /> : <Copy size={14} />}
-                    <span>{copied ? "Copied!" : "Copy"}</span>
-                  </button>
-                </div>
-
-                <Link
-                  href={`/quran/${ayah.surahNumber}`}
-                  className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-sm"
-                >
-                  <BookOpen size={13} />
-                  <span>Read Full Surah</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8 w-full sm:w-auto">
-          <button
-            onClick={fetchAyah}
-            disabled={loading}
-            className="w-full sm:w-auto group flex items-center justify-center gap-2.5 sm:gap-3 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-600/30 active:scale-95 disabled:opacity-60 cursor-pointer"
-          >
-            <RefreshCw size={15} className={`${loading ? "animate-spin" : "group-hover:rotate-180"} transition-transform duration-500`} />
-            <span>{loading ? "Seeking Wisdom..." : "New Ayah"}</span>
-          </button>
-
+        {/* Action Buttons (Flat, No Glow, No Heavy Colored Shadow) */}
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4">
           <Link
-            href="/quran"
-            className="w-full sm:w-auto flex items-center justify-center gap-2.5 sm:gap-3 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-slate-900 dark:text-white hover:border-blue-500/60 transition-all duration-300 shadow-sm active:scale-95"
+            href="/quran/1"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:py-4 rounded-full font-semibold text-xs sm:text-sm bg-[#155DFC] text-white hover:bg-[#124bc9] transition-colors active:scale-98"
           >
-            <span>Explore All 114 Surahs</span>
-            <ArrowRight size={15} />
+            <BookOpen size={16} />
+            <span>Start Reading (Surah Al-Fatihah)</span>
           </Link>
-        </div>
 
-        {/* High-Intent Quran Search Links - Direct Mobile SEO Boost */}
-        <div className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-200/80 dark:border-[#141c2b]/80">
-          <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 sm:mb-4">
-            Frequently Read Surahs • اکثر پڑھی جانے والی سورتیں
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
-            {POPULAR_SURAHS.map((s) => (
-              <Link
-                key={s.number}
-                href={s.link}
-                className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full text-xs font-medium bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] hover:border-blue-500 text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-all shadow-sm active:scale-95"
+          <a
+            href="#surah-explorer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:py-4 rounded-full font-semibold text-xs sm:text-sm border border-slate-300 dark:border-neutral-800 text-slate-800 dark:text-neutral-200 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors active:scale-98"
+          >
+            <span>Browse 114 Surahs</span>
+            <ArrowDown size={15} />
+          </a>
+        </div>
+      </div>
+
+      {/* --- 114 SURAHS EXPLORER SECTION --- */}
+      <div id="surah-explorer" className="mt-16 sm:mt-20 scroll-mt-24">
+        {/* Search Header Bar */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3.5 mb-6 sm:mb-8">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+              <span>All 114 Surahs</span>
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-neutral-300">
+                {filteredSurahs.length}
+              </span>
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-neutral-400 mt-0.5">
+              Select any Surah to read the Uthmani script with translations and audio.
+            </p>
+          </div>
+
+          {/* Search Box */}
+          <div className="relative w-full sm:w-80 md:w-96">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search Surah (e.g. Yasin, 36, Rahman)..."
+              className="w-full pl-10 pr-9 py-3 rounded-full text-xs sm:text-sm bg-slate-100 dark:bg-white/[0.06] border-none outline-none ring-0 focus:ring-0 focus:outline-none text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500 transition-colors"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                aria-label="Clear search"
               >
-                <span className="w-5 h-5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold flex items-center justify-center">
-                  {s.number}
-                </span>
-                <span className="font-semibold">{s.name}</span>
-                <span className="font-arabic text-sm opacity-80">{s.urdu}</span>
-              </Link>
-            ))}
+                <X size={15} />
+              </button>
+            )}
           </div>
         </div>
+
+        {/* 3-Column Surahs Grid matching User Screenshot 2 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+          {displayedSurahs.map((surah: SurahStaticMeta) => {
+            const arabicTitle = surah.name.startsWith("سورة") || surah.name.startsWith("سُورَة")
+              ? surah.name
+              : `سُورَةُ ${surah.name}`;
+
+            return (
+              <Link
+                key={surah.number}
+                href={`/quran/${surah.number}`}
+                className="group relative overflow-hidden p-3.5 sm:p-4 rounded-2xl sm:rounded-[1.4rem] bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 hover:border-slate-400 dark:hover:border-neutral-600 transition-colors flex items-center justify-between"
+              >
+                {/* Left side: Number badge + Surah English Name & Verses */}
+                <div className="flex items-center gap-3 sm:gap-3.5 min-w-0 z-10">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-[#155DFC] font-bold text-xs flex items-center justify-center shrink-0">
+                    {surah.number}
+                  </div>
+
+                  <div className="min-w-0">
+                    <h3 className="text-xs sm:text-sm md:text-[15px] font-bold text-slate-900 dark:text-white truncate">
+                      {surah.englishName}
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-neutral-400 truncate mt-0.5">
+                      {surah.revelationType} • {surah.numberOfAyahs} Verses
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right side: Arabic Name + English Meaning uppercase */}
+                <div className="flex flex-col items-end shrink-0 pl-2 z-10">
+                  <span className="font-arabic text-base sm:text-lg font-bold text-slate-900 dark:text-white text-right leading-tight">
+                    {arabicTitle}
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-400 dark:text-neutral-500 font-semibold mt-0.5 text-right truncate max-w-[120px]">
+                    {surah.englishNameTranslation}
+                  </span>
+                </div>
+
+                {/* Faint corner number watermark matching Screenshot 2 */}
+                <span className="absolute right-2 -bottom-2 text-3xl sm:text-4xl font-black text-slate-100 dark:text-neutral-900/60 pointer-events-none select-none z-0">
+                  {surah.number}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* No Results Empty State */}
+        {displayedSurahs.length === 0 && (
+          <div className="py-16 text-center rounded-2xl bg-white dark:bg-black border border-slate-200 dark:border-white/10">
+            <p className="text-slate-500 dark:text-neutral-400 text-sm">
+              No Surah found matching &quot;{searchQuery}&quot;.
+            </p>
+            <button
+              onClick={() => setSearchQuery("")}
+              className="mt-3 text-xs font-semibold text-[#155DFC] hover:underline"
+            >
+              Reset search
+            </button>
+          </div>
+        )}
+
+        {/* View More Button (Shown when not searching) */}
+        {!searchQuery.trim() && (
+          <div className="mt-8 sm:mt-10 flex justify-center">
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-xs sm:text-sm bg-white dark:bg-black hover:bg-slate-50 dark:hover:bg-neutral-900 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white transition-colors active:scale-98 cursor-pointer"
+            >
+              <span>
+                {showAll
+                  ? "Show Less (First 10 Surahs)"
+                  : `View More Surahs (${ALL_SURAHS_META.length - INITIAL_COUNT} More)`}
+              </span>
+              <ChevronDown
+                size={16}
+                className={`transition-transform duration-300 ${showAll ? "rotate-180" : ""}`}
+              />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

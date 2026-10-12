@@ -2,14 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { 
-  Instagram, 
-  Heart, 
-  ArrowUpRight,
-  Globe,
-  Sparkles,
-  CheckCircle2
-} from "lucide-react";
+import { BookOpen, Instagram, Github, ArrowUpRight, Check } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -20,143 +13,166 @@ export default function Footer() {
     e.preventDefault();
     if (email.trim()) {
       setSubscribed(true);
-      setTimeout(() => setSubscribed(false), 3500);
+      setTimeout(() => setSubscribed(false), 3000);
       setEmail("");
     }
   };
 
-  const footerSections = [
+  const footerNav = [
     {
-      title: "Navigation",
+      title: "Read & Listen",
       links: [
-        { name: "Al-Quran", href: "/quran" },
-        { name: "Prayer Times", href: "/prayer-time" },
-        { name: "Daily Duas", href: "/dua" },
-        { name: "Digital Tasbeeh", href: "/tasbeeh" },
+        { name: "Holy Quran (114 Surahs)", href: "/quran" },
+        { name: "Surah Al-Fatihah", href: "/quran/1" },
+        { name: "Surah Yaseen", href: "/quran/36" },
+        { name: "Surah Al-Mulk", href: "/quran/67" },
+        { name: "Surah Ar-Rahman", href: "/quran/55" },
       ],
     },
     {
-      title: "Spiritual",
+      title: "Spiritual Essentials",
       links: [
+        { name: "Prayer Times (Namaz)", href: "/prayer-time" },
+        { name: "Daily Duas & Azkar", href: "/dua" },
+        { name: "Digital Tasbeeh Counter", href: "/tasbeeh" },
+        { name: "Islamic Hijri Calendar", href: "/calendar" },
         { name: "Prophetic Seerah", href: "/seerah" },
-        { name: "Islamic Calendar", href: "/calendar" },
-        { name: "About Noor", href: "/about" },
       ],
     },
     {
-      title: "Developer",
+      title: "Project",
       links: [
-        { name: "GitHub Repository", href: "https://github.com/Abdullahja5558" },
-        { name: "Contact & Feedback", href: "/about" },
+        { name: "About Noor Al-Quran", href: "/about" },
+        { name: "Developer GitHub", href: "https://github.com/Abdullahja5558" },
+        { name: "Instagram Community", href: "https://www.instagram.com/mian.abdullah.9/" },
+        { name: "Feedback & Contact", href: "/about" },
       ],
     },
   ];
 
   return (
-    <footer className="relative pt-16 sm:pt-20 pb-10 sm:pb-12 px-4 sm:px-8 md:px-12 border-t border-slate-200 dark:border-[#141c2b] bg-white dark:bg-[#000000]">
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 md:gap-24 mb-12 sm:mb-16">
-          {/* Left Brand & Newsletter */}
-          <div className="space-y-6 sm:space-y-8">
-            <Link href="/" className="flex items-center gap-3 group w-fit">
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-md shadow-blue-600/25 group-hover:rotate-12 transition-all duration-300">
-                <Globe size={22} />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-                  Noor<span className="text-blue-500">Quran</span>
-                </span>
-                <span className="text-[8px] sm:text-[9px] font-black tracking-[0.4em] text-blue-600 dark:text-blue-400 uppercase -mt-1">
-                  Al-Kareem
-                </span>
-              </div>
-            </Link>
+    <footer className="w-full px-3 sm:px-6 md:px-8 pt-12 sm:pt-16 pb-0">
+      {/* 
+        Inverted High-Contrast Monolithic Footer:
+        - Light Mode: Pure Black Background, White Text
+        - Dark Mode: Pure White Background, Black Text
+        - Top Corners: Full Rounded Gol (rounded-t-[2.5rem] to rounded-t-[4rem])
+        - Bottom: Flush with zero bottom padding/margin
+      */}
+      <div className="w-full bg-black text-white dark:bg-white dark:text-black rounded-t-[2.5rem] sm:rounded-t-[3.5rem] md:rounded-t-[4rem] rounded-b-none pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-12 px-6 sm:px-10 md:px-16 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto">
+          {/* Top Main Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 pb-12 sm:pb-16 border-b border-neutral-800 dark:border-neutral-200">
+            {/* Left Brand Column (5 cols) */}
+            <div className="lg:col-span-5 space-y-5 sm:space-y-6">
+              {/* Logo */}
+              <Link href="/" className="inline-flex items-center gap-3 group">
+                <div className="w-10 h-10 rounded-2xl bg-white text-black dark:bg-black dark:text-white flex items-center justify-center font-bold shrink-0 transition-transform duration-200 group-hover:scale-105">
+                  <BookOpen size={18} />
+                </div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-xl sm:text-2xl font-bold tracking-tight">
+                    Noor<span className="font-light opacity-80">Quran</span>
+                  </span>
+                  <span className="font-arabic text-sm text-neutral-400 dark:text-neutral-500 ml-1.5">
+                    نور القرآن الكريم
+                  </span>
+                </div>
+              </Link>
 
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold max-w-md leading-snug tracking-tight text-slate-900 dark:text-white">
-              Bringing <span className="text-blue-600 dark:text-blue-400 italic">Noor</span> to your digital daily life.
-            </h3>
+              {/* Tagline */}
+              <p className="text-sm sm:text-base text-neutral-400 dark:text-neutral-600 font-normal leading-relaxed max-w-md">
+                An open-source Islamic sanctuary providing authentic Quranic recitations, accurate translations, prayer timings, and spiritual guidance without distractions.
+              </p>
 
-            {/* Newsletter Input */}
-            <form onSubmit={handleSubscribe} className="relative max-w-md">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Stay updated via email"
-                className="w-full rounded-2xl py-3.5 sm:py-4 pl-5 sm:pl-6 pr-32 sm:pr-36 outline-none transition-all text-xs md:text-sm bg-slate-50 dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-slate-900 dark:text-white focus:border-blue-500 shadow-sm"
-              />
-              <button
-                type="submit"
-                className="absolute right-1.5 sm:right-2 top-1.5 sm:top-2 bottom-1.5 sm:bottom-2 px-4 sm:px-6 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest bg-blue-600 hover:bg-blue-700 text-white transition-all cursor-pointer shadow-md active:scale-95 flex items-center gap-1.5"
-              >
-                {subscribed ? (
-                  <>
-                    <CheckCircle2 size={13} />
-                    <span>Joined!</span>
-                  </>
-                ) : (
-                  <span>Join Us</span>
-                )}
-              </button>
-            </form>
-          </div>
-
-          {/* Right Links Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
-            {footerSections.map((section) => (
-              <div key={section.title} className="space-y-4 sm:space-y-6">
-                <h4 className="text-[9px] sm:text-[10px] font-black tracking-[0.25em] sm:tracking-[0.3em] uppercase flex items-center gap-1.5 sm:gap-2 text-blue-600 dark:text-blue-400">
-                  <Sparkles size={11} /> {section.title}
-                </h4>
-                <ul className="space-y-3 sm:space-y-4">
-                  {section.links.map((link) => (
-                    <li key={link.name}>
-                      <Link
-                        href={link.href}
-                        className="group flex items-center gap-1 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
-                      >
-                        <span>{link.name}</span>
-                        <ArrowUpRight
-                          size={12}
-                          className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-blue-500"
-                        />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="pt-6 sm:pt-8 border-t border-slate-200 dark:border-[#141c2b] flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 text-xs text-center md:text-left">
-          {/* Social */}
-          <div className="flex items-center gap-3">
-            <a
-              href="https://www.instagram.com/mian.abdullah.9/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram Profile"
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-slate-50 dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
-            >
-              <Instagram size={17} />
-            </a>
-          </div>
-
-          {/* Crafted with love */}
-          <div className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full border border-slate-200 dark:border-[#141c2b] bg-white dark:bg-[#07090e] text-[9px] sm:text-[10px] font-black tracking-[0.15em] sm:tracking-[0.2em] uppercase flex items-center justify-center gap-1.5 sm:gap-2 text-slate-700 dark:text-slate-300 shadow-sm text-center">
-            CRAFTED WITH <Heart size={11} className="text-blue-500 fill-blue-500 animate-pulse" /> BY AJ CODE IN PAKISTAN © {currentYear}
-          </div>
-
-          {/* Version badge */}
-          <div className="flex items-center gap-3 sm:gap-4 text-[9px] sm:text-[10px] font-black tracking-widest text-slate-500 dark:text-slate-400">
-            <div className="flex items-center gap-1.5">
-              <div className="w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
-              <span className="text-slate-900 dark:text-white font-bold">SYSTEM ACTIVE</span>
+              {/* Minimal Newsletter / Daily Verse Subscription */}
+              <form onSubmit={handleSubscribe} className="relative max-w-sm pt-2">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter email for daily reflections"
+                  className="w-full rounded-full py-3 pl-4 sm:pl-5 pr-28 text-xs sm:text-sm bg-neutral-900 dark:bg-neutral-100 border border-neutral-800 dark:border-neutral-300 text-white dark:text-black placeholder:text-neutral-500 focus:outline-none focus:border-neutral-600 dark:focus:border-neutral-400 transition-colors"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-1.5 top-3.5 bottom-1.5 px-4 sm:px-5 rounded-full text-xs font-semibold bg-white text-black dark:bg-black dark:text-white hover:opacity-90 transition-opacity cursor-pointer flex items-center gap-1"
+                >
+                  {subscribed ? (
+                    <>
+                      <Check size={13} />
+                      <span>Saved</span>
+                    </>
+                  ) : (
+                    <span>Subscribe</span>
+                  )}
+                </button>
+              </form>
             </div>
-            <span>V 3.0 ELITE</span>
+
+            {/* Right Nav Links Columns (7 cols) */}
+            <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-10">
+              {footerNav.map((col) => (
+                <div key={col.title} className="space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                    {col.title}
+                  </h3>
+                  <ul className="space-y-2.5 sm:space-y-3">
+                    {col.links.map((link) => (
+                      <li key={link.name}>
+                        <Link
+                          href={link.href}
+                          target={link.href.startsWith("http") ? "_blank" : undefined}
+                          rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                          className="group inline-flex items-center gap-1 text-xs sm:text-sm text-neutral-300 dark:text-neutral-700 hover:text-white dark:hover:text-black transition-colors"
+                        >
+                          <span>{link.name}</span>
+                          {link.href.startsWith("http") && (
+                            <ArrowUpRight
+                              size={12}
+                              className="opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"
+                            />
+                          )}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom Bar: Copyright & Socials */}
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 text-xs text-neutral-400 dark:text-neutral-500 text-center sm:text-left">
+            <div>
+              <p>
+                © {currentYear} Noor Al-Quran. Open & free for the global Muslim Ummah.
+              </p>
+            </div>
+
+            {/* Social Links */}
+            <div className="flex items-center gap-2.5">
+              <a
+                href="https://github.com/Abdullahja5558"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub Profile"
+                className="w-9 h-9 rounded-full bg-neutral-900 dark:bg-neutral-100 text-neutral-300 dark:text-neutral-700 hover:text-white dark:hover:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 flex items-center justify-center transition-colors"
+              >
+                <Github size={16} />
+              </a>
+
+              <a
+                href="https://www.instagram.com/mian.abdullah.9/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram Profile"
+                className="w-9 h-9 rounded-full bg-neutral-900 dark:bg-neutral-100 text-neutral-300 dark:text-neutral-700 hover:text-white dark:hover:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 flex items-center justify-center transition-colors"
+              >
+                <Instagram size={16} />
+              </a>
+            </div>
           </div>
         </div>
       </div>
