@@ -64,12 +64,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  // Top searched Surahs globally (Yaseen, Rahman, Mulk, Baqarah, Kahf, Waqiah, Fatiha, Ikhlas, Falaq, Nas)
+  const HIGH_PRIORITY_SURAHS = new Set([1, 2, 18, 36, 55, 56, 67, 112, 113, 114]);
+
   // Dynamic routes for all 114 Surahs
   const surahRoutes: MetadataRoute.Sitemap = ALL_SURAHS_META.map((surah) => ({
     url: `${BASE_URL}/quran/${surah.number}`,
     lastModified: now,
-    changeFrequency: "weekly",
-    priority: 0.9,
+    changeFrequency: HIGH_PRIORITY_SURAHS.has(surah.number) ? "daily" : "weekly",
+    priority: HIGH_PRIORITY_SURAHS.has(surah.number) ? 0.98 : 0.9,
   }));
 
   return [...staticRoutes, ...surahRoutes];

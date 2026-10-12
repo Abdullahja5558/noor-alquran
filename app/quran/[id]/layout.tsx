@@ -18,8 +18,8 @@ export async function generateMetadata({
   const surahNumber = parseInt(resolved.id, 10);
   const meta = getSurahMetaByNumber(surahNumber);
 
-  const title = `Surah ${meta.englishName} (${meta.name}) - Read & Listen with Urdu Translation`;
-  const description = `Read, listen to Surah ${meta.englishName} (${meta.englishNameTranslation} - ${meta.numberOfAyahs} Ayahs, ${meta.revelationType}). High quality audio recitations by Mishary Rashid Alafasy, Abdul Basit, and Sudais with word-by-word Urdu and English translation.`;
+  const title = `Surah ${meta.englishName} (${meta.name}) with Urdu Translation & MP3 Audio`;
+  const description = `Read and listen to Surah ${meta.englishName} (${meta.name} - ${meta.englishNameTranslation}, ${meta.numberOfAyahs} Ayahs). Complete text in Arabic with word-by-word Urdu translation (اردو ترجمہ) and high quality MP3 tilawat by Mishary Rashid Alafasy, Sudais, and Abdul Basit on Noor Al-Quran.`;
   const url = `${BASE_URL}/quran/${meta.number}`;
 
   return {
@@ -27,15 +27,19 @@ export async function generateMetadata({
     description,
     keywords: [
       `Surah ${meta.englishName}`,
-      `Surah ${meta.englishName} Urdu translation`,
+      `Surah ${meta.englishName} with Urdu translation`,
+      `Surah ${meta.englishName} Urdu tarjuma`,
       `Surah ${meta.englishName} MP3`,
-      `Surah ${meta.englishName} audio`,
+      `Surah ${meta.englishName} audio recitation`,
       `Surah ${meta.englishName} English translation`,
-      meta.name,
+      `سورۃ ${meta.name}`,
+      `سورۃ ${meta.englishName} اردو ترجمہ`,
       `Surah ${meta.number}`,
+      `Quran Chapter ${meta.number}`,
       `Read Surah ${meta.englishName} online`,
-      `Quran Surah ${meta.number}`,
+      `Quran Surah ${meta.number} tilawat`,
       "Noor Al-Quran",
+      "Holy Quran online",
     ],
     alternates: {
       canonical: url,
@@ -51,7 +55,7 @@ export async function generateMetadata({
           url: "/favicon5.png",
           width: 512,
           height: 512,
-          alt: `Surah ${meta.englishName} - Noor Al-Quran`,
+          alt: `Surah ${meta.englishName} (${meta.name}) - Noor Al-Quran`,
         },
       ],
     },
