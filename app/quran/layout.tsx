@@ -15,6 +15,56 @@ export const metadata: Metadata = {
     "Holy Quran MP3",
     "Meccan Surahs",
     "Medinan Surahs",
+    "full quran in urdu",
+    "read quran in urdu",
+    "quran in urdu translation",
+    "quran mp3",
+    "quran in urdu mp3",
+    "quran karim",
+    "quran meaning in urdu",
+    "quran online",
+    "quran sharif",
+    "quran with urdu translation",
+    "quran with urdu",
+    "quran with urdu pdf",
+    "quran with urdu translation mp3",
+    "quran with urdu translation mp3",
+    "quran with urdu translation mp3",
+    "listen quran in urdu",
+    "quran urdu",
+    "quran in urdu pdf",
+    "read quran in urdu online",
+
+   
+    "quran english translation",
+    "quran translation in urdu",
+    "quran translation in english",
+    "quran translation",
+  
+    "quran translation online",
+    "quran translation with urdu",
+   
+    "quran urdu translation",
+    "quran urdu pdf",
+    "quran urdu mp3",
+    "quran online urdu",
+    "quran online urdu translation",
+    "quran online mp3",
+    "quran online with urdu translation",
+    "quran online with urdu mp3",
+    "quran sharif in urdu",
+    "quran sharif in urdu pdf",
+    "quran sharif in urdu mp3",
+    "quran sharif mp3",
+    "quran sharif pdf",
+    "quran sharif mp3 free download",
+    "quran sharif mp3 free download",
+    "quran sharif mp3 free download",
+    
+  
+
+    
+    
   ],
   alternates: {
     canonical: `${BASE_URL}/quran`,
