@@ -54,15 +54,15 @@ export default function Navbar() {
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-out ${
           scrolled
-            ? "pt-3 sm:pt-4 px-3 sm:px-6 md:px-8 pointer-events-none"
+            ? "pt-2.5 sm:pt-4 px-3 sm:px-6 md:px-8 pointer-events-none"
             : "pt-0 px-4 sm:px-8 md:px-10 pointer-events-auto"
         }`}
       >
         <div
           className={`transition-all duration-300 ease-out flex items-center justify-between ${
             scrolled
-              ? "pointer-events-auto max-w-5xl lg:max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl sm:rounded-full bg-white/80 dark:bg-neutral-900/75 backdrop-blur-2xl border border-slate-200/90 dark:border-white/20 shadow-lg shadow-black/5 dark:shadow-[0_16px_40px_rgba(0,0,0,0.7)]"
-              : "w-full max-w-7xl mx-auto py-5 sm:py-6 px-4 sm:px-8 bg-transparent border-none"
+              ? "pointer-events-auto max-w-5xl lg:max-w-6xl mx-auto px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white/90 dark:bg-black/85 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.14]"
+              : "w-full max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-8 bg-transparent border-none"
           }`}
         >
           {/* Logo */}
@@ -155,7 +155,7 @@ export default function Navbar() {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className={`fixed ${
               scrolled ? "top-16 sm:top-20" : "top-20"
-            } inset-x-3 sm:inset-x-6 max-w-md mx-auto rounded-3xl p-4 sm:p-5 flex flex-col gap-1.5 lg:hidden bg-white/95 dark:bg-neutral-950/90 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 shadow-2xl z-50`}
+            } inset-x-3 sm:inset-x-6 max-w-md mx-auto rounded-[2rem] p-4 sm:p-5 flex flex-col gap-1.5 lg:hidden bg-white/95 dark:bg-black/95 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 z-50`}
           >
             {NAV_LINKS.map((link) => {
               const isActive =
