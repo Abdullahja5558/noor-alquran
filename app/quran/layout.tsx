@@ -27,44 +27,23 @@ export const metadata: Metadata = {
     "quran with urdu translation",
     "quran with urdu",
     "quran with urdu pdf",
-    "quran with urdu translation mp3",
-    "quran with urdu translation mp3",
-    "quran with urdu translation mp3",
     "listen quran in urdu",
     "quran urdu",
-    "quran in urdu pdf",
     "read quran in urdu online",
-
-   
     "quran english translation",
     "quran translation in urdu",
     "quran translation in english",
-    "quran translation",
-  
     "quran translation online",
-    "quran translation with urdu",
-   
     "quran urdu translation",
-    "quran urdu pdf",
-    "quran urdu mp3",
-    "quran online urdu",
-    "quran online urdu translation",
-    "quran online mp3",
-    "quran online with urdu translation",
-    "quran online with urdu mp3",
     "quran sharif in urdu",
-    "quran sharif in urdu pdf",
     "quran sharif in urdu mp3",
-    "quran sharif mp3",
-    "quran sharif pdf",
     "quran sharif mp3 free download",
-    "quran sharif mp3 free download",
-    "quran sharif mp3 free download",
-    
-  
-
-    
-    
+    "قرآن مجید کی تمام 114 سورتیں",
+    "قرآن پاک کی فہرست",
+    "قرآن مجید اردو ترجمہ کے ساتھ",
+    "سورتوں کی فہرست",
+    "تلاوت قرآن پاک mp3",
+    "القرآن الكريم فهرس السور",
   ],
   alternates: {
     canonical: `${BASE_URL}/quran`,

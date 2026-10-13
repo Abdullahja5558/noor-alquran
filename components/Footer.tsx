@@ -59,7 +59,7 @@ export default function Footer() {
         - Top Corners: Full Rounded Gol (rounded-t-[2.5rem] to rounded-t-[4rem])
         - Bottom: Flush with zero bottom padding/margin
       */}
-      <div className="w-full bg-black text-white dark:bg-white dark:text-black rounded-t-[2.5rem] sm:rounded-t-[3.5rem] md:rounded-t-[4rem] rounded-b-none pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-12 px-6 sm:px-10 md:px-16 transition-colors duration-300">
+      <div className="w-full bg-black text-white dark:bg-white dark:text-black rounded-t-[2.5rem] sm:rounded-t-[3.5rem] md:rounded-t-[4rem] rounded-b-none pt-12 sm:pt-16 md:pt-20 pb-24 sm:pb-28 px-6 sm:px-10 md:px-16 transition-colors duration-300">
         <div className="max-w-7xl mx-auto">
           {/* Top Main Section */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 pb-12 sm:pb-16 border-b border-neutral-800 dark:border-neutral-200">

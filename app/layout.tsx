@@ -1,6 +1,8 @@
 import { Geist, Amiri, Noto_Nastaliq_Urdu, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AudioPlayerProvider } from "@/components/audio/AudioPlayerContext";
+import { BottomAudioPlayer } from "@/components/audio/BottomAudioPlayer";
 import { Metadata, Viewport } from "next";
 
 const geistSans = Geist({
@@ -48,62 +50,36 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Read Holy Quran Online with Urdu Translation & Audio MP3 | Noor Al-Quran",
+    default: "Read Holy Quran Online with Urdu & English Translation | MP3 Tilawat Audio – Noor Al-Quran",
     template: "%s | Noor Al-Quran",
   },
   description:
-    "Read and listen to the Holy Quran online with complete 114 Surahs, authentic Urdu translation (قرآن مجید اردو ترجمہ), English meaning, MP3 tilawat by top reciters (Mishary Alafasy, Sudais, Abdul Basit), daily duas, tasbeeh, and accurate namaz prayer times.",
+    "Read and listen to the Holy Quran online with complete 114 Surahs, authentic Urdu translation (قرآن مجید مع اردو ترجمہ), word by word English meaning, high quality MP3 Tilawat by top Qaris (Mishary Alafasy, Sudais, Abdul Basit), authentic daily Duas, digital Tasbeeh counter, and live Namaz prayer times.",
   keywords: [
-    // Core English Quran queries
+    // Top Core Quran Queries (High Traffic)
     "Quran",
     "Holy Quran",
+    "Al Quran",
+    "Al Quran Al Kareem",
     "Read Holy Quran online",
-    "Holy Quran with Urdu translation",
-    "Quran online read",
-    "Quran recitation MP3",
     "Listen Quran online",
+    "Quran online read free",
     "Full Quran Sharif",
     "114 Surahs of Quran",
-    "Quran translation in Urdu",
     "Quran Pak reading",
-    "Al Quran Al Kareem",
-    // Top searched Surahs
-    "Surah Yaseen",
-    "Surah Yasin with Urdu translation",
-    "Surah Al-Baqarah",
-    "Surah Rahman",
-    "Surah Mulk",
-    "Surah Al-Waqiah",
-    "Surah Al-Kahf",
-    "Ayatul Kursi",
-    "Surah Fatiha",
-    "Surah Ikhlas",
-    // Urdu Script keywords (crucial for local Google search)
-    "قرآن مجید",
-    "قرآن پاک",
-    "قرآن مجید اردو ترجمہ کے ساتھ",
-    "سورۃ یٰس",
-    "سورۃ الرحمن",
-    "سورۃ الملک",
-    "آیت الکرسی",
-    "تلاوت قرآن پاک",
-    "نماز کے اوقات",
-    "مسنون دعائیں",
-    // Reciters
-    "Mishary Rashid Alafasy Quran",
-    "Abdul Basit Abdus Samad recitation",
-    "Abdur Rahman As-Sudais tilawat",
-    "Saad Al Ghamdi",
-    "Maher Al Muaiqly",
-    // Islamic utilities
-    "Prayer Times Pakistan",
-    "Namaz Timings Karachi Lahore Islamabad",
-    "Daily Islamic Duas",
-    "Masnoon Duain with Urdu translation",
-    "Digital Tasbeeh Counter",
-    "Hijri Islamic Calendar",
-    "Noor Al-Quran",
-     "full quran in urdu",
+    "Holy Quran with Urdu translation",
+    "Quran English translation",
+    "Quran word by word translation",
+    "Quran recitation MP3",
+    "Quran audio player online",
+    "Listen Quran MP3",
+    "Quran Sharif online",
+    "Download Quran MP3",
+    "Online Quran player",
+    "Quran explorer",
+    "Quran majeed reading",
+    "Holy Quran audio",
+    "full quran in urdu",
     "read quran in urdu",
     "quran in urdu translation",
     "quran mp3",
@@ -114,7 +90,6 @@ export const metadata: Metadata = {
     "quran sharif",
     "quran with urdu translation",
     "quran with urdu",
-  
     "listen quran in urdu",
     "quran urdu",
     "quran in urdu pdf",
@@ -125,12 +100,88 @@ export const metadata: Metadata = {
     "quran translation in urdu",
     "quran translation in english",
     "quran translation",
-    
-  
-  
-   
-   
-  
+
+    // Top Searched Surahs Globally
+    "Surah Al-Fatihah",
+    "Surah Yaseen",
+    "Surah Yasin with Urdu translation",
+    "Surah Al-Baqarah",
+    "Surah Baqarah full",
+    "Surah Rahman",
+    "Surah Ar-Rahman with Urdu translation",
+    "Surah Mulk",
+    "Surah Al-Mulk audio mp3",
+    "Surah Al-Waqiah",
+    "Surah Al-Kahf",
+    "Surah Kahf Friday recitation",
+    "Ayatul Kursi",
+    "Ayat ul Kursi with Urdu translation",
+    "Surah Fatiha",
+    "Surah Ikhlas",
+    "Surah Falaq",
+    "Surah Nas",
+    "Surah Yusuf",
+    "Surah Maryam",
+    "Surah Taha",
+    "Surah Sajdah",
+    "Surah Muzammil",
+    "Surah Naba",
+    "Surah Juma",
+
+    // Urdu Script Queries (Critical for Pakistan, India & Global Urdu Searches)
+    "قرآن مجید",
+    "قرآن پاک",
+    "قرآن مجید اردو ترجمہ کے ساتھ",
+    "قرآن پاک آن لائن",
+    "تلاوت قرآن پاک",
+    "قرآن مجید مع اردو ترجمہ آڈیو",
+    "قرآن شریف",
+    "مکمل قرآن پاک",
+    "سورۃ یٰس اردو ترجمہ",
+    "سورۃ الرحمن آڈیو",
+    "سورۃ الملک",
+    "سورۃ البقرہ مکمل",
+    "سورۃ الکہف جمعہ",
+    "آیت الکرسی اردو ترجمہ",
+    "مسنون دعائیں",
+    "نماز کے اوقات",
+    "قرآن مجید سنیں",
+    "قرآن پاک تلاوت mp3",
+    "نور القرآن",
+
+    // Arabic Queries
+    "القرآن الكريم",
+    "القرآن الكريم كامل",
+    "تلاوة القرآن الكريم",
+    "استماع القرآن الكريم mp3",
+    "سورة الفاتحة",
+    "سورة يس",
+    "سورة البقرة",
+    "سورة الكهف",
+    "سورة الرحمن",
+    "سورة الملك",
+    "تحميل القرآن الكريم",
+    "مشاري راشد العفاسي",
+
+    // Famous Reciters
+    "Mishary Rashid Alafasy Quran",
+    "Abdul Basit Abdus Samad recitation",
+    "Abdur Rahman As-Sudais tilawat",
+    "Saad Al Ghamdi",
+    "Maher Al Muaiqly",
+    "Minshawi murattal",
+    "Husary tilawat",
+    "relaxing Quran recitation",
+    "sleep Quran tilawat",
+
+    // Islamic Utilities
+    "Prayer Times Pakistan",
+    "Namaz Timings Karachi Lahore Islamabad",
+    "Daily Islamic Duas",
+    "Masnoon Duain with Urdu translation",
+    "Digital Tasbeeh Counter",
+    "Hijri Islamic Calendar",
+    "Noor Al-Quran",
   ],
   authors: [{ name: "Noor Al-Quran Team", url: BASE_URL }],
   creator: "Noor Al-Quran",
@@ -177,7 +228,7 @@ export const metadata: Metadata = {
     alternateLocale: ["ur_PK", "ar_SA"],
     url: BASE_URL,
     siteName: "Noor Al-Quran الكريم",
-    title: "Read Holy Quran Online with Urdu Translation & Audio MP3 | Noor Al-Quran",
+    title: "Read Holy Quran Online with Urdu & English Translation | MP3 Audio Tilawat",
     description:
       "Explore all 114 Surahs of the Holy Quran with authentic Urdu translation, beautiful audio recitations by world renowned Qaris, daily Islamic duas, and prayer times.",
     images: [
@@ -185,13 +236,13 @@ export const metadata: Metadata = {
         url: "/favicon5.png",
         width: 512,
         height: 512,
-        alt: "Noor Al-Quran - Holy Quran Online with Urdu Translation",
+        alt: "Noor Al-Quran - Holy Quran Online with Urdu Translation & Audio MP3",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Read Holy Quran Online with Urdu Translation & Audio MP3 | Noor Al-Quran",
+    title: "Read Holy Quran Online with Urdu & English Translation | MP3 Audio Tilawat",
     description:
       "Explore all 114 Surahs of the Holy Quran with authentic Urdu translation, beautiful audio recitations by world renowned Qaris, daily Islamic duas, and prayer times.",
     images: ["/favicon5.png"],
@@ -256,6 +307,79 @@ const jsonLdWebsite = {
         "priceCurrency": "USD",
       },
     },
+    {
+      "@type": "SiteNavigationElement",
+      "@id": `${BASE_URL}/#navigation`,
+      "name": "Main Navigation",
+      "hasPart": [
+        {
+          "@type": "WebPage",
+          "name": "Al-Quran (114 Surahs)",
+          "url": `${BASE_URL}/quran`,
+          "description": "Complete 114 Surahs of the Holy Quran with Urdu translation and MP3 audio tilawat.",
+        },
+        {
+          "@type": "WebPage",
+          "name": "Prayer Times",
+          "url": `${BASE_URL}/prayer-time`,
+          "description": "Daily accurate Namaz prayer timings with Azan audio notifications.",
+        },
+        {
+          "@type": "WebPage",
+          "name": "Daily Duas",
+          "url": `${BASE_URL}/dua`,
+          "description": "Authentic daily Islamic Duas and Azkar with Urdu translation.",
+        },
+        {
+          "@type": "WebPage",
+          "name": "Digital Tasbeeh",
+          "url": `${BASE_URL}/tasbeeh`,
+          "description": "Online digital Tasbeeh counter for daily Zikr and Astaghfar.",
+        },
+        {
+          "@type": "WebPage",
+          "name": "Islamic Calendar",
+          "url": `${BASE_URL}/calendar`,
+          "description": "Hijri lunar Islamic calendar with important Islamic events.",
+        },
+        {
+          "@type": "WebPage",
+          "name": "Quran Playlists",
+          "url": `${BASE_URL}/playlists`,
+          "description": "Curated Quran recitations for focus, sleep, and emotional peace.",
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${BASE_URL}/#faq`,
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How can I read and listen to the Holy Quran online with Urdu translation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can read all 114 Surahs of the Holy Quran online on Noor Al-Quran with authentic verse-by-verse Urdu translation, English meaning, and crystal clear MP3 Tilawat recitations by world renowned Qaris including Mishary Rashid Alafasy and Abdul Basit.",
+          },
+        },
+        {
+          "@type": "Question",
+          "name": "Is Noor Al-Quran completely free to access?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Noor Al-Quran is completely 100% free with no ads or subscriptions for the global Muslim Ummah across mobile, tablet, and desktop devices.",
+          },
+        },
+        {
+          "@type": "Question",
+          "name": "Can I listen to Surah Al-Fatihah, Surah Yaseen, and Surah Al-Baqarah audio online?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, you can listen to Surah Al-Fatihah, Surah Yaseen, Surah Al-Baqarah, Surah Ar-Rahman, Surah Al-Mulk, and all 114 Surahs with continuous audio playback, ayah highlighting, and recitation controls.",
+          },
+        },
+      ],
+    },
   ],
 };
 
@@ -286,7 +410,10 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          {children}
+          <AudioPlayerProvider>
+            {children}
+            <BottomAudioPlayer />
+          </AudioPlayerProvider>
         </ThemeProvider>
       </body>
     </html>
