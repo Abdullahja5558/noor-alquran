@@ -225,40 +225,51 @@ export default function DuaPage() {
                     <button
                       onClick={() => copyToClipboard(dua)}
                       title="Copy Dua Text"
-                      className="p-2.5 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/60 dark:border-white/10 text-slate-600 dark:text-neutral-300 hover:text-[#155DFC] transition-all cursor-pointer active:scale-90"
+                      aria-label={`Copy ${dua.title}`}
+                      className={`h-9 sm:h-9.5 px-3 sm:px-3.5 rounded-full border transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 text-xs font-semibold select-none ${
+                        copyStatus === dua.id
+                          ? "bg-emerald-600 border-emerald-600 text-white shadow-sm"
+                          : "bg-slate-100 dark:bg-white/[0.05] border-slate-200/60 dark:border-white/10 text-slate-700 dark:text-neutral-300 hover:text-[#155DFC] hover:border-[#155DFC]/40"
+                      }`}
                     >
                       {copyStatus === dua.id ? (
-                        <CheckCircle2 size={15} className="text-[#155DFC]" />
+                        <>
+                          <CheckCircle2 size={14} className="text-white shrink-0" />
+                          <span>Copied!</span>
+                        </>
                       ) : (
-                        <Copy size={15} />
+                        <>
+                          <Copy size={13} className="shrink-0" />
+                          <span>Copy</span>
+                        </>
                       )}
                     </button>
                   </div>
                 </div>
 
-                {/* Arabic Text */}
-                <div className="text-center my-6 sm:my-8 px-2">
-                  <p className="font-arabic text-2xl sm:text-3xl md:text-4xl leading-loose text-slate-900 dark:text-white">
+                {/* Arabic Text (Fully selectable on mobile) */}
+                <div className="text-center my-6 sm:my-8 px-2 select-text">
+                  <p className="font-arabic text-2xl sm:text-3xl md:text-4xl leading-loose text-slate-900 dark:text-white select-text selection:bg-[#155DFC]/30">
                     {dua.arabic}
                   </p>
                 </div>
 
                 {/* Urdu Translation */}
-                <div className="text-right mb-4 p-4 rounded-2xl bg-slate-50/70 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.05]">
-                  <span className="text-[11px] font-bold text-[#155DFC] block mb-1">
+                <div className="text-right mb-4 p-4 rounded-2xl bg-slate-50/70 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.05] select-text">
+                  <span className="text-[11px] font-bold text-[#155DFC] block mb-1 select-none">
                     اردو ترجمہ
                   </span>
-                  <p className="font-urdu text-lg sm:text-xl leading-relaxed text-slate-800 dark:text-neutral-200">
+                  <p className="font-urdu text-lg sm:text-xl leading-relaxed text-slate-800 dark:text-neutral-200 select-text selection:bg-[#155DFC]/30">
                     {dua.urdu}
                   </p>
                 </div>
 
                 {/* English Meaning */}
-                <div className="mb-4 p-4 rounded-2xl bg-slate-50/70 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.05]">
-                  <span className="text-[11px] font-bold text-[#155DFC] block mb-1">
+                <div className="mb-4 p-4 rounded-2xl bg-slate-50/70 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.05] select-text">
+                  <span className="text-[11px] font-bold text-[#155DFC] block mb-1 select-none">
                     English Meaning
                   </span>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 font-normal leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 font-normal leading-relaxed select-text selection:bg-[#155DFC]/30">
                     &quot;{dua.english}&quot;
                   </p>
                 </div>
@@ -273,6 +284,22 @@ export default function DuaPage() {
             ))}
           </AnimatePresence>
         </div>
+
+        {/* Floating Copy Feedback Toast Notification */}
+        <AnimatePresence>
+          {toastMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: 25, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 15, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="fixed bottom-24 sm:bottom-28 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-full bg-emerald-600 text-white text-xs font-semibold shadow-2xl flex items-center gap-2 border border-emerald-500/50 backdrop-blur-xl whitespace-nowrap"
+            >
+              <CheckCircle2 size={15} className="text-white shrink-0" />
+              <span>{toastMessage}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
 
       <Footer />
