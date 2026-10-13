@@ -21,6 +21,7 @@ export default function DuaPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [copyStatus, setCopyStatus] = useState<number | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [speakingDuaId, setSpeakingDuaId] = useState<number | null>(null);
 
   const categories = ["All", "Protection", "Success", "Peace of Mind", "Forgiveness", "Guidance"];
@@ -36,13 +37,55 @@ export default function DuaPage() {
     return matchesCategory && matchesSearch;
   });
 
-  const copyToClipboard = (dua: Dua) => {
+  const copyToClipboard = async (dua: Dua) => {
     const fullText = `🤲 ${dua.title}\n\n${dua.arabic}\n\nاردو: ${dua.urdu}\n\nEnglish: ${dua.english}\n\nRef: ${dua.ref}`;
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(fullText).then(() => {
-        setCopyStatus(dua.id);
-        setTimeout(() => setCopyStatus(null), 2000);
-      });
+    let success = false;
+
+    // Tier 1: Modern Navigator Clipboard API
+    if (typeof navigator !== "undefined" && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      try {
+        await navigator.clipboard.writeText(fullText);
+        success = true;
+      } catch (err) {
+        console.warn("navigator.clipboard.writeText failed, using mobile fallback:", err);
+      }
+    }
+
+    // Tier 2: 100% Reliable Fallback for iOS Safari, Android Webview & In-App Browsers
+    if (!success && typeof document !== "undefined") {
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = fullText;
+        textarea.style.position = "fixed";
+        textarea.style.top = "0";
+        textarea.style.left = "0";
+        textarea.style.width = "2em";
+        textarea.style.height = "2em";
+        textarea.style.padding = "0";
+        textarea.style.border = "none";
+        textarea.style.outline = "none";
+        textarea.style.boxShadow = "none";
+        textarea.style.background = "transparent";
+        textarea.style.opacity = "0.01";
+        textarea.setAttribute("readonly", "");
+        document.body.appendChild(textarea);
+
+        textarea.focus();
+        textarea.select();
+        textarea.setSelectionRange(0, 99999); // Critical for iOS Safari
+
+        success = document.execCommand("copy");
+        document.body.removeChild(textarea);
+      } catch (fallbackErr) {
+        console.error("document.execCommand fallback failed:", fallbackErr);
+      }
+    }
+
+    if (success) {
+      setCopyStatus(dua.id);
+      setToastMessage(`"${dua.title}" copied to clipboard!`);
+      setTimeout(() => setCopyStatus(null), 2500);
+      setTimeout(() => setToastMessage(null), 3000);
     }
   };
 
