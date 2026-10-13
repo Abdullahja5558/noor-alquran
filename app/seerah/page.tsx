@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Heart, ShieldCheck, History, Sparkles } from "lucide-react";
+import { ArrowLeft, ShieldCheck, History } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -10,61 +10,50 @@ import { PROPHETS_DATA, SEERAH_TIMELINE } from "@/components/seerahData";
 
 export default function SeerahPage() {
   return (
-    <div className="min-h-screen font-sans selection:bg-blue-600/30 overflow-x-hidden pb-24">
+    <div className="min-h-screen flex flex-col justify-between font-sans bg-[#f8fafc] dark:bg-[#000000] text-slate-900 dark:text-slate-100 overflow-x-hidden selection:bg-[#155DFC]/20">
       <Navbar />
 
-      <main className="pt-28 sm:pt-32 pb-20 sm:pb-24 px-3 sm:px-6 md:px-8 max-w-5xl mx-auto">
+      <main className="flex-1 pt-28 sm:pt-32 pb-16 sm:pb-20 px-3 sm:px-6 md:px-8 max-w-5xl mx-auto w-full">
         {/* Top Header */}
-        <div className="flex items-center justify-between mb-6 sm:mb-8">
+        <div className="flex items-center justify-between mb-8 sm:mb-10">
           <Link
             href="/"
-            className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-xs font-semibold text-slate-700 dark:text-neutral-300 hover:text-[#155DFC] dark:hover:text-[#155DFC] transition-colors"
           >
-            <ArrowLeft size={15} />
+            <ArrowLeft size={14} />
             <span>Home</span>
           </Link>
 
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-xs font-bold text-blue-600 dark:text-blue-400 shadow-sm">
-            <Star size={13} />
-            <span>The Noble Seerah</span>
-          </div>
+          <span className="text-xs font-semibold text-slate-500 dark:text-neutral-400">
+            Prophetic Chronicles
+          </span>
         </div>
 
         {/* Hero Banner */}
-        <section className="text-center mb-16 sm:mb-20 md:mb-28">
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-[9.5px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-blue-600 dark:text-blue-400 mb-3 sm:mb-4 shadow-sm">
-              <Sparkles size={12} />
-              <span>Sacred History & Legacy</span>
-            </div>
-            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tight mb-3 sm:mb-4 text-slate-900 dark:text-white leading-[1.08] sm:leading-[1.05]">
-              Prophetic <br />
-              <span className="text-blue-600 dark:text-blue-400 italic font-serif">Heritage.</span>
-            </h1>
-            <p className="max-w-lg mx-auto text-[11px] sm:text-xs md:text-sm uppercase tracking-wider sm:tracking-widest text-slate-500 font-bold">
-              A journey through the blessed life of Prophet Muhammad ﷺ and the Messengers of Allah
-            </p>
-          </motion.div>
+        <section className="text-center mb-16 sm:mb-20">
+          <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-3 text-slate-900 dark:text-white">
+            Prophetic <span className="bg-[#155DFC] text-white px-4 py-0.5 rounded-full text-2xl sm:text-4xl md:text-5xl font-extrabold align-middle inline-block">Seerah & Heritage</span>
+          </h1>
+          <p className="max-w-xl mx-auto text-xs sm:text-sm text-slate-600 dark:text-neutral-400 font-normal leading-relaxed mt-2">
+            Chronological milestones of the blessed life of Prophet Muhammad ﷺ and the revered Messengers of Allah.
+          </p>
         </section>
 
         {/* --- PROPHET MUHAMMAD (PBUH) TIMELINE --- */}
-        <section className="relative mb-20 sm:mb-28 md:mb-36">
+        <section className="relative mb-20 sm:mb-28">
           <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-block p-3.5 sm:p-4 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-blue-500 mb-3 sm:mb-4 shadow-sm">
-              <Heart fill="currentColor" size={24} />
-            </div>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white">
-              Prophet Muhammad <span className="text-blue-500 font-normal">ﷺ</span>
+            <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+              Prophet Muhammad <span className="text-[#155DFC]">ﷺ</span>
             </h2>
-            <p className="text-blue-600 dark:text-blue-400 mt-1.5 sm:mt-2 tracking-[0.2em] sm:tracking-[0.25em] uppercase text-[10px] sm:text-[11px] font-black">
+            <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1 font-medium">
               Key Chronological Milestones
             </p>
           </div>
 
           {/* Timeline Center Line */}
-          <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 w-px h-[92%] top-28 z-0 bg-slate-200 dark:bg-[#141c2b]" />
+          <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 w-px h-[92%] top-24 z-0 bg-slate-200 dark:bg-white/[0.08]" />
 
-          <div className="space-y-8 sm:space-y-12 md:space-y-20 relative z-10">
+          <div className="space-y-6 sm:space-y-10 relative z-10">
             {SEERAH_TIMELINE.map((item, idx) => (
               <motion.div
                 key={idx}
@@ -76,35 +65,33 @@ export default function SeerahPage() {
                 }`}
               >
                 <div className="flex-1 w-full pl-8 sm:pl-10 md:pl-0">
-                  <div className="p-6 sm:p-8 md:p-10 rounded-[1.8rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] hover:border-blue-500/50 transition-all shadow-sm relative group">
-                    <div className="flex justify-between items-center mb-3 sm:mb-4">
-                      <span className="text-blue-600 dark:text-blue-400 font-black text-xl sm:text-2xl md:text-3xl">
+                  <div className="p-6 sm:p-8 rounded-[2.2rem] bg-white dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.08] transition-all relative">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="font-heading text-xl sm:text-2xl font-extrabold text-[#155DFC]">
                         {item.year}
                       </span>
-                      <History className="text-slate-300 dark:text-slate-700" size={22} />
+                      <History className="text-slate-400 dark:text-neutral-600" size={18} />
                     </div>
 
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 text-slate-900 dark:text-white">
+                    <h3 className="font-heading text-base sm:text-xl font-bold mb-2 text-slate-900 dark:text-white">
                       {item.event}
                     </h3>
 
-                    <p className="text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-300 font-light mb-3 sm:mb-4">
+                    <p className="text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-neutral-400 font-normal mb-3">
                       {item.desc_en}
                     </p>
 
-                    <div className="h-px w-full bg-slate-100 dark:bg-[#141c2b] my-3 sm:my-4" />
-
-                    <p className="font-urdu text-base sm:text-lg md:text-2xl leading-relaxed text-right text-slate-800 dark:text-blue-100">
-                      {item.desc_ur}
-                    </p>
+                    <div className="pt-3 border-t border-slate-100 dark:border-white/[0.06]">
+                      <p className="font-urdu text-base sm:text-lg leading-relaxed text-right text-slate-800 dark:text-neutral-200">
+                        {item.desc_ur}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Pulsing Node */}
-                <div className="absolute left-1.5 md:relative md:left-0 z-20">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 rounded-full bg-blue-600 border-4 border-white dark:border-[#07090e] flex items-center justify-center shadow-lg">
-                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-ping" />
-                  </div>
+                {/* Node */}
+                <div className="absolute left-2.5 md:relative md:left-0 z-20">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#155DFC] border-2 sm:border-3 border-white dark:border-black flex items-center justify-center" />
                 </div>
 
                 <div className="flex-1 hidden md:block" />
@@ -115,43 +102,42 @@ export default function SeerahPage() {
 
         {/* --- PROPHETS DIRECTORY --- */}
         <section>
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white">
-              The Messengers of Allah
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+              The Messengers of <span className="text-[#155DFC]">Allah</span>
             </h2>
-            <p className="text-[11px] sm:text-xs text-slate-500 uppercase tracking-widest mt-1.5 sm:mt-2 font-bold">
-              Stories and titles of selected Prophets (Peace Be Upon Them)
+            <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1 font-medium">
+              Chronicles and titles of the Prophets (Peace Be Upon Them)
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {PROPHETS_DATA.map((prophet, idx) => (
-              <motion.div
+              <div
                 key={idx}
-                whileHover={{ y: -4 }}
-                className="p-6 sm:p-8 md:p-10 rounded-[1.8rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] hover:border-blue-500/50 transition-all shadow-sm"
+                className="p-6 sm:p-8 rounded-[2.2rem] bg-white dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.08] transition-all"
               >
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-blue-600 dark:text-blue-400 flex items-center justify-center mb-5 sm:mb-6 shadow-sm">
-                  <ShieldCheck size={22} />
+                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/60 dark:border-white/10 text-[#155DFC] flex items-center justify-center mb-4">
+                  <ShieldCheck size={18} />
                 </div>
 
-                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-1">
+                <h3 className="font-heading text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-0.5">
                   {prophet.name}
                 </h3>
-                <span className="text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-3 sm:mb-4">
+                <span className="text-[11px] font-semibold text-[#155DFC] block mb-3">
                   {prophet.title}
                 </span>
 
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-light leading-relaxed mb-3 sm:mb-4">
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 font-normal leading-relaxed mb-3">
                   {prophet.desc_en}
                 </p>
 
-                <div className="h-px w-14 sm:w-16 bg-slate-200 dark:bg-[#141c2b] my-3 sm:my-4" />
-
-                <p className="font-urdu text-base sm:text-lg md:text-xl text-right text-slate-800 dark:text-slate-200 leading-relaxed">
-                  {prophet.desc_ur}
-                </p>
-              </motion.div>
+                <div className="pt-3 border-t border-slate-100 dark:border-white/[0.06]">
+                  <p className="font-urdu text-base sm:text-lg text-right text-slate-800 dark:text-neutral-200 leading-relaxed">
+                    {prophet.desc_ur}
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         </section>

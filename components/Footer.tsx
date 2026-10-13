@@ -51,7 +51,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="w-full px-3 sm:px-6 md:px-8 pt-12 sm:pt-16 pb-0">
+    <footer className="w-full px-3 sm:px-6 md:px-8 pt-12 sm:pt-16 pb-0 mt-auto">
       {/* 
         Inverted High-Contrast Monolithic Footer:
         - Light Mode: Pure Black Background, White Text

@@ -15,18 +15,21 @@ export default function Feature() {
             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6 sm:mb-8 group-hover:scale-105 transition-transform shadow-sm">
               <Book className="w-7 h-7 sm:w-8 sm:h-8" />
             </div>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 tracking-tight text-slate-900 dark:text-white">
-              Complete Digital Mushaf
+            <h3 className="font-heading text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 tracking-tight text-slate-900 dark:text-white">
+              Complete Digital{" "}
+              <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white px-3 sm:px-4 py-0.5 rounded-xl text-xl sm:text-2xl md:text-3xl shadow-sm">
+                Mushaf
+              </span>
             </h3>
-            <p className="text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-lg text-slate-600 dark:text-slate-300">
-              Experience the Noble Quran with high-definition Uthmani script, authentic Urdu and English translations, and sequential audio recitations.
+            <p className="text-xs sm:text-sm md:text-base font-normal leading-relaxed max-w-md text-slate-600 dark:text-neutral-400">
+              High-definition Uthmani script, authentic translations, and verse-by-verse Tilawat.
             </p>
           </div>
 
           <div className="mt-6 sm:mt-8 flex items-center gap-4">
             <Link
               href="/quran"
-              className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-blue-600 dark:text-blue-400 hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#155DFC] hover:gap-3 transition-all"
             >
               <span>Explore all 114 Surahs</span>
               <ArrowRight size={16} />
@@ -87,11 +90,14 @@ export default function Feature() {
               <Sparkles size={12} />
               <span>Free & Open Source</span>
             </div>
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">
-              Ready to start your spiritual journey?
+            <h3 className="font-heading text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white">
+              Ready for your{" "}
+              <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white px-3 py-0.5 rounded-xl text-lg sm:text-xl md:text-2xl">
+                Spiritual Journey?
+              </span>
             </h3>
-            <p className="text-xs sm:text-sm text-blue-200/80 max-w-md">
-              Read, listen, and reflect on the Holy Quran with high quality digital tools.
+            <p className="text-xs sm:text-sm text-blue-200/80 max-w-md font-normal">
+              Read, listen, and reflect on the Holy Quran with high-precision digital tools.
             </p>
           </div>
 

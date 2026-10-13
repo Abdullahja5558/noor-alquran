@@ -120,37 +120,42 @@ export default function RecitersSection() {
     <section className="py-16 sm:py-24 px-4 sm:px-6 md:px-8 relative font-sans">
       <div className="max-w-7xl mx-auto">
         {/* --- CENTERED SECTION HEADER --- */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10 sm:mb-14">
           <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-            Listen by Reciter{" "}
-            <span className="font-arabic font-normal text-2xl sm:text-4xl text-blue-600 dark:text-blue-400 ml-2">
+            Listen with{" "}
+            <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white px-3.5 sm:px-4.5 py-0.5 sm:py-1 rounded-xl sm:rounded-2xl mx-1.5 shadow-sm">
+              Beloved Reciters
+            </span>{" "}
+            <span className="font-arabic font-normal text-2xl sm:text-4xl text-[#155DFC] ml-1 sm:ml-2">
               القراء
             </span>
           </h2>
           
-          <p className="mt-3 text-sm sm:text-base md:text-lg text-slate-600 dark:text-neutral-400 max-w-xl font-normal leading-relaxed">
-            Experience the recitation of all 114 Surahs by the most esteemed and beloved reciters of the Islamic world.
+          <p className="mt-2.5 text-xs sm:text-sm md:text-base text-slate-500 dark:text-neutral-400 max-w-md font-normal leading-relaxed">
+            Soulful Tilawat of 114 Surahs by the Islamic world&apos;s most revered Qaris.
           </p>
 
-          {/* Centered Borderless Search Box */}
-          <div className="relative w-full max-w-md mt-6">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search reciter or city..."
-              className="w-full pl-11 pr-10 py-3 rounded-full bg-slate-100 dark:bg-white/[0.06] border-none outline-none ring-0 focus:ring-0 focus:outline-none text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500 transition-colors"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
-                aria-label="Clear reciter search"
-              >
-                <X size={15} />
-              </button>
-            )}
+          {/* Centered Minimal Underline Search Input */}
+          <div className="w-full max-w-md mx-auto mt-6">
+            <div className="relative flex items-center border-b border-slate-300 dark:border-neutral-700 focus-within:border-[#155DFC] dark:focus-within:border-[#155DFC] pb-2 transition-colors">
+              <Search className="w-4 h-4 text-slate-400 shrink-0 ml-0.5" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search reciter or city..."
+                className="w-full pl-3 pr-8 bg-transparent border-none rounded-none outline-none ring-0 focus:ring-0 focus:outline-none text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 transition-colors"
+                  aria-label="Clear reciter search"
+                >
+                  <X size={15} />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* 
@@ -268,22 +273,22 @@ export default function RecitersSection() {
       {/* --- SURAH PICKER MODAL (114 SURAHS) --- */}
       <AnimatePresence>
         {selectedReciterModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-2xl">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-2xl bg-white dark:bg-black border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh]"
+              className="relative w-full max-w-2xl bg-white/95 dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.09] rounded-[2.5rem] shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-2xl overflow-hidden flex flex-col max-h-[88vh] text-slate-900 dark:text-white"
             >
               {/* Modal Header */}
-              <div className="p-5 sm:p-6 bg-slate-50 dark:bg-neutral-900 border-b border-slate-200 dark:border-white/10 relative">
+              <div className="p-5 sm:p-7 bg-slate-50/50 dark:bg-white/[0.02] border-b border-slate-200/80 dark:border-white/[0.08] relative">
                 <button
                   onClick={() => setSelectedReciterModal(null)}
-                  className="absolute right-4 top-4 w-9 h-9 rounded-full bg-slate-200/80 dark:bg-white/10 hover:bg-slate-300 dark:hover:bg-white/20 text-slate-600 dark:text-neutral-300 flex items-center justify-center transition-all"
+                  className="absolute right-5 top-5 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.12] border border-slate-200/60 dark:border-white/10 text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-all cursor-pointer"
                   aria-label="Close modal"
                 >
-                  <X size={18} />
+                  <X size={16} />
                 </button>
 
                 <div className="flex items-center gap-4 sm:gap-5 pr-10">
@@ -298,41 +303,43 @@ export default function RecitersSection() {
                     </div>
                   </div>
                   <div className="min-w-0">
-                    <span className="text-xs font-semibold text-slate-600 dark:text-neutral-400 uppercase tracking-wider">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#155DFC]/10 border border-[#155DFC]/20 text-[#155DFC] text-[10px] font-bold uppercase tracking-wider mb-1">
                       {selectedReciterModal.country}
                     </span>
-                    <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white truncate">
+                    <h3 className="font-heading text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white truncate">
                       {selectedReciterModal.name}
                     </h3>
-                    <p className="text-xs sm:text-sm font-arabic text-[#155DFC] mt-0.5">
+                    <p className="text-xs sm:text-sm font-arabic text-slate-600 dark:text-neutral-300 mt-0.5">
                       {selectedReciterModal.arabicName} • {selectedReciterModal.city}
                     </p>
                   </div>
                 </div>
 
-                {/* Borderless Search Surah inside Modal */}
-                <div className="relative mt-4">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input
-                    type="text"
-                    value={surahSearch}
-                    onChange={(e) => setSurahSearch(e.target.value)}
-                    placeholder={`Search 114 Surahs for ${selectedReciterModal.name.split(" ")[0]}...`}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-full bg-slate-100 dark:bg-white/[0.06] border-none outline-none ring-0 focus:ring-0 focus:outline-none text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500"
-                  />
-                  {surahSearch && (
-                    <button
-                      onClick={() => setSurahSearch("")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white text-xs"
-                    >
-                      Clear
-                    </button>
-                  )}
+                {/* Minimal Underline Search Surah inside Modal */}
+                <div className="relative mt-5">
+                  <div className="relative flex items-center border-b border-slate-300 dark:border-neutral-700 focus-within:border-[#155DFC] dark:focus-within:border-[#155DFC] pb-1.5 transition-colors">
+                    <Search className="w-4 h-4 text-slate-400 shrink-0 ml-0.5" />
+                    <input
+                      type="text"
+                      value={surahSearch}
+                      onChange={(e) => setSurahSearch(e.target.value)}
+                      placeholder={`Search 114 Surahs for ${selectedReciterModal.name.split(" ")[0]}...`}
+                      className="w-full pl-3 pr-8 bg-transparent border-none rounded-none outline-none ring-0 focus:ring-0 focus:outline-none text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500"
+                    />
+                    {surahSearch && (
+                      <button
+                        onClick={() => setSurahSearch("")}
+                        className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xs px-1"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
               {/* Surahs Scrollable List */}
-              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2.5 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2 custom-scrollbar">
                 {loadingSurahs ? (
                   <div className="py-12 text-center text-slate-400 text-sm animate-pulse">
                     Loading Surahs list...
@@ -346,10 +353,10 @@ export default function RecitersSection() {
                     <div
                       key={surah.number}
                       onClick={() => handlePlaySurah(surah.number, selectedReciterModal.id)}
-                      className="group flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-white/[0.04] hover:bg-slate-100 dark:hover:bg-white/[0.08] border border-slate-200/80 dark:border-white/10 transition-colors cursor-pointer"
+                      className="group flex items-center justify-between px-4 sm:px-5 py-3 rounded-full bg-slate-50/80 dark:bg-white/[0.02] hover:bg-slate-100/70 dark:hover:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.07] hover:border-[#155DFC]/50 dark:hover:border-[#155DFC]/50 transition-all cursor-pointer"
                     >
-                      <div className="flex items-center gap-3 sm:gap-4">
-                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white dark:bg-white/10 text-slate-800 dark:text-white font-bold text-xs flex items-center justify-center border border-slate-200 dark:border-white/10">
+                      <div className="flex items-center gap-3.5 sm:gap-4">
+                        <div className="w-8 h-8 rounded-full bg-white dark:bg-white/[0.05] text-slate-700 dark:text-neutral-300 font-bold text-xs flex items-center justify-center border border-slate-200 dark:border-white/[0.08] group-hover:text-[#155DFC] group-hover:border-[#155DFC]/40 transition-colors">
                           {surah.number}
                         </div>
                         <div>
@@ -362,12 +369,12 @@ export default function RecitersSection() {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3.5">
                         <span className="font-arabic text-base sm:text-lg text-slate-800 dark:text-neutral-200">
                           {surah.name}
                         </span>
-                        <div className="w-8 h-8 rounded-full bg-white dark:bg-white/10 text-slate-700 dark:text-neutral-200 group-hover:bg-[#155DFC] group-hover:text-white flex items-center justify-center transition-colors">
-                          <Play size={13} className="fill-current ml-0.5" />
+                        <div className="w-8 h-8 rounded-full bg-white dark:bg-white/10 text-slate-700 dark:text-neutral-300 group-hover:bg-[#155DFC] group-hover:text-white flex items-center justify-center transition-all shrink-0">
+                          <Play size={11} className="fill-current ml-0.5" />
                         </div>
                       </div>
                     </div>
@@ -376,10 +383,10 @@ export default function RecitersSection() {
               </div>
 
               {/* Modal Footer */}
-              <div className="p-4 bg-slate-50 dark:bg-neutral-900 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs text-slate-500 dark:text-neutral-400">
-                <span>Select any Surah to start audio playback</span>
+              <div className="p-4 sm:p-5 bg-slate-50/50 dark:bg-white/[0.02] border-t border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between text-xs text-slate-500 dark:text-neutral-400">
+                <span>Select any Surah to begin recitation</span>
                 <span className="font-semibold text-slate-700 dark:text-neutral-300">
-                  114 Surahs Available
+                  114 Surahs
                 </span>
               </div>
             </motion.div>

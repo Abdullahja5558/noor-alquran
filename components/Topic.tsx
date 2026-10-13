@@ -104,15 +104,15 @@ export default function Topics() {
     <section className="relative py-20 sm:py-28 px-4 sm:px-6 overflow-hidden">
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header Section */}
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black mt-4 sm:mt-6 tracking-tight text-slate-900 dark:text-white">
-            Wisdom for every <br />
-            <span className="text-blue-600 dark:text-blue-400 italic">
-              human emotion.
+        <div className="text-center mb-10 sm:mb-14">
+          <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Divine Wisdom for{" "}
+            <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white px-3.5 sm:px-4.5 py-0.5 sm:py-1 rounded-xl sm:rounded-2xl mx-1.5 shadow-sm">
+              Every Emotion
             </span>
           </h2>
-          <p className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-lg mx-auto">
-            Click on any emotion to discover comforting Quranic verses and timeless spiritual remedies.
+          <p className="mt-2.5 text-xs sm:text-sm text-slate-500 dark:text-neutral-400 max-w-md mx-auto font-normal">
+            Comforting verses and spiritual remedies for every state of the heart.
           </p>
         </div>
 
@@ -159,79 +159,79 @@ export default function Topics() {
         {selectedTopic && (
           <div 
             onClick={() => setSelectedTopic(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md overflow-hidden"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-2xl overflow-hidden"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 md:p-12 bg-white dark:bg-[#07090e] shadow-2xl border border-slate-200 dark:border-[#141c2b] overscroll-contain"
+              className="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-[2.5rem] p-6 sm:p-8 md:p-10 bg-white/95 dark:bg-[#070709] shadow-[0_30px_90px_rgba(0,0,0,0.6)] border border-slate-200/80 dark:border-white/[0.09] backdrop-blur-2xl overscroll-contain text-slate-900 dark:text-white custom-scrollbar"
             >
               {/* Close Button */}
               <button
                 onClick={() => setSelectedTopic(null)}
                 aria-label="Close modal"
-                className="absolute top-4 sm:top-6 right-4 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-blue-500 transition-colors cursor-pointer"
+                className="absolute top-5 sm:top-7 right-5 sm:right-7 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/[0.06] border border-slate-200/60 dark:border-white/10 flex items-center justify-center text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
 
-              <div className="flex items-center gap-3 mb-6 pr-10">
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-blue-500/15 border border-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3.5 mb-6 pr-10">
+                <div className="w-12 h-12 rounded-2xl bg-[#155DFC]/10 border border-[#155DFC]/20 text-[#155DFC] flex items-center justify-center shrink-0">
                   {selectedTopic.icon}
                 </div>
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                  <h3 className="font-heading text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                     {selectedTopic.title}
                   </h3>
-                  <span className="text-[10px] sm:text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.06] text-[11px] font-semibold text-[#155DFC] border border-slate-200/60 dark:border-white/10 mt-1">
                     {selectedTopic.reference}
                   </span>
                 </div>
               </div>
 
               {/* Arabic Verse */}
-              <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-slate-50 dark:bg-[#0c111a]/60 border border-slate-200 dark:border-[#141c2b] text-center mb-5 sm:mb-6">
-                <p className="font-arabic text-xl sm:text-2xl md:text-3xl leading-loose text-slate-900 dark:text-white">
+              <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.07] text-center my-6 relative">
+                <p className="font-arabic text-2xl sm:text-3xl leading-loose text-slate-900 dark:text-neutral-100">
                   {selectedTopic.ayahArabic}
                 </p>
               </div>
 
               {/* Urdu Translation */}
-              <div className="mb-4 text-right">
-                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
+              <div className="mb-4 p-4 sm:p-5 rounded-2xl bg-slate-50/50 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.05] text-right">
+                <span className="text-[11px] font-bold text-[#155DFC] block mb-1">
                   اردو ترجمہ
                 </span>
-                <p className="font-urdu text-lg sm:text-xl leading-relaxed text-slate-800 dark:text-slate-200">
+                <p className="font-urdu text-lg sm:text-xl leading-relaxed text-slate-800 dark:text-neutral-200">
                   {selectedTopic.ayahUrdu}
                 </p>
               </div>
 
               {/* English Translation */}
-              <div className="mb-6 sm:mb-8">
-                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
-                  English Meaning
+              <div className="mb-6 sm:mb-8 p-4 sm:p-5 rounded-2xl bg-slate-50/50 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.05]">
+                <span className="text-[11px] font-bold text-[#155DFC] block mb-1">
+                  English Translation
                 </span>
-                <p className="text-xs sm:text-sm md:text-base italic text-slate-700 dark:text-slate-300 leading-relaxed">
+                <p className="text-xs sm:text-sm md:text-base text-slate-700 dark:text-neutral-300 leading-relaxed font-normal">
                   &quot;{selectedTopic.ayahEnglish}&quot;
                 </p>
               </div>
 
               {/* Modal Actions */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-5 sm:pt-6 border-t border-slate-200 dark:border-[#141c2b]">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-5 border-t border-slate-200/80 dark:border-white/[0.08]">
                 <Link
                   href={selectedTopic.surahLink}
                   onClick={() => setSelectedTopic(null)}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-blue-600/30 text-center"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#155DFC] hover:bg-[#114ecc] text-white font-semibold text-xs sm:text-sm transition-all active:scale-95 shadow-md shadow-[#155DFC]/25 text-center"
                 >
-                  <BookOpen size={15} />
+                  <BookOpen size={14} />
                   <span>Open Full Surah</span>
                 </Link>
 
                 <button
                   onClick={() => setSelectedTopic(null)}
-                  className="px-6 py-3 rounded-full bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-slate-700 dark:text-slate-300 font-bold text-xs uppercase tracking-wider hover:bg-blue-500/10 transition-all cursor-pointer text-center"
+                  className="px-6 py-2.5 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/60 dark:border-white/10 text-slate-700 dark:text-neutral-300 hover:text-slate-900 dark:hover:text-white font-semibold text-xs sm:text-sm transition-all cursor-pointer text-center"
                 >
                   Close
                 </button>

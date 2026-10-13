@@ -1,219 +1,196 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React from "react";
 import {
   ArrowLeft,
-  Star,
-  Heart,
-  Calendar,
-  Clock,
   BookOpen,
-  Sparkles,
-  Smartphone,
-  Apple,
+  Heart,
+  Clock,
+  Calendar,
+  ShieldCheck,
+  Github,
+  Instagram,
+  Code2,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function PremiumAbout() {
-  const [userCount, setUserCount] = useState(128450);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setUserCount((prev) => prev + Math.floor(Math.random() * 3));
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <div className="min-h-screen font-sans selection:bg-blue-600/30 overflow-x-hidden pb-24">
+    <div className="min-h-screen flex flex-col justify-between font-sans bg-[#f8fafc] dark:bg-[#000000] text-slate-900 dark:text-slate-100 overflow-x-hidden selection:bg-[#155DFC]/20">
       <Navbar />
 
-      <main className="pt-28 sm:pt-36 px-3 sm:px-6 md:px-8 max-w-6xl mx-auto">
+      <main className="flex-1 pt-28 sm:pt-32 pb-16 sm:pb-20 px-3 sm:px-6 md:px-8 max-w-6xl mx-auto w-full">
         {/* Top Floating Badge */}
-        <div className="flex items-center justify-between mb-8 sm:mb-12">
+        <div className="flex items-center justify-between mb-8 sm:mb-10">
           <Link
             href="/"
-            className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-xs font-semibold text-slate-700 dark:text-neutral-300 hover:text-[#155DFC] dark:hover:text-[#155DFC] transition-colors"
           >
-            <ArrowLeft size={15} />
-            <span>Return Home</span>
+            <ArrowLeft size={14} />
+            <span>Home</span>
           </Link>
 
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-xs font-bold text-blue-600 dark:text-blue-400 shadow-sm">
-            <Sparkles size={13} />
-            <span>Version 3.0 Elite</span>
-          </div>
+          <span className="text-xs font-semibold text-slate-500 dark:text-neutral-400">
+            Open-Source Islamic Initiative
+          </span>
         </div>
 
         {/* Hero Section */}
-        <section className="text-center mb-16 sm:mb-24 md:mb-28">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-4xl sm:text-7xl md:text-9xl font-black tracking-tight mb-6 sm:mb-8 text-slate-900 dark:text-white leading-[0.95] sm:leading-[0.9]">
-              Digital <br />
-              <span className="text-blue-600 dark:text-blue-400 italic font-serif">
-                Spiritualism.
-              </span>
-            </h1>
+        <section className="text-center mb-16 sm:mb-20">
+          <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-3 text-slate-900 dark:text-white">
+            About <span className="bg-[#155DFC] text-white px-4 py-0.5 rounded-full text-2xl sm:text-4xl md:text-5xl font-extrabold align-middle inline-block">Noor Al-Quran</span>
+          </h1>
 
-            <p className="text-sm sm:text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed text-slate-600 dark:text-slate-300 mb-8 sm:mb-12">
-              An elegant, modern Islamic web portal crafted with deep reverence and precision for the modern believer who seeks beauty and peace in worship.
-            </p>
+          <p className="text-xs sm:text-sm md:text-base max-w-2xl mx-auto font-normal leading-relaxed text-slate-600 dark:text-neutral-400 mt-2">
+            An authentic, ad-free Islamic platform built with sincere devotion to bring the Word of Allah, authentic prophetic recitations, and spiritual essentials to believers worldwide.
+          </p>
 
-            <div className="flex justify-center items-center gap-6 sm:gap-8">
-              <div className="text-center">
-                <p className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white">
-                  {userCount.toLocaleString()}+
-                </p>
-                <p className="text-[9px] sm:text-[10px] uppercase tracking-widest text-blue-600 dark:text-blue-400 font-bold">
-                  Daily Listeners
-                </p>
-              </div>
-
-              <div className="w-px h-8 sm:h-10 bg-slate-200 dark:bg-[#141c2b]" />
-
-              <div className="text-center">
-                <p className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white">
-                  114
-                </p>
-                <p className="text-[9px] sm:text-[10px] uppercase tracking-widest text-blue-600 dark:text-blue-400 font-bold">
-                  Surahs with Audio
-                </p>
-              </div>
+          {/* Pillars Highlights */}
+          <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-10 mt-8 sm:mt-10">
+            <div className="text-center">
+              <p className="font-heading text-2xl sm:text-3xl font-extrabold text-[#155DFC]">
+                100% Free
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-neutral-400 font-medium mt-0.5">
+                Zero Ads • No Subscriptions
+              </p>
             </div>
-          </motion.div>
+
+            <div className="w-px h-8 bg-slate-200 dark:bg-white/10 hidden sm:block" />
+
+            <div className="text-center">
+              <p className="font-heading text-2xl sm:text-3xl font-extrabold text-[#155DFC]">
+                114 Surahs
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-neutral-400 font-medium mt-0.5">
+                EveryAyah Audio & Translations
+              </p>
+            </div>
+
+            <div className="w-px h-8 bg-slate-200 dark:bg-white/10 hidden sm:block" />
+
+            <div className="text-center">
+              <p className="font-heading text-2xl sm:text-3xl font-extrabold text-[#155DFC]">
+                15 Reciters
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-neutral-400 font-medium mt-0.5">
+                World-Renowned Qaris
+              </p>
+            </div>
+          </div>
         </section>
 
-        {/* Ecosystem Grid */}
-        <section className="mb-16 sm:mb-24">
+        {/* Feature Architecture Grid */}
+        <section className="mb-16 sm:mb-20">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <div className="md:col-span-2 p-6 sm:p-10 md:p-12 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-sm flex flex-col justify-between">
+            <div className="md:col-span-2 p-6 sm:p-10 rounded-[2.5rem] bg-white dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.08] flex flex-col justify-between">
               <div>
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-blue-600 dark:text-blue-400 flex items-center justify-center mb-5 sm:mb-6 shadow-sm">
-                  <BookOpen size={22} />
+                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/60 dark:border-white/10 text-[#155DFC] flex items-center justify-center mb-5">
+                  <BookOpen size={18} />
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3">
-                  Sacred Scripture with Audio
+                <h3 className="font-heading text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                  Authentic Scripture & Verse Recitation
                 </h3>
-                <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-300 font-light leading-relaxed max-w-lg mb-5 sm:mb-6">
-                  Experience full Arabic recitation coupled with synchronized verse-by-verse Urdu and English translations.
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 font-normal leading-relaxed max-w-lg mb-6">
+                  Complete Uthmani Arabic scripture paired with verse-synchronized Urdu and English translations. Seamless audio playback driven by high-reliability EveryAyah CDNs.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <span className="px-3.5 sm:px-4 py-1.5 rounded-xl bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                <span className="px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-[11px] font-semibold text-slate-700 dark:text-neutral-300">
                   114 Surahs
                 </span>
-                <span className="px-3.5 sm:px-4 py-1.5 rounded-xl bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                  Sequential Mode
+                <span className="px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-[11px] font-semibold text-slate-700 dark:text-neutral-300">
+                  Ayah-by-Ayah Sync
                 </span>
-                <span className="px-3.5 sm:px-4 py-1.5 rounded-xl bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                  HD Audio
+                <span className="px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-[11px] font-semibold text-slate-700 dark:text-neutral-300">
+                  Background Ambience Mixer
                 </span>
               </div>
             </div>
 
-            <div className="p-6 sm:p-8 md:p-10 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-sm flex flex-col justify-between">
-              <Clock className="text-blue-600 dark:text-blue-400 mb-4 sm:mb-6 w-8 h-8 sm:w-9 sm:h-9" />
+            <div className="p-6 sm:p-8 rounded-[2.5rem] bg-white dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.08] flex flex-col justify-between">
+              <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/60 dark:border-white/10 text-[#155DFC] flex items-center justify-center mb-5">
+                <Clock size={18} />
+              </div>
               <div>
-                <h4 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1.5 sm:mb-2">
+                <h4 className="font-heading text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1.5">
                   Astronomical Prayer Timings
                 </h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Automatic GPS calculation and countdown timers for daily prayers worldwide.
+                <p className="text-xs text-slate-600 dark:text-neutral-400 font-normal leading-relaxed">
+                  Accurate Namaz schedules calculated via AlAdhan coordinates with live Adhan audio and countdown to next prayer.
                 </p>
               </div>
             </div>
 
-            <div className="p-6 sm:p-8 md:p-10 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-sm flex flex-col justify-between">
-              <Calendar className="text-indigo-500 mb-4 sm:mb-6 w-8 h-8 sm:w-9 sm:h-9" />
+            <div className="p-6 sm:p-8 rounded-[2.5rem] bg-white dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.08] flex flex-col justify-between">
+              <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/60 dark:border-white/10 text-[#155DFC] flex items-center justify-center mb-5">
+                <Calendar size={18} />
+              </div>
               <div>
-                <h4 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1.5 sm:mb-2">
-                  Islamic Lunar Calendar
+                <h4 className="font-heading text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1.5">
+                  Islamic Lunar Hijri Calendar
                 </h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Live moon-phase Hijri dates alongside Gregorian records and Sunnah fasting days.
+                <p className="text-xs text-slate-600 dark:text-neutral-400 font-normal leading-relaxed">
+                  Live moon-phase Hijri dates alongside Gregorian records, Sunnah fasting milestones, and sacred Islamic events.
                 </p>
               </div>
             </div>
 
-            <div className="md:col-span-2 p-6 sm:p-10 md:p-12 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8">
+            <div className="md:col-span-2 p-6 sm:p-8 rounded-[2.5rem] bg-white dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div className="flex-1">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider mb-3 sm:mb-4">
-                  <Heart size={11} fill="currentColor" />
-                  <span>Spiritual Arsenal</span>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#155DFC]/10 text-[#155DFC] text-[11px] font-semibold mb-3">
+                  <Heart size={12} fill="currentColor" />
+                  <span>Spiritual Essentials</span>
                 </div>
-                <h4 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3">
-                  Duas, Digital Tasbeeh & Seerah
+                <h4 className="font-heading text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-1.5">
+                  Daily Duas, Digital Tasbeeh & Noble Seerah
                 </h4>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-light leading-relaxed">
-                  Authentic supplications with audio pronunciation, tactile digital tasbeeh counter, and the Prophetic timeline.
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 font-normal leading-relaxed">
+                  Authentic Quranic and Masnoon supplications with Arabic voice pronunciation, tactile digital tasbeeh counter, and the chronological Prophetic timeline.
                 </p>
               </div>
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] flex items-center justify-center text-blue-500 shrink-0 shadow-sm">
-                <Star className="w-7 h-7 sm:w-8 sm:h-8" />
-              </div>
             </div>
           </div>
         </section>
 
-        {/* Dual Vision */}
-        <section className="mb-16 sm:mb-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            <div className="p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-sm space-y-3 sm:space-y-4">
-              <span className="text-[9.5px] sm:text-[10px] font-black uppercase tracking-[0.25em] sm:tracking-[0.3em] text-blue-600 dark:text-blue-400 block">
-                Our Vision
-              </span>
-              <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-                Faith, Redefined for <span className="text-blue-600 dark:text-blue-400 italic">Today.</span>
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-light leading-relaxed">
-                A digital sanctuary designed with zero ads, ultra-fast performance, and serene aesthetic harmony to keep you connected to the words of Allah.
-              </p>
+        {/* Sincere Dedication & Open Source */}
+        <section className="p-8 sm:p-12 rounded-[2.5rem] bg-white dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.08] text-center mb-8">
+          <div className="max-w-xl mx-auto space-y-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.08] text-xs font-semibold text-[#155DFC]">
+              <Code2 size={14} />
+              <span>Sadaqah Jariyah Initiative</span>
             </div>
 
-            <div className="p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-sm space-y-3 sm:space-y-4 text-right">
-              <span className="text-[9.5px] sm:text-[10px] font-black uppercase tracking-[0.25em] sm:tracking-[0.3em] text-blue-600 dark:text-blue-400 block font-sans">
-                ہمارا عزم
-              </span>
-              <h3 className="font-urdu text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-                خوبصورتی اور <span className="text-blue-600 dark:text-blue-400">روحانی سکون</span>
-              </h3>
-              <p className="font-urdu text-base sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-                ایک ایسا پاکیزہ ڈیجیٹل پلیٹ فارم جو بغیر کسی اشتہار کے آپ کو قرآن، دعا اور سنتِ نبوی ﷺ سے جوڑے۔
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Mobile App Teaser */}
-        <section className="p-8 sm:p-12 md:p-16 rounded-[2.5rem] sm:rounded-[3rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-center shadow-xl relative overflow-hidden mb-12 sm:mb-16">
-          <div className="relative z-10 space-y-3 sm:space-y-4 max-w-xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-[9.5px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-blue-600 dark:text-blue-400">
-              <Sparkles size={12} />
-              <span>Project Noor Mobile</span>
-            </div>
-
-            <h3 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
-              The Light in Your Pocket
+            <h3 className="font-heading text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Crafted for the Global Ummah
             </h3>
 
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-light leading-relaxed">
-              We are currently crafting progressive native apps for iOS & Android with offline Mushaf and Adhan alarms.
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 font-normal leading-relaxed">
+              Noor Al-Quran is maintained with love and reverence as an open-source contribution to Muslim technology. May Allah accept this work and make it a source of continuous blessing for all who read, listen, and learn.
             </p>
 
-            <div className="pt-4 sm:pt-6 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6 text-slate-500">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
-                <Apple size={17} />
-                <span>iOS App (Coming Soon)</span>
-              </div>
-              <div className="hidden sm:block w-px h-4 bg-slate-200 dark:bg-[#141c2b]" />
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
-                <Smartphone size={17} />
-                <span>Android App (Coming Soon)</span>
-              </div>
+            <div className="pt-4 flex justify-center items-center gap-4">
+              <Link
+                href="https://github.com/Abdullahja5558"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#155DFC] hover:bg-[#114ecc] text-white text-xs font-semibold transition-all active:scale-95"
+              >
+                <Github size={14} />
+                <span>Developer GitHub</span>
+              </Link>
+              <Link
+                href="https://www.instagram.com/mian.abdullah.9/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.08] text-slate-700 dark:text-neutral-300 hover:text-[#155DFC] text-xs font-semibold transition-colors"
+              >
+                <Instagram size={14} />
+                <span>Instagram Community</span>
+              </Link>
             </div>
           </div>
         </section>

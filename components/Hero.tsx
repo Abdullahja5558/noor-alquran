@@ -41,9 +41,9 @@ export default function Hero() {
   }, [filteredSurahs, showAll, searchQuery]);
 
   return (
-    <div className="relative pt-24 sm:pt-32 md:pt-36 pb-16 sm:pb-24 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
-      {/* --- HERO HEADER --- */}
-      <div className="text-center max-w-6xl mx-auto">
+    <div className="relative w-full">
+      {/* --- 100vh HERO SCREEN (Heading, Description & 2 Buttons) --- */}
+      <section className="min-h-[100dvh] flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 max-w-6xl mx-auto pt-20 sm:pt-24 pb-12 sm:pb-16">
         {/* Strictly 2-Line Desktop Heading with Bricolage Grotesque font */}
         <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.2] sm:leading-[1.16] max-w-6xl mx-auto">
           <span className="block whitespace-normal md:whitespace-nowrap">
@@ -63,7 +63,7 @@ export default function Hero() {
         </p>
 
         {/* Action Buttons (Flat, No Glow, No Heavy Colored Shadow) */}
-        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4">
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full sm:w-auto">
           <Link
             href="/quran/1"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:py-4 rounded-full font-semibold text-xs sm:text-sm bg-[#155DFC] text-white hover:bg-[#124bc9] transition-colors active:scale-98"
@@ -80,38 +80,38 @@ export default function Hero() {
             <ArrowDown size={15} />
           </a>
         </div>
-      </div>
+      </section>
 
-      {/* --- 114 SURAHS EXPLORER SECTION --- */}
-      <div id="surah-explorer" className="mt-16 sm:mt-20 scroll-mt-24">
-        {/* Search Header Bar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3.5 mb-6 sm:mb-8">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <span>All 114 Surahs</span>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-neutral-300">
-                {filteredSurahs.length}
-              </span>
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-neutral-400 mt-0.5">
-              Select any Surah to read the Uthmani script with translations and audio.
-            </p>
-          </div>
+      {/* --- 114 SURAHS EXPLORER SECTION (Below the 100vh Hero) --- */}
+      <section id="surah-explorer" className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-8 pb-20 sm:pb-28 scroll-mt-24">
+        {/* Centered Heading with space and span */}
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            All{" "}
+            <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white px-3.5 sm:px-4.5 py-0.5 sm:py-1 rounded-xl sm:rounded-2xl mx-1.5 shadow-sm">
+              Surah 114
+            </span>
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-neutral-400 mt-2.5 font-normal">
+            Select any Surah to read the Uthmani script with translations and audio.
+          </p>
+        </div>
 
-          {/* Search Box */}
-          <div className="relative w-full sm:w-80 md:w-96">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        {/* Minimal Underline Search Input (No Box, No Rounded Border, Just Clean Bottom Line) */}
+        <div className="w-full max-w-md mx-auto mb-10 sm:mb-12">
+          <div className="relative flex items-center border-b border-slate-300 dark:border-neutral-700 focus-within:border-[#155DFC] dark:focus-within:border-[#155DFC] pb-2 transition-colors">
+            <Search className="w-4 h-4 text-slate-400 shrink-0 ml-0.5" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search Surah (e.g. Yasin, 36, Rahman)..."
-              className="w-full pl-10 pr-9 py-3 rounded-full text-xs sm:text-sm bg-slate-100 dark:bg-white/[0.06] border-none outline-none ring-0 focus:ring-0 focus:outline-none text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500 transition-colors"
+              className="w-full pl-3 pr-8 bg-transparent border-none rounded-none outline-none ring-0 focus:ring-0 focus:outline-none text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 transition-colors"
                 aria-label="Clear search"
               >
                 <X size={15} />
@@ -120,8 +120,13 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* 3-Column Surahs Grid matching User Screenshot 2 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+        {/* 
+          Surahs Grid with Pill-shaped Rounded Borders like Navbar:
+          - Rounded-full pill borders matching the attached screenshot
+          - Generous width and comfortable internal spacing
+          - Clean home theme preserved (White / Pure Black with subtle border)
+        */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 md:gap-4.5">
           {displayedSurahs.map((surah: SurahStaticMeta) => {
             const arabicTitle = surah.name.startsWith("سورة") || surah.name.startsWith("سُورَة")
               ? surah.name
@@ -131,7 +136,7 @@ export default function Hero() {
               <Link
                 key={surah.number}
                 href={`/quran/${surah.number}`}
-                className="group relative overflow-hidden p-3.5 sm:p-4 rounded-2xl sm:rounded-[1.4rem] bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 hover:border-slate-400 dark:hover:border-neutral-600 transition-colors flex items-center justify-between"
+                className="group relative overflow-hidden px-4.5 sm:px-5 md:px-6 py-3.5 sm:py-4 rounded-full bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 hover:border-slate-400 dark:hover:border-neutral-500 transition-colors flex items-center justify-between"
               >
                 {/* Left side: Number badge + Surah English Name & Verses */}
                 <div className="flex items-center gap-3 sm:gap-3.5 min-w-0 z-10">
@@ -159,8 +164,8 @@ export default function Hero() {
                   </span>
                 </div>
 
-                {/* Faint corner number watermark matching Screenshot 2 */}
-                <span className="absolute right-2 -bottom-2 text-3xl sm:text-4xl font-black text-slate-100 dark:text-neutral-900/60 pointer-events-none select-none z-0">
+                {/* Faint corner number watermark matching Screenshot */}
+                <span className="absolute right-4 -bottom-2 text-3xl sm:text-4xl font-black text-slate-100 dark:text-neutral-900/60 pointer-events-none select-none z-0">
                   {surah.number}
                 </span>
               </Link>
@@ -170,13 +175,13 @@ export default function Hero() {
 
         {/* No Results Empty State */}
         {displayedSurahs.length === 0 && (
-          <div className="py-16 text-center rounded-2xl bg-white dark:bg-black border border-slate-200 dark:border-white/10">
+          <div className="py-16 text-center rounded-3xl bg-white dark:bg-black border border-slate-200 dark:border-white/10 max-w-md mx-auto">
             <p className="text-slate-500 dark:text-neutral-400 text-sm">
               No Surah found matching &quot;{searchQuery}&quot;.
             </p>
             <button
               onClick={() => setSearchQuery("")}
-              className="mt-3 text-xs font-semibold text-[#155DFC] hover:underline"
+              className="mt-3 text-xs font-semibold text-[#155DFC] hover:underline cursor-pointer"
             >
               Reset search
             </button>
@@ -202,7 +207,7 @@ export default function Hero() {
             </button>
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }

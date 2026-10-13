@@ -1029,12 +1029,12 @@ export default function SurahDetailPage({
         )}
       </main>
 
-      {/* --- MINIMALIST, PREMIUM RECITERS & SOUNDSCAPES MODAL --- */}
+      {/* --- REFINED SENIOR AUDIO SETTINGS & RECITERS MODAL --- */}
       <AnimatePresence>
         {isMixerOpen && (
           <div
             onClick={() => setIsMixerOpen(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-2xl"
           >
             <motion.div
               onClick={(e) => e.stopPropagation()}
@@ -1042,32 +1042,40 @@ export default function SurahDetailPage({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2 }}
-              className="w-full max-w-md sm:max-w-xl max-h-[85vh] rounded-3xl bg-[#07090e]/95 border border-white/10 p-4 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl flex flex-col gap-3 text-white overflow-hidden"
+              className="w-full max-w-md sm:max-w-xl max-h-[85vh] rounded-[2.5rem] bg-[#070709] border border-white/[0.09] p-5 sm:p-6 shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-2xl flex flex-col gap-3.5 text-white overflow-hidden"
             >
               {/* Header */}
-              <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
-                <div className="flex items-center gap-2">
-                  <Headphones size={16} className="text-blue-400" />
-                  <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">
-                    Audio Settings & Reciters
-                  </h3>
+              <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.08] shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-[#155DFC]/10 border border-[#155DFC]/20 flex items-center justify-center text-[#155DFC]">
+                    <Headphones size={16} />
+                  </div>
+                  <div>
+                    <h3 className="font-heading text-base sm:text-lg font-bold text-white tracking-tight">
+                      Audio & Reciter Settings
+                    </h3>
+                    <p className="text-[11px] text-neutral-400 font-normal">
+                      Studio control • Reciters & Ambient soundscapes
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={() => setIsMixerOpen(false)}
-                  className="p-1.5 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-neutral-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                  aria-label="Close settings"
                 >
                   <X size={15} />
                 </button>
               </div>
 
-              {/* Modal Tabs Switcher */}
-              <div className="grid grid-cols-2 p-1 rounded-2xl bg-white/5 border border-white/10 text-xs font-bold shrink-0">
+              {/* Segmented Controls Tabs Switcher */}
+              <div className="grid grid-cols-2 p-1 rounded-full bg-white/[0.04] border border-white/[0.07] text-xs font-semibold shrink-0">
                 <button
                   onClick={() => setActiveMixerTab("reciters")}
-                  className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`py-2 rounded-full transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeMixerTab === "reciters"
-                      ? "bg-blue-600 text-white shadow-md shadow-blue-950"
-                      : "text-slate-400 hover:text-white"
+                      ? "bg-[#155DFC] text-white shadow-md shadow-[#155DFC]/25 font-bold"
+                      : "text-neutral-400 hover:text-white"
                   }`}
                 >
                   <Mic size={14} />
@@ -1075,10 +1083,10 @@ export default function SurahDetailPage({
                 </button>
                 <button
                   onClick={() => setActiveMixerTab("soundscapes")}
-                  className={`py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`py-2 rounded-full transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeMixerTab === "soundscapes"
-                      ? "bg-blue-600 text-white shadow-md shadow-blue-950"
-                      : "text-slate-400 hover:text-white"
+                      ? "bg-[#155DFC] text-white shadow-md shadow-[#155DFC]/25 font-bold"
+                      : "text-neutral-400 hover:text-white"
                   }`}
                 >
                   <SlidersHorizontal size={14} />
@@ -1086,59 +1094,64 @@ export default function SurahDetailPage({
                 </button>
               </div>
 
-              {/* Tab 1: Clean 2-Column Reciters Grid (Strict 2 Columns, No Blue Tick, Zero Glow) */}
+              {/* Tab 1: Clean Modern Reciters Grid */}
               {activeMixerTab === "reciters" && (
-                <div className="flex-1 overflow-y-auto px-1 py-1 no-scrollbar max-h-[58vh]">
-                  <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
+                <div className="flex-1 overflow-y-auto px-0.5 py-1 custom-scrollbar max-h-[58vh]">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {RECITERS_LIST.map((reciter) => {
                       const isSelected = selectedReciter.id === reciter.id;
                       return (
                         <button
                           key={reciter.id}
                           onClick={() => handleSelectReciter(reciter)}
-                          className={`group relative flex flex-col items-center justify-center p-3 sm:p-3.5 rounded-2xl transition-colors cursor-pointer text-center ${
+                          className={`group flex items-center gap-3 p-2.5 sm:p-3 rounded-2xl transition-all cursor-pointer text-left ${
                             isSelected
-                              ? "bg-[#161c28] border border-blue-500/80"
-                              : "bg-[#0d121c] border border-white/5 hover:border-white/20 hover:bg-[#121724]"
+                              ? "bg-[#155DFC]/15 border border-[#155DFC] text-white shadow-sm ring-1 ring-[#155DFC]/30"
+                              : "bg-white/[0.03] border border-white/5 hover:border-white/15 hover:bg-white/[0.06] text-neutral-300"
                           }`}
                         >
-                          {/* Reciter Photo - Clean Circular Avatar without any tick overlay or glow */}
+                          {/* Reciter Circular Portrait */}
                           <div
-                            className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shrink-0 transition-transform duration-200 ${
+                            className={`relative w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden shrink-0 border-2 transition-all ${
                               isSelected
-                                ? "ring-2 ring-blue-400"
-                                : "ring-1 ring-white/15 group-hover:ring-white/30"
+                                ? "border-[#155DFC] ring-2 ring-[#155DFC]/40"
+                                : "border-white/15 group-hover:border-white/30"
                             }`}
                           >
                             <Image
                               src={reciter.image}
                               alt={reciter.name}
                               fill
-                              sizes="80px"
+                              sizes="48px"
                               className="object-cover"
                               unoptimized
                             />
                           </div>
 
-                          {/* Reciter English Name Underneath */}
-                          <p
-                            className={`text-xs sm:text-[13px] font-semibold mt-2.5 px-1 w-full text-center leading-tight transition-colors line-clamp-1 ${
-                              isSelected
-                                ? "text-white font-bold"
-                                : "text-slate-300 group-hover:text-white"
-                            }`}
-                          >
-                            {reciter.name}
-                          </p>
+                          {/* Reciter Info */}
+                          <div className="min-w-0 flex-1">
+                            <p
+                              className={`text-xs sm:text-[13px] font-bold truncate leading-tight ${
+                                isSelected ? "text-white" : "text-neutral-200 group-hover:text-white"
+                              }`}
+                            >
+                              {reciter.name}
+                            </p>
+                            <p className="text-[10px] text-neutral-400 truncate mt-0.5 font-medium">
+                              {reciter.country}
+                            </p>
+                          </div>
 
-                          {/* Subtle Country/Style Subtitle */}
-                          <p
-                            className={`text-[9px] sm:text-[10px] mt-0.5 tracking-wider uppercase truncate w-full text-center ${
-                              isSelected ? "text-blue-300 font-medium" : "text-white/40 group-hover:text-white/60"
-                            }`}
-                          >
-                            {reciter.country}
-                          </p>
+                          {/* Status Indicator */}
+                          {isSelected ? (
+                            <div className="w-6 h-6 rounded-full bg-[#155DFC] text-white flex items-center justify-center shrink-0">
+                              <Check size={12} strokeWidth={3} />
+                            </div>
+                          ) : (
+                            <div className="w-6 h-6 rounded-full bg-white/[0.04] text-neutral-500 opacity-0 group-hover:opacity-100 flex items-center justify-center shrink-0 transition-opacity">
+                              <Play size={10} className="fill-current ml-0.5" />
+                            </div>
+                          )}
                         </button>
                       );
                     })}
@@ -1149,12 +1162,17 @@ export default function SurahDetailPage({
               {/* Tab 2: Soundscapes & Dual Volumes */}
               {activeMixerTab === "soundscapes" && (
                 <div className="flex flex-col gap-3.5 py-1">
-                  {/* Sound Selector Row / Grid */}
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                      Background Ambience
-                    </span>
-                    <div className="grid grid-cols-4 gap-1.5">
+                  {/* Sound Selector Grid */}
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-neutral-300">
+                        Background Ambience
+                      </span>
+                      <span className="text-[11px] text-[#155DFC] font-medium">
+                        {activeAmbientItem && activeAmbientItem.id !== "none" ? activeAmbientItem.title : "Muted"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2">
                       {AMBIENT_TRACKS.map((t) => {
                         const Icon = t.icon;
                         const isSelected = selectedAmbience === t.id;
@@ -1163,14 +1181,14 @@ export default function SurahDetailPage({
                           <button
                             key={t.id}
                             onClick={() => handleSelectAmbience(t.id)}
-                            className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl border transition-all cursor-pointer ${
+                            className={`flex flex-col items-center justify-center py-3.5 px-2 rounded-2xl transition-all cursor-pointer ${
                               isSelected
-                                ? "bg-blue-600 border-blue-400 text-white shadow-md shadow-blue-950 scale-[1.03]"
-                                : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white"
+                                ? "bg-[#155DFC] text-white shadow-md shadow-[#155DFC]/25 border border-[#155DFC] scale-[1.02]"
+                                : "bg-white/[0.03] border border-white/[0.08] text-neutral-300 hover:bg-white/[0.07] hover:text-white"
                             }`}
                           >
-                            <Icon size={16} />
-                            <span className="text-[9px] font-bold mt-1 tracking-tight">
+                            <Icon size={18} />
+                            <span className="text-[11px] font-semibold mt-1.5 tracking-tight">
                               {t.title}
                             </span>
                           </button>
@@ -1180,15 +1198,15 @@ export default function SurahDetailPage({
                   </div>
 
                   {/* Dual Volume Sliders */}
-                  <div className="flex flex-col gap-3 pt-2.5 border-t border-white/10">
+                  <div className="flex flex-col gap-2.5 pt-3 border-t border-white/[0.08]">
                     {/* Quran Recitation Volume */}
-                    <div className="flex flex-col gap-1.5">
+                    <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col gap-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="flex items-center gap-1.5 font-bold text-slate-200">
-                          <Volume2 size={13} className="text-blue-400" />
+                        <span className="flex items-center gap-2 font-semibold text-neutral-200">
+                          <Volume2 size={14} className="text-[#155DFC]" />
                           <span>Quran Volume ({selectedReciter.name.split(" ")[0]})</span>
                         </span>
-                        <span className="font-mono text-[11px] font-bold text-blue-400">
+                        <span className="font-mono text-xs font-bold text-[#155DFC] bg-[#155DFC]/10 px-2 py-0.5 rounded-full border border-[#155DFC]/20">
                           {Math.round(quranVolume * 100)}%
                         </span>
                       </div>
@@ -1199,20 +1217,20 @@ export default function SurahDetailPage({
                         step="0.01"
                         value={quranVolume}
                         onChange={(e) => setQuranVolume(parseFloat(e.target.value))}
-                        className="w-full h-1.5 bg-white/15 rounded-full appearance-none cursor-pointer accent-blue-400 focus:outline-none"
+                        className="w-full h-1.5 bg-white/15 rounded-full appearance-none cursor-pointer accent-[#155DFC] focus:outline-none"
                       />
                     </div>
 
                     {/* Ambience Volume */}
-                    <div className="flex flex-col gap-1.5">
+                    <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col gap-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="flex items-center gap-1.5 font-bold text-slate-200">
-                          <Headphones size={13} className="text-blue-400" />
+                        <span className="flex items-center gap-2 font-semibold text-neutral-200">
+                          <Headphones size={14} className="text-[#155DFC]" />
                           <span>
                             Ambience ({activeAmbientItem && activeAmbientItem.id !== "none" ? activeAmbientItem.title : "Off"})
                           </span>
                         </span>
-                        <span className="font-mono text-[11px] font-bold text-blue-400">
+                        <span className="font-mono text-xs font-bold text-[#155DFC] bg-[#155DFC]/10 px-2 py-0.5 rounded-full border border-[#155DFC]/20">
                           {selectedAmbience === "none" ? "Muted" : `${Math.round(ambienceVolume * 100)}%`}
                         </span>
                       </div>
@@ -1224,7 +1242,7 @@ export default function SurahDetailPage({
                         disabled={selectedAmbience === "none"}
                         value={ambienceVolume}
                         onChange={(e) => setAmbienceVolume(parseFloat(e.target.value))}
-                        className={`w-full h-1.5 rounded-full appearance-none cursor-pointer accent-blue-400 focus:outline-none ${
+                        className={`w-full h-1.5 rounded-full appearance-none cursor-pointer accent-[#155DFC] focus:outline-none ${
                           selectedAmbience === "none"
                             ? "bg-white/10 opacity-30 cursor-not-allowed"
                             : "bg-white/15"

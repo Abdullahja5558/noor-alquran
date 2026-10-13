@@ -167,56 +167,66 @@ export default function TasbeehPage() {
   const progress = Math.min((count / target) * 100, 100);
 
   return (
-    <div className="min-h-screen flex flex-col justify-between font-sans selection:bg-blue-600/30 overflow-x-hidden">
+    <div className="min-h-screen flex flex-col justify-between font-sans bg-[#f8fafc] dark:bg-[#000000] text-slate-900 dark:text-slate-100 overflow-x-hidden selection:bg-[#155DFC]/20">
       <Navbar />
 
-      <main className="flex-1 pt-28 sm:pt-32 pb-16 sm:pb-24 px-3 sm:px-6 md:px-8 max-w-4xl w-full mx-auto flex flex-col items-center justify-center">
+      <main className="flex-1 pt-28 sm:pt-32 pb-16 sm:pb-20 px-3 sm:px-6 md:px-8 max-w-4xl w-full mx-auto flex flex-col items-center justify-center">
         {/* Top Header Controls */}
         <div className="w-full flex items-center justify-between mb-6 sm:mb-8">
           <Link
             href="/"
-            className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-xs font-semibold text-slate-700 dark:text-neutral-300 hover:text-[#155DFC] dark:hover:text-[#155DFC] transition-colors"
           >
-            <ArrowLeft size={15} />
+            <ArrowLeft size={14} />
             <span>Home</span>
           </Link>
 
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-xs font-bold text-blue-600 dark:text-blue-400 shadow-sm">
-            <Trophy size={13} />
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-xs font-semibold text-slate-700 dark:text-neutral-300">
+            <Trophy size={13} className="text-[#155DFC]" />
             <span>Lifetime: {totalLifetime.toLocaleString()}</span>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setIsSound(!isSound)}
               aria-label="Toggle Sound"
-              className={`p-2 sm:p-2.5 rounded-2xl bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] transition-all ${
-                isSound ? "text-blue-600 dark:text-blue-400" : "text-slate-400"
+              className={`p-2.5 rounded-full bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] transition-all cursor-pointer ${
+                isSound ? "text-[#155DFC]" : "text-slate-400"
               }`}
             >
-              {isSound ? <Volume2 size={16} /> : <VolumeX size={16} />}
+              {isSound ? <Volume2 size={15} /> : <VolumeX size={15} />}
             </button>
 
             <button
               onClick={() => setIsSettingsOpen(true)}
               aria-label="Tasbeeh Settings"
-              className="p-2 sm:p-2.5 rounded-2xl bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] text-slate-700 dark:text-slate-300 hover:text-blue-500 transition-all cursor-pointer"
+              className="p-2.5 rounded-full bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-slate-700 dark:text-neutral-300 hover:text-[#155DFC] transition-all cursor-pointer"
             >
-              <Settings2 size={16} />
+              <Settings2 size={15} />
             </button>
           </div>
         </div>
 
+        {/* Page Title */}
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="font-heading text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Digital <span className="bg-[#155DFC] text-white px-3.5 py-0.5 rounded-full text-xl sm:text-3xl font-extrabold align-middle inline-block">Tasbeeh Counter</span>
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-neutral-400 mt-1.5 font-normal">
+            Track daily dhikr with haptic feedback, synthetic click sound, and customizable targets.
+          </p>
+        </div>
+
         {/* Dhikr Selector Pills */}
-        <div className="w-full overflow-x-auto no-scrollbar pb-3 sm:pb-4 mb-6 sm:mb-8 flex gap-2">
+        <div className="w-full overflow-x-auto no-scrollbar pb-3 mb-6 sm:mb-8 flex gap-2 justify-start sm:justify-center">
           {DHIKR_PRESETS.map((preset) => (
             <button
               key={preset.id}
               onClick={() => handleSelectDhikr(preset)}
-              className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all border ${
+              className={`px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer ${
                 activeDhikr.id === preset.id
-                  ? "bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/30"
-                  : "bg-white dark:bg-[#07090e] border-slate-200 dark:border-[#141c2b] text-slate-600 dark:text-slate-400 hover:border-blue-500/50 shadow-sm"
+                  ? "bg-[#155DFC] text-white border-[#155DFC]"
+                  : "bg-white dark:bg-white/[0.04] border-slate-200/80 dark:border-white/[0.08] text-slate-600 dark:text-neutral-300 hover:bg-slate-100 dark:hover:bg-white/[0.08]"
               }`}
             >
               {preset.transliteration}
@@ -225,16 +235,16 @@ export default function TasbeehPage() {
         </div>
 
         {/* Dedicated Tasbeeh Center Card */}
-        <div className="w-full p-6 sm:p-10 md:p-12 rounded-[2.2rem] sm:rounded-[2.8rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-xl flex flex-col items-center text-center">
+        <div className="w-full p-6 sm:p-10 md:p-12 rounded-[2.5rem] bg-white dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.08] flex flex-col items-center text-center">
           {/* Active Dhikr Title */}
-          <div className="mb-6 sm:mb-8 space-y-1.5 sm:space-y-2">
-            <h2 className="font-arabic text-3xl sm:text-5xl md:text-6xl text-blue-600 dark:text-blue-400 leading-tight">
+          <div className="mb-6 sm:mb-8 space-y-1 sm:space-y-1.5">
+            <h2 className="font-arabic text-3xl sm:text-5xl md:text-6xl text-slate-900 dark:text-white leading-tight">
               {activeDhikr.arabic}
             </h2>
-            <p className="font-urdu text-lg sm:text-xl text-slate-800 dark:text-slate-200">
+            <p className="font-urdu text-lg sm:text-xl text-slate-700 dark:text-neutral-200">
               {activeDhikr.urdu}
             </p>
-            <p className="text-[11px] sm:text-xs text-slate-500 uppercase tracking-widest font-bold">
+            <p className="text-xs text-[#155DFC] font-semibold">
               {activeDhikr.meaning}
             </p>
           </div>
@@ -250,22 +260,22 @@ export default function TasbeehPage() {
                 cy="50%"
                 r="43%"
                 stroke="currentColor"
-                strokeWidth="10"
+                strokeWidth="8"
                 fill="transparent"
-                className="text-slate-100 dark:text-[#0c111a]"
+                className="text-slate-100 dark:text-neutral-900"
               />
               <motion.circle
                 cx="50%"
                 cy="50%"
                 r="43%"
                 stroke="currentColor"
-                strokeWidth="11"
+                strokeWidth="9"
                 fill="transparent"
                 strokeDasharray="276"
                 animate={{ strokeDashoffset: 276 - (276 * progress) / 100 }}
                 transition={{ type: "spring", stiffness: 50, damping: 20 }}
                 strokeLinecap="round"
-                className="text-blue-600"
+                className="text-[#155DFC]"
               />
             </svg>
 
@@ -274,35 +284,35 @@ export default function TasbeehPage() {
                 key={count}
                 initial={{ scale: 0.85, opacity: 0.7 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight text-slate-900 dark:text-white"
+                className="font-heading text-5xl sm:text-7xl md:text-8xl font-black tracking-tight text-slate-900 dark:text-white"
               >
                 {count}
               </motion.span>
-              <span className="text-[9.5px] sm:text-[11px] font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-blue-600 dark:text-blue-400 mt-1 sm:mt-2">
+              <span className="text-xs font-semibold text-[#155DFC] mt-1 sm:mt-2">
                 {count >= target ? "MashaAllah Target Met" : `Target: ${target}`}
               </span>
             </div>
           </div>
 
           {/* Action Buttons Bar */}
-          <div className="mt-8 sm:mt-10 flex items-center justify-center gap-4 sm:gap-8">
+          <div className="mt-8 sm:mt-10 flex items-center justify-center gap-4 sm:gap-6">
             <button
               onClick={resetCurrent}
               title="Reset Counter"
-              className="p-3.5 sm:p-4 rounded-full bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-slate-600 dark:text-slate-400 hover:text-rose-500 hover:border-rose-500/40 transition-all cursor-pointer active:scale-90 shadow-sm"
+              className="p-3.5 sm:p-4 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.08] text-slate-600 dark:text-neutral-400 hover:text-rose-500 hover:border-rose-500/40 transition-all cursor-pointer active:scale-90"
             >
-              <RotateCcw size={18} />
+              <RotateCcw size={16} />
             </button>
 
             <motion.button
               whileTap={{ scale: 0.92 }}
               onClick={handleCountPress}
-              className="w-18 h-18 sm:w-22 sm:h-22 p-4 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-white shadow-xl shadow-blue-600/30 border-4 border-blue-500/40 cursor-pointer"
+              className="w-18 h-18 sm:w-20 sm:h-20 p-4 rounded-full bg-[#155DFC] hover:bg-[#114ecc] flex items-center justify-center text-white active:scale-95 transition-all cursor-pointer"
             >
-              <Fingerprint className="w-8 h-8 sm:w-10 sm:h-10" />
+              <Fingerprint className="w-8 h-8 sm:w-9 sm:h-9" />
             </motion.button>
 
-            <div className="flex items-center gap-1 p-1 rounded-full bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] shadow-sm">
+            <div className="flex items-center gap-1 p-1 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.08]">
               {[33, 100, 1000].map((t) => (
                 <button
                   key={t}
@@ -310,10 +320,10 @@ export default function TasbeehPage() {
                     setTarget(t);
                     setCount(0);
                   }}
-                  className={`px-2.5 sm:px-3 py-1.5 rounded-full text-[9px] sm:text-[10px] font-black tracking-wider transition-all cursor-pointer ${
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                     target === t
-                      ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
-                      : "text-slate-600 dark:text-slate-400 hover:text-blue-500"
+                      ? "bg-[#155DFC] text-white"
+                      : "text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   {t === 1000 ? "1k" : t}
@@ -329,29 +339,31 @@ export default function TasbeehPage() {
         {isSettingsOpen && (
           <div
             onClick={() => setIsSettingsOpen(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md overflow-hidden"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-2xl overflow-hidden"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-[#07090e] border border-slate-200 dark:border-[#141c2b] shadow-2xl relative"
+              className="w-full max-w-md p-6 sm:p-8 rounded-[2.5rem] bg-white/95 dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.09] backdrop-blur-2xl relative text-slate-900 dark:text-white"
             >
               <button
                 onClick={() => setIsSettingsOpen(false)}
-                className="absolute top-4 sm:top-6 right-4 sm:right-6 p-2 rounded-full bg-slate-100 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-slate-400 hover:text-slate-800 dark:hover:text-white"
+                className="absolute top-5 sm:top-6 right-5 sm:right-6 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/[0.06] border border-slate-200/60 dark:border-white/10 text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-all cursor-pointer"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
 
-              <h3 className="text-lg sm:text-xl font-bold mb-5 sm:mb-6 text-slate-900 dark:text-white flex items-center gap-2">
-                <Settings2 size={18} className="text-blue-500" />
+              <h3 className="font-heading text-lg sm:text-xl font-extrabold mb-5 sm:mb-6 text-slate-900 dark:text-white flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-[#155DFC]/10 border border-[#155DFC]/20 text-[#155DFC] flex items-center justify-center">
+                  <Settings2 size={16} />
+                </div>
                 <span>Tasbeeh Settings</span>
               </h3>
 
-              <div className="space-y-3 sm:space-y-4 mb-6">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 block">
+              <div className="space-y-2 mb-6">
+                <label className="text-xs font-semibold text-slate-600 dark:text-neutral-400 block">
                   Custom Target Count
                 </label>
                 <div className="flex gap-2">
@@ -359,7 +371,7 @@ export default function TasbeehPage() {
                     type="number"
                     value={customTargetInput}
                     onChange={(e) => setCustomTargetInput(e.target.value)}
-                    className="flex-1 rounded-2xl py-2.5 sm:py-3 px-4 bg-slate-50 dark:bg-[#0c111a] border border-slate-200 dark:border-[#1a2538] text-slate-900 dark:text-white text-sm outline-none focus:border-blue-500"
+                    className="flex-1 rounded-full py-2.5 px-4 bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm outline-none focus:border-[#155DFC]"
                   />
                   <button
                     onClick={() => {
@@ -370,22 +382,22 @@ export default function TasbeehPage() {
                         setIsSettingsOpen(false);
                       }
                     }}
-                    className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider cursor-pointer"
+                    className="px-6 py-2.5 rounded-full bg-[#155DFC] hover:bg-[#114ecc] text-white text-xs font-semibold tracking-wide transition-all active:scale-95 cursor-pointer"
                   >
                     Set
                   </button>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-200 dark:border-[#141c2b] flex items-center justify-between">
-                <span className="text-xs text-slate-500">Clear Lifetime History</span>
+              <div className="pt-4 border-t border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between">
+                <span className="text-xs text-slate-500 dark:text-neutral-400 font-medium">Clear Lifetime History</span>
                 <button
                   onClick={() => {
                     localStorage.removeItem("tasbeeh_total_count");
                     setTotalLifetime(0);
                     setIsSettingsOpen(false);
                   }}
-                  className="px-4 py-2 rounded-xl bg-rose-500/10 text-rose-500 text-xs font-bold hover:bg-rose-500/20 transition-all cursor-pointer"
+                  className="px-4 py-1.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 text-xs font-semibold hover:bg-rose-500/20 transition-all cursor-pointer"
                 >
                   Reset
                 </button>

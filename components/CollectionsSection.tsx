@@ -63,11 +63,14 @@ export default function CollectionsSection() {
     <section id="collections" className="relative py-16 sm:py-24 px-3 sm:px-6 md:px-8 max-w-7xl mx-auto overflow-hidden">
       {/* Section Header Centered */}
       <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-        <h2 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
-          Collections
+        <h2 className="font-heading text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          Curated{" "}
+          <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white px-3.5 sm:px-4.5 py-0.5 sm:py-1 rounded-xl sm:rounded-2xl mx-1.5 shadow-sm">
+            Daily Playlists
+          </span>
         </h2>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 font-light">
-          Curated Quranic playlists for your daily spiritual states & routines
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-neutral-400 mt-2.5 font-normal">
+          Handpicked Surahs for focus, tranquil sleep, and peaceful reflection.
         </p>
       </div>
 
@@ -323,65 +326,75 @@ export default function CollectionsSection() {
         {selectedCollection && (
           <div
             onClick={() => setSelectedCollection(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/80 backdrop-blur-md overflow-hidden"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/85 backdrop-blur-2xl overflow-hidden"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[90vh] flex flex-col rounded-[2rem] sm:rounded-[2.5rem] bg-[#07090e] border border-[#141c2b] shadow-2xl overflow-hidden text-white"
+              className="relative w-full max-w-2xl max-h-[88vh] flex flex-col rounded-[2.5rem] bg-white/95 dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.09] shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-2xl overflow-hidden text-slate-900 dark:text-white"
             >
               {/* Modal Header */}
-              <div className="p-5 sm:p-6 border-b border-[#141c2b] bg-[#0c111a]/60 relative flex items-start justify-between gap-4">
+              <div className="p-5 sm:p-7 border-b border-slate-200/80 dark:border-white/[0.08] bg-slate-50/50 dark:bg-white/[0.02] relative flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#155DFC]/10 border border-[#155DFC]/20 text-[#155DFC] text-[11px] font-semibold mb-2 tracking-wide">
+                    <span>Curated Playlist</span>
+                    <span>•</span>
+                    <span>{selectedCollection.tracks.length} Surahs</span>
+                  </div>
+                  <h3 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                     {selectedCollection.title}
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1 max-w-lg font-light">
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-neutral-400 mt-1 max-w-lg leading-relaxed font-normal">
                     {selectedCollection.description}
                   </p>
                 </div>
 
                 <button
                   onClick={() => setSelectedCollection(null)}
-                  className="w-9 h-9 rounded-full bg-[#141c2b] border border-[#1a2538] text-slate-300 hover:text-white flex items-center justify-center shrink-0 cursor-pointer"
+                  className="w-9 h-9 rounded-full bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.12] border border-slate-200/60 dark:border-white/10 text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center shrink-0 transition-all cursor-pointer"
+                  aria-label="Close modal"
                 >
-                  <X size={18} />
+                  <X size={16} />
                 </button>
               </div>
 
-              {/* Reciter Selection Row */}
-              <div className="p-4 sm:p-5 border-b border-[#141c2b] bg-[#07090e]">
-                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-2.5">
-                  <Headphones size={12} className="text-blue-500" />
-                  <span>Choose Reciter Voice</span>
-                </label>
+              {/* Reciter Voice Selection Row */}
+              <div className="px-5 sm:px-7 py-4 border-b border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#070709]">
+                <div className="flex items-center justify-between mb-2.5">
+                  <span className="text-xs font-semibold text-slate-500 dark:text-neutral-400">
+                    Reciter Voice
+                  </span>
+                  <span className="text-[11px] text-[#155DFC] font-medium">
+                    {selectedReciter.name} ({selectedReciter.country})
+                  </span>
+                </div>
 
-                <div className="flex gap-2.5 overflow-x-auto no-scrollbar pb-1">
+                <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
                   {RECITERS_LIST.map((reciter) => {
                     const isSelected = selectedReciter.id === reciter.id;
                     return (
                       <button
                         key={reciter.id}
                         onClick={() => handleSelectReciter(reciter)}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-2xl border text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                        className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                           isSelected
-                            ? "bg-blue-600 border-blue-500 text-white shadow-md shadow-blue-600/30"
-                            : "bg-[#0c111a] border-[#1a2538] text-slate-300 hover:border-blue-500/50"
+                            ? "bg-[#155DFC] text-white shadow-md shadow-[#155DFC]/25 scale-[1.02]"
+                            : "bg-slate-100 dark:bg-white/[0.04] text-slate-700 dark:text-neutral-300 border border-slate-200/60 dark:border-white/[0.06] hover:bg-slate-200/70 dark:hover:bg-white/[0.08]"
                         }`}
                       >
-                        <div className="relative w-6 h-6 rounded-full overflow-hidden shrink-0 border border-white/20">
+                        <div className="relative w-5 h-5 rounded-full overflow-hidden shrink-0 border border-white/20">
                           <Image
                             src={reciter.image}
                             alt={reciter.name}
                             fill
-                            sizes="24px"
+                            sizes="20px"
                             className="object-cover"
                           />
                         </div>
                         <span className="whitespace-nowrap">{reciter.name}</span>
-                        {isSelected && <Check size={13} className="ml-0.5" />}
+                        {isSelected && <Check size={12} className="ml-0.5" />}
                       </button>
                     );
                   })}
@@ -389,42 +402,42 @@ export default function CollectionsSection() {
               </div>
 
               {/* Surah Tracks List */}
-              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2.5 custom-scrollbar">
-                <div className="flex items-center justify-between text-xs font-bold text-slate-400 mb-1 px-1">
-                  <span>Included Surahs ({selectedCollection.tracks.length})</span>
-                  <span className="text-[11px] text-blue-400">Click any Surah to start</span>
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2 custom-scrollbar">
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-neutral-400 mb-1 px-1">
+                  <span>Surahs in this session ({selectedCollection.tracks.length})</span>
+                  <span className="text-[11px] text-[#155DFC] font-medium">Click track to play</span>
                 </div>
 
                 {selectedCollection.tracks.map((track, idx) => (
                   <div
                     key={track.surahNumber}
                     onClick={() => handlePlaySurah(track.surahNumber)}
-                    className="group flex items-center justify-between p-3.5 rounded-2xl bg-[#0c111a] hover:bg-[#141c2b] border border-[#141c2b] hover:border-blue-500/50 transition-all cursor-pointer shadow-sm"
+                    className="group flex items-center justify-between px-4 sm:px-5 py-3 rounded-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.07] hover:border-[#155DFC]/50 dark:hover:border-[#155DFC]/50 hover:bg-slate-100/70 dark:hover:bg-white/[0.04] transition-all cursor-pointer"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-xl bg-[#141c2b] border border-[#1a2538] text-slate-200 font-bold text-xs flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="w-8 h-8 rounded-full bg-white dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-neutral-300 group-hover:text-[#155DFC] group-hover:border-[#155DFC]/40 font-bold text-xs flex items-center justify-center shrink-0 transition-colors">
                         {idx + 1}
                       </div>
 
                       <div className="min-w-0">
-                        <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-blue-400 transition-colors truncate">
+                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#155DFC] transition-colors truncate">
                           {track.englishName}{" "}
-                          <span className="text-[10px] text-slate-400 font-normal">
+                          <span className="text-[10px] sm:text-xs text-slate-500 dark:text-neutral-400 font-normal">
                             ({track.englishTranslation})
                           </span>
                         </h4>
-                        <p className="text-[10px] text-slate-400 truncate">
+                        <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-neutral-400 truncate mt-0.5">
                           {track.revelationType} • {track.ayahCount} Verses
                           {track.note && ` • ${track.note}`}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="font-arabic text-base sm:text-lg text-slate-200">
+                    <div className="flex items-center gap-3.5 shrink-0 pl-2">
+                      <span className="font-arabic text-base sm:text-lg text-slate-800 dark:text-neutral-200">
                         {track.name}
                       </span>
-                      <div className="w-7 h-7 rounded-full bg-[#141c2b] text-blue-400 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center transition-all shadow-sm">
+                      <div className="w-8 h-8 rounded-full bg-white dark:bg-white/10 text-slate-700 dark:text-neutral-300 group-hover:bg-[#155DFC] group-hover:text-white flex items-center justify-center transition-all shrink-0">
                         <Play size={11} className="fill-current ml-0.5" />
                       </div>
                     </div>
@@ -433,14 +446,30 @@ export default function CollectionsSection() {
               </div>
 
               {/* Modal Footer CTA */}
-              <div className="p-4 bg-[#0c111a] border-t border-[#141c2b] flex items-center justify-between gap-3">
-                <div className="text-xs text-slate-400">
-                  Voice: <span className="font-bold text-white">{selectedReciter.name}</span>
+              <div className="p-4 sm:p-5 bg-slate-50/80 dark:bg-white/[0.02] border-t border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="relative w-7 h-7 rounded-full overflow-hidden border border-slate-200 dark:border-white/20 shrink-0">
+                    <Image
+                      src={selectedReciter.image}
+                      alt={selectedReciter.name}
+                      fill
+                      sizes="28px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-slate-400 dark:text-neutral-500 font-medium leading-none">
+                      Selected Voice
+                    </p>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight mt-0.5">
+                      {selectedReciter.name}
+                    </p>
+                  </div>
                 </div>
 
                 <button
                   onClick={() => handlePlaySurah(selectedCollection.tracks[0].surahNumber)}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-blue-600/30 cursor-pointer"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#155DFC] hover:bg-[#114ecc] text-white font-semibold text-xs sm:text-sm transition-all active:scale-95 shadow-md shadow-[#155DFC]/25 cursor-pointer"
                 >
                   <Play size={13} className="fill-current" />
                   <span>Play Collection</span>
