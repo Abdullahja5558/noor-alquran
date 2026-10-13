@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Search, Sparkles, BookOpen } from "lucide-react";
+import { ArrowLeft, Search, BookOpen } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -107,7 +107,7 @@ export default function QuranPage() {
                     onClick={() => setFilterType(type)}
                     className={`flex-1 sm:flex-none px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer text-center ${
                       filterType === type
-                        ? "bg-[#155DFC] text-white shadow-sm"
+                        ? "bg-[#155DFC] text-white"
                         : "text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white"
                     }`}
                   >

@@ -128,7 +128,7 @@ export default function DuaPage() {
               onClick={() => setActiveCategory(cat)}
               className={`px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 activeCategory === cat
-                  ? "bg-[#155DFC] text-white shadow-sm"
+                  ? "bg-[#155DFC] text-white"
                   : "bg-white dark:bg-white/[0.04] text-slate-700 dark:text-neutral-300 border border-slate-200/80 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.08]"
               }`}
             >
@@ -172,7 +172,7 @@ export default function DuaPage() {
                       title="Listen Arabic Recitation"
                       className={`p-2.5 rounded-full border transition-all cursor-pointer ${
                         speakingDuaId === dua.id
-                          ? "bg-[#155DFC] border-[#155DFC] text-white shadow-sm"
+                          ? "bg-[#155DFC] border-[#155DFC] text-white"
                           : "bg-slate-100 dark:bg-white/[0.05] border-slate-200/60 dark:border-white/10 text-slate-600 dark:text-neutral-300 hover:text-[#155DFC]"
                       }`}
                     >
