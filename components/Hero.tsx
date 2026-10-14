@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { 
   BookOpen, 
   ArrowDown, 
@@ -42,43 +43,75 @@ export default function Hero() {
 
   return (
     <div className="relative w-full">
-      {/* --- 100vh HERO SCREEN (Heading, Description & 2 Buttons) --- */}
-      <section className="min-h-[100dvh] flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 max-w-6xl mx-auto pt-20 sm:pt-24 pb-12 sm:pb-16">
-        {/* Strictly 2-Line Desktop Heading with Bricolage Grotesque font */}
-        <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.2] sm:leading-[1.16] max-w-6xl mx-auto">
-          <span className="block whitespace-normal md:whitespace-nowrap">
-            Read, Listen & Explore the Holy Quran
-          </span>
-          <span className="block mt-2 sm:mt-3">
-            with{" "}
-            <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white px-3.5 sm:px-5 py-0.5 sm:py-1 rounded-xl sm:rounded-2xl">
-              Divine Guidance
+      {/* --- 100vh HERO SCREEN (Responsive for Mobile, Tablet & Desktop) --- */}
+      <section className="relative w-full min-h-[100dvh] flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 pt-20 sm:pt-24 pb-24 sm:pb-28 md:pb-20 overflow-hidden">
+        {/* --- HERO BACKGROUND IMAGES (Light & Dark Mode + Soft Bottom Fade) --- */}
+        <div className="absolute inset-0 pointer-events-none select-none z-0">
+          {/* Light Mode Hero Image */}
+          <Image
+            src="/bg-hero-light.png"
+            alt="Hero background light"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center dark:hidden"
+          />
+
+          {/* Dark Mode Hero Image */}
+          <Image
+            src="/bg-hero-dark.png"
+            alt="Hero background dark"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center hidden dark:block"
+          />
+
+          {/* Contrast Scrim for Superior Text Readability on all screens */}
+          <div className="absolute inset-0 bg-white/25 dark:bg-black/35 backdrop-blur-[0.5px]" />
+
+          {/* Soft Bottom Shadow / Gradient (Smooth transition into the page, no sharp line) */}
+          <div className="absolute inset-x-0 bottom-0 h-40 sm:h-64 md:h-80 bg-gradient-to-t from-[#f8fafc] dark:from-[#000000] via-[#f8fafc]/80 dark:via-[#000000]/85 to-transparent" />
+        </div>
+
+        {/* Hero Content Container */}
+        <div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col items-center">
+          {/* Responsive Heading with Bricolage Grotesque font */}
+          <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.22] sm:leading-[1.16] max-w-5xl mx-auto drop-shadow-sm text-balance">
+            <span className="block md:whitespace-nowrap">
+              Read, Listen & Explore the Holy Quran
             </span>
-          </span>
-        </h1>
+            <span className="block mt-2 sm:mt-3">
+              with{" "}
+              <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white px-3 sm:px-5 py-0.5 sm:py-1 rounded-xl sm:rounded-2xl shadow-sm">
+                Divine Guidance
+              </span>
+            </span>
+          </h1>
 
-        {/* Subtitle / Paragraph */}
-        <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg text-slate-600 dark:text-neutral-400 max-w-2xl mx-auto font-normal leading-relaxed">
-          Access all 114 Surahs with authentic Urdu and English translations, crystal-clear MP3 recitations, and verse-by-verse spiritual reflection.
-        </p>
+          {/* Subtitle / Paragraph */}
+          <p className="mt-3.5 sm:mt-6 text-xs sm:text-base md:text-lg text-slate-700 dark:text-neutral-200 max-w-xl md:max-w-2xl mx-auto font-normal leading-relaxed px-2 drop-shadow-sm">
+            Access all 114 Surahs with authentic Urdu and English translations, crystal-clear MP3 recitations, and verse-by-verse spiritual reflection.
+          </p>
 
-        {/* Action Buttons (Flat, No Glow, No Heavy Colored Shadow) */}
-        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full sm:w-auto">
-          <Link
-            href="/quran/1"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:py-4 rounded-full font-semibold text-xs sm:text-sm bg-[#155DFC] text-white hover:bg-[#124bc9] transition-colors active:scale-98"
-          >
-            <BookOpen size={16} />
-            <span>Start Reading (Surah Al-Fatihah)</span>
-          </Link>
+          {/* Action Buttons (Responsive on Mobile / Tablet / Desktop) */}
+          <div className="mt-7 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-2 sm:px-0 max-w-md sm:max-w-none">
+            <Link
+              href="/quran/1"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-full font-semibold text-xs sm:text-sm bg-[#155DFC] text-white hover:bg-[#124bc9] shadow-lg shadow-blue-500/20 transition-all active:scale-98"
+            >
+              <BookOpen size={16} />
+              <span>Start Reading (Surah Al-Fatihah)</span>
+            </Link>
 
-          <a
-            href="#surah-explorer"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:py-4 rounded-full font-semibold text-xs sm:text-sm border border-slate-300 dark:border-neutral-800 text-slate-800 dark:text-neutral-200 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors active:scale-98"
-          >
-            <span>Browse 114 Surahs</span>
-            <ArrowDown size={15} />
-          </a>
+            <a
+              href="#surah-explorer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-full font-semibold text-xs sm:text-sm bg-white/80 dark:bg-black/40 hover:bg-white dark:hover:bg-white/10 backdrop-blur-md border border-slate-300 dark:border-white/20 text-slate-800 dark:text-neutral-100 hover:text-slate-950 dark:hover:text-white transition-all active:scale-98 shadow-sm"
+            >
+              <span>Browse 114 Surahs</span>
+              <ArrowDown size={15} />
+            </a>
+          </div>
         </div>
       </section>
 
