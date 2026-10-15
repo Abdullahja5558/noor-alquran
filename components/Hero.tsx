@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { 
   BookOpen, 
   ArrowDown, 
@@ -15,10 +16,48 @@ import { ALL_SURAHS_META, SurahStaticMeta } from "@/components/surahMeta";
 
 const INITIAL_COUNT = 10;
 
-function TrustBadge() {
+function getDynamicListenersCount(): string {
+  const START_DATE = new Date("2026-10-01T00:00:00Z").getTime();
+  const BASE_COUNT = 2.6;
+  const now = Date.now();
+  const elapsedDays = Math.max(0, Math.floor((now - START_DATE) / (1000 * 60 * 60 * 24)));
+
+  let currentCount = BASE_COUNT;
+  let remainingDays = elapsedDays;
+  let seed = 42;
+
+  while (remainingDays > 0) {
+    seed = (seed * 9301 + 49297) % 233280;
+    const intervalDays = 14 + (seed % 17);
+    if (remainingDays >= intervalDays) {
+      currentCount = Math.round((currentCount + 0.1) * 10) / 10;
+      remainingDays -= intervalDays;
+    } else {
+      break;
+    }
+  }
+
+  return `${currentCount.toFixed(1)}M+`;
+}
+
+function TrustBadge({ isMobile }: { isMobile: boolean }) {
+  const [listenerCount, setListenerCount] = useState("2.6M+");
+
+  useEffect(() => {
+    setListenerCount(getDynamicListenersCount());
+  }, []);
+
   return (
-    <div className="mb-6 sm:mb-8 inline-flex items-center gap-2 sm:gap-3 select-none">
-      {/* Left Laurel Wreath */}
+    <motion.div 
+      initial={{ opacity: 0, y: -6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ 
+        duration: isMobile ? 0.35 : 0.65, 
+        delay: 0, 
+        ease: [0.22, 1, 0.36, 1] 
+      }}
+      className="mb-4 sm:mb-6 inline-flex items-center gap-2 sm:gap-3 select-none"
+    >
       <div className="relative w-7 h-10 sm:w-9 sm:h-12 md:w-10 md:h-14 shrink-0">
         <Image
           src="/weather-L.png"
@@ -30,16 +69,14 @@ function TrustBadge() {
         />
       </div>
 
-      {/* Trust Text with Highlighted Blue Pill Span */}
       <p className="text-xs sm:text-sm md:text-base font-medium tracking-tight text-slate-800 dark:text-neutral-200 whitespace-nowrap">
         Trusted by{" "}
         <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white font-bold px-2 sm:px-2.5 py-0.5 rounded-lg shadow-sm mx-1">
-          2.4M+
+          {listenerCount}
         </span>{" "}
         Quran listeners worldwide
       </p>
 
-      {/* Right Laurel Wreath */}
       <div className="relative w-7 h-10 sm:w-9 sm:h-12 md:w-10 md:h-14 shrink-0">
         <Image
           src="/weather-R.png"
@@ -50,15 +87,24 @@ function TrustBadge() {
           priority
         />
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 export default function Hero() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAll, setShowAll] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Filter Surahs based on search query
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const filteredSurahs = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return ALL_SURAHS_META;
@@ -73,7 +119,6 @@ export default function Hero() {
     });
   }, [searchQuery]);
 
-  // Determine which Surahs to display
   const displayedSurahs = useMemo(() => {
     if (searchQuery.trim()) {
       return filteredSurahs;
@@ -83,11 +128,10 @@ export default function Hero() {
 
   return (
     <div className="relative w-full">
-      {/* --- 100vh HERO SCREEN (Responsive for Mobile, Tablet & Desktop) --- */}
-      <section className="relative w-full min-h-[100dvh] flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 pt-20 sm:pt-24 pb-24 sm:pb-28 md:pb-20 overflow-hidden">
-        {/* --- HERO BACKGROUND IMAGES (Light & Dark Mode + Soft Bottom Fade) --- */}
+      {/* 100vh Hero Section */}
+      <section className="relative w-full min-h-[100dvh] flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 pt-14 sm:pt-16 pb-20 sm:pb-24 overflow-hidden">
+        {/* Background Images */}
         <div className="absolute inset-0 pointer-events-none select-none z-0">
-          {/* Light Mode Hero Image */}
           <Image
             src="/bg-hero-light.png"
             alt="Hero background light"
@@ -97,7 +141,6 @@ export default function Hero() {
             className="object-cover object-center dark:hidden"
           />
 
-          {/* Dark Mode Hero Image */}
           <Image
             src="/bg-hero-dark.png"
             alt="Hero background dark"
@@ -107,19 +150,25 @@ export default function Hero() {
             className="object-cover object-center hidden dark:block"
           />
 
-          {/* Contrast Scrim for Superior Text Readability on all screens */}
           <div className="absolute inset-0 bg-white/25 dark:bg-black/35 backdrop-blur-[0.5px]" />
-
-          {/* Soft Bottom Shadow / Gradient (Smooth transition into the page, no sharp line) */}
           <div className="absolute inset-x-0 bottom-0 h-40 sm:h-64 md:h-80 bg-gradient-to-t from-[#f8fafc] dark:from-[#000000] via-[#f8fafc]/80 dark:via-[#000000]/85 to-transparent" />
         </div>
 
         {/* Hero Content Container */}
-        <div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col items-center">
-          <TrustBadge />
+        <div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col items-center -mt-6 sm:-mt-8 md:mt-2 lg:mt-3">
+          <TrustBadge isMobile={isMobile} />
 
-          {/* Responsive Heading with Bricolage Grotesque font */}
-          <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.22] sm:leading-[1.16] max-w-5xl mx-auto drop-shadow-sm text-balance">
+          {/* Heading: Snappy on mobile, gentle on desktop */}
+          <motion.h1 
+            initial={{ opacity: 0, y: isMobile ? 8 : 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: isMobile ? 0.38 : 0.75, 
+              delay: isMobile ? 0.05 : 0.1, 
+              ease: [0.22, 1, 0.36, 1] 
+            }}
+            className="font-heading text-2xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.22] sm:leading-[1.16] max-w-5xl mx-auto drop-shadow-sm text-balance"
+          >
             <span className="block md:whitespace-nowrap">
               Read, Listen & Explore the Holy Quran
             </span>
@@ -129,15 +178,33 @@ export default function Hero() {
                 Divine Guidance
               </span>
             </span>
-          </h1>
+          </motion.h1>
 
-          {/* Subtitle / Paragraph */}
-          <p className="mt-3.5 sm:mt-6 text-xs sm:text-base md:text-lg text-slate-700 dark:text-neutral-200 max-w-xl md:max-w-2xl mx-auto font-normal leading-relaxed px-2 drop-shadow-sm">
+          {/* Subtitle */}
+          <motion.p 
+            initial={{ opacity: 0, y: isMobile ? 6 : 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: isMobile ? 0.38 : 0.75, 
+              delay: isMobile ? 0.1 : 0.2, 
+              ease: [0.22, 1, 0.36, 1] 
+            }}
+            className="mt-3 sm:mt-5 text-xs sm:text-base md:text-lg text-slate-700 dark:text-neutral-200 max-w-xl md:max-w-2xl mx-auto font-normal leading-relaxed px-2 drop-shadow-sm"
+          >
             Access all 114 Surahs with authentic Urdu and English translations, crystal-clear MP3 recitations, and verse-by-verse spiritual reflection.
-          </p>
+          </motion.p>
 
-          {/* Action Buttons (Responsive on Mobile / Tablet / Desktop) */}
-          <div className="mt-7 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-2 sm:px-0 max-w-md sm:max-w-none">
+          {/* Action Buttons */}
+          <motion.div 
+            initial={{ opacity: 0, y: isMobile ? 6 : 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: isMobile ? 0.35 : 0.7, 
+              delay: isMobile ? 0.14 : 0.28, 
+              ease: [0.22, 1, 0.36, 1] 
+            }}
+            className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-2 sm:px-0 max-w-md sm:max-w-none"
+          >
             <Link
               href="/quran/1"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-full font-semibold text-xs sm:text-sm bg-[#155DFC] text-white hover:bg-[#124bc9] shadow-lg shadow-blue-500/20 transition-all active:scale-98"
@@ -153,13 +220,12 @@ export default function Hero() {
               <span>Browse 114 Surahs</span>
               <ArrowDown size={15} />
             </a>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* --- 114 SURAHS EXPLORER SECTION (Below the 100vh Hero) --- */}
+      {/* 114 Surahs Explorer Section */}
       <section id="surah-explorer" className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-8 pb-20 sm:pb-28 scroll-mt-24">
-        {/* Centered Heading with space and span */}
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
           <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             All{" "}
@@ -208,7 +274,6 @@ export default function Hero() {
                 href={`/quran/${surah.number}`}
                 className="group relative overflow-hidden px-4.5 sm:px-5 md:px-6 py-3.5 sm:py-4 rounded-full bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 hover:border-slate-400 dark:hover:border-neutral-500 transition-colors flex items-center justify-between"
               >
-                {/* Left side: Number badge + Surah English Name & Verses */}
                 <div className="flex items-center gap-3 sm:gap-3.5 min-w-0 z-10">
                   <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-[#155DFC] font-bold text-xs flex items-center justify-center shrink-0">
                     {surah.number}
@@ -224,7 +289,6 @@ export default function Hero() {
                   </div>
                 </div>
 
-                {/* Right side: Arabic Name + English Meaning uppercase */}
                 <div className="flex flex-col items-end shrink-0 pl-2 z-10">
                   <span className="font-arabic text-base sm:text-lg font-bold text-slate-900 dark:text-white text-right leading-tight">
                     {arabicTitle}
@@ -234,7 +298,6 @@ export default function Hero() {
                   </span>
                 </div>
 
-                {/* Faint corner number watermark */}
                 <span className="absolute right-4 -bottom-2 text-3xl sm:text-4xl font-black text-slate-100 dark:text-neutral-900/60 pointer-events-none select-none z-0">
                   {surah.number}
                 </span>
