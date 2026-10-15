@@ -10,18 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/api/"],
       },
-      {
-        userAgent: "Googlebot",
-        allow: "/",
-      },
-      {
-        userAgent: "Bingbot",
-        allow: "/",
-      },
-      {
-        userAgent: "Applebot",
-        allow: "/",
-      },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,
     host: BASE_URL,

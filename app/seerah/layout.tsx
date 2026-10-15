@@ -34,15 +34,37 @@ export default function SeerahLayout({
 }) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Seerah of Prophet Muhammad ﷺ – Life Timeline",
-    "description": "Chronological history and pivotal milestones of the life of the Prophet Muhammad ﷺ.",
-    "url": `${BASE_URL}/seerah`,
-    "publisher": {
-      "@type": "Organization",
-      "name": "Noor Al-Quran",
-      "url": BASE_URL,
-    },
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": BASE_URL,
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Prophetic Seerah",
+            "item": `${BASE_URL}/seerah`,
+          },
+        ],
+      },
+      {
+        "@type": "Article",
+        "@id": `${BASE_URL}/seerah#article`,
+        "headline": "Seerah of Prophet Muhammad ﷺ – Life Timeline",
+        "description": "Chronological history and pivotal milestones of the life of the Prophet Muhammad ﷺ.",
+        "url": `${BASE_URL}/seerah`,
+        "publisher": {
+          "@type": "Organization",
+          "name": "Noor Al-Quran",
+          "url": BASE_URL,
+        },
+      },
+    ],
   };
 
   return (

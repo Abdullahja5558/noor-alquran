@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { ALL_SURAHS_META, getSurahMetaByNumber } from "@/components/surahMeta";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
@@ -16,6 +17,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const resolved = await params;
   const surahNumber = parseInt(resolved.id, 10);
+  if (isNaN(surahNumber) || surahNumber < 1 || surahNumber > 114) {
+    notFound();
+  }
   const meta = getSurahMetaByNumber(surahNumber);
 
   const title = `Surah ${meta.englishName} (${meta.name}) with Urdu Translation & MP3 Audio`;
@@ -77,8 +81,15 @@ export default async function SurahLayout({
 }) {
   const resolved = await params;
   const surahNumber = parseInt(resolved.id, 10);
+  if (isNaN(surahNumber) || surahNumber < 1 || surahNumber > 114) {
+    notFound();
+  }
   const meta = getSurahMetaByNumber(surahNumber);
+  const prevMeta = surahNumber > 1 ? getSurahMetaByNumber(surahNumber - 1) : null;
+  const nextMeta = surahNumber < 114 ? getSurahMetaByNumber(surahNumber + 1) : null;
   const url = `${BASE_URL}/quran/${meta.number}`;
+  const sNumPadded = String(meta.number).padStart(3, "0");
+  const audioStreamUrl = `https://everyayah.com/data/Alafasy_128kbps/${sNumPadded}001.mp3`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -121,9 +132,10 @@ export default async function SurahLayout({
       },
       {
         "@type": "AudioObject",
-        "name": `Surah ${meta.englishName} Tilawat & Audio Recitation`,
-        "description": `Listen to full recitation of Surah ${meta.englishName} with Urdu & English translation.`,
-        "contentUrl": url,
+        "name": `Surah ${meta.englishName} (${meta.name}) Tilawat & Audio Recitation`,
+        "description": `Listen to authentic high-quality recitation of Surah ${meta.englishName} with Urdu & English translation.`,
+        "contentUrl": audioStreamUrl,
+        "encodingFormat": "audio/mpeg",
         "inLanguage": ["ar", "ur", "en"],
         "publisher": {
           "@type": "Organization",
@@ -140,6 +152,28 @@ export default async function SurahLayout({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {/* Search Engine & Accessibility Server-Side Semantic Navigation */}
+      <nav aria-label="Surah Breadcrumb & Internal Navigation" className="sr-only">
+        <a href={`${BASE_URL}/`}>Home</a>
+        <a href={`${BASE_URL}/quran`}>All 114 Holy Quran Surahs</a>
+        {prevMeta && (
+          <a href={`${BASE_URL}/quran/${prevMeta.number}`}>
+            Previous Surah: Surah {prevMeta.englishName} ({prevMeta.name})
+          </a>
+        )}
+        {nextMeta && (
+          <a href={`${BASE_URL}/quran/${nextMeta.number}`}>
+            Next Surah: Surah {nextMeta.englishName} ({nextMeta.name})
+          </a>
+        )}
+      </nav>
+      <section className="sr-only" aria-label="Surah Details">
+        <h2>About Surah {meta.englishName} ({meta.name})</h2>
+        <p>
+          Surah {meta.englishName} ({meta.englishNameTranslation}) is Chapter {meta.number} of the Holy Quran, containing {meta.numberOfAyahs} verses.
+          It is a {meta.revelationType} Surah. Read the complete Arabic scripture with word-by-word Urdu translation (اردو ترجمہ), English meaning, and crystal-clear audio tilawat by Mishary Rashid Alafasy, Sudais, and Abdul Basit.
+        </p>
+      </section>
       {children}
     </>
   );

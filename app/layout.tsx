@@ -190,13 +190,7 @@ export const metadata: Metadata = {
   category: "Islamic Education, Religion & Quran",
   manifest: "/manifest.webmanifest",
   alternates: {
-    canonical: "/",
-    languages: {
-      "en-US": "/",
-      "ur-PK": "/",
-      "ar-SA": "/",
-      "x-default": "/",
-    },
+    canonical: BASE_URL,
   },
   icons: {
     icon: [
@@ -347,6 +341,18 @@ const jsonLdWebsite = {
           "name": "Quran Playlists",
           "url": `${BASE_URL}/playlists`,
           "description": "Curated Quran recitations for focus, sleep, and emotional peace.",
+        },
+        {
+          "@type": "WebPage",
+          "name": "Prophetic Seerah",
+          "url": `${BASE_URL}/seerah`,
+          "description": "Inspiring life timeline and pivotal events of Prophet Muhammad ﷺ.",
+        },
+        {
+          "@type": "WebPage",
+          "name": "About Project",
+          "url": `${BASE_URL}/about`,
+          "description": "Mission, philosophy, and authentic sources behind Noor Al-Quran.",
         },
       ],
     },

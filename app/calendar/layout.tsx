@@ -34,10 +34,32 @@ export default function CalendarLayout({
 }) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "ItemPage",
-    "name": "Islamic Hijri Calendar",
-    "url": `${BASE_URL}/calendar`,
-    "description": "Accurate Islamic Hijri calendar with Gregorian conversion and holy events.",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": BASE_URL,
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Islamic Hijri Calendar",
+            "item": `${BASE_URL}/calendar`,
+          },
+        ],
+      },
+      {
+        "@type": "ItemPage",
+        "@id": `${BASE_URL}/calendar#page`,
+        "name": "Islamic Hijri Calendar",
+        "url": `${BASE_URL}/calendar`,
+        "description": "Accurate Islamic Hijri calendar with Gregorian conversion and holy events.",
+      },
+    ],
   };
 
   return (

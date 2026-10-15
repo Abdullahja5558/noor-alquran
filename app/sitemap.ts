@@ -4,61 +4,62 @@ import { ALL_SURAHS_META } from "@/components/surahMeta";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  // Stable release date prevents misleading search engines with fluctuating timestamps
+  const contentDate = new Date("2025-02-15T00:00:00.000Z");
 
   // Static core routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${BASE_URL}`,
-      lastModified: now,
+      lastModified: contentDate,
       changeFrequency: "daily",
       priority: 1.0,
     },
     {
       url: `${BASE_URL}/quran`,
-      lastModified: now,
+      lastModified: contentDate,
       changeFrequency: "daily",
       priority: 0.95,
     },
     {
       url: `${BASE_URL}/prayer-time`,
-      lastModified: now,
+      lastModified: contentDate,
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
       url: `${BASE_URL}/dua`,
-      lastModified: now,
+      lastModified: contentDate,
       changeFrequency: "weekly",
       priority: 0.85,
     },
     {
       url: `${BASE_URL}/calendar`,
-      lastModified: now,
-      changeFrequency: "daily",
+      lastModified: contentDate,
+      changeFrequency: "weekly",
       priority: 0.85,
     },
     {
       url: `${BASE_URL}/tasbeeh`,
-      lastModified: now,
+      lastModified: contentDate,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${BASE_URL}/seerah`,
-      lastModified: now,
+      lastModified: contentDate,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${BASE_URL}/playlists`,
-      lastModified: now,
+      lastModified: contentDate,
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
       url: `${BASE_URL}/about`,
-      lastModified: now,
+      lastModified: contentDate,
       changeFrequency: "monthly",
       priority: 0.7,
     },
@@ -70,8 +71,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Dynamic routes for all 114 Surahs
   const surahRoutes: MetadataRoute.Sitemap = ALL_SURAHS_META.map((surah) => ({
     url: `${BASE_URL}/quran/${surah.number}`,
-    lastModified: now,
-    changeFrequency: HIGH_PRIORITY_SURAHS.has(surah.number) ? "daily" : "weekly",
+    lastModified: contentDate,
+    changeFrequency: HIGH_PRIORITY_SURAHS.has(surah.number) ? "weekly" : "monthly",
     priority: HIGH_PRIORITY_SURAHS.has(surah.number) ? 0.98 : 0.9,
   }));
 

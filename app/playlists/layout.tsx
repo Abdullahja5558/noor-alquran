@@ -33,10 +33,32 @@ export default function PlaylistsLayout({
 }) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "Curated Quran Audio Playlists",
-    "description": "Curated Quran recitations and playlists.",
-    "url": `${BASE_URL}/playlists`,
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": BASE_URL,
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Quran Playlists",
+            "item": `${BASE_URL}/playlists`,
+          },
+        ],
+      },
+      {
+        "@type": "CollectionPage",
+        "@id": `${BASE_URL}/playlists#collection`,
+        "name": "Curated Quran Audio Playlists",
+        "description": "Curated Quran recitations and playlists for tranquil sleep, deep focus, and emotional peace.",
+        "url": `${BASE_URL}/playlists`,
+      },
+    ],
   };
 
   return (

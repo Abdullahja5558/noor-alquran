@@ -30,10 +30,32 @@ export default function AboutLayout({
 }) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "name": "About Noor Al-Quran",
-    "url": `${BASE_URL}/about`,
-    "description": "Learn about the mission and technology behind Noor Al-Quran.",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": BASE_URL,
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "About Noor Al-Quran",
+            "item": `${BASE_URL}/about`,
+          },
+        ],
+      },
+      {
+        "@type": "AboutPage",
+        "@id": `${BASE_URL}/about#page`,
+        "name": "About Noor Al-Quran",
+        "url": `${BASE_URL}/about`,
+        "description": "Learn about the mission and technology behind Noor Al-Quran.",
+      },
+    ],
   };
 
   return (

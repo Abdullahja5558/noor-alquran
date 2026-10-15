@@ -33,11 +33,33 @@ export default function TasbeehLayout({
 }) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Digital Tasbeeh Counter",
-    "url": `${BASE_URL}/tasbeeh`,
-    "applicationCategory": "UtilitiesApplication",
-    "description": "Interactive online digital Tasbeeh counter for daily dhikr and remembrance of Allah.",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": BASE_URL,
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Digital Tasbeeh",
+            "item": `${BASE_URL}/tasbeeh`,
+          },
+        ],
+      },
+      {
+        "@type": "WebApplication",
+        "@id": `${BASE_URL}/tasbeeh#app`,
+        "name": "Digital Tasbeeh Counter",
+        "url": `${BASE_URL}/tasbeeh`,
+        "applicationCategory": "UtilitiesApplication",
+        "description": "Interactive online digital Tasbeeh counter for daily dhikr and remembrance of Allah.",
+      },
+    ],
   };
 
   return (

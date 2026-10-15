@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { 
   BookOpen, 
-  ArrowDown, 
+  ArrowDown,
+  ArrowRight, 
   Search, 
   X, 
   ChevronDown 
@@ -221,12 +222,12 @@ export default function Hero() {
           </div>
         )}
 
-        {/* View More Button (Shown when not searching) */}
+        {/* View More & Complete Index Buttons (Shown when not searching) */}
         {!searchQuery.trim() && (
-          <div className="mt-8 sm:mt-10 flex justify-center">
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-xs sm:text-sm bg-white dark:bg-black hover:bg-slate-50 dark:hover:bg-neutral-900 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white transition-colors active:scale-98 cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-semibold text-xs sm:text-sm bg-white dark:bg-black hover:bg-slate-50 dark:hover:bg-neutral-900 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white transition-colors active:scale-98 cursor-pointer"
             >
               <span>
                 {showAll
@@ -238,6 +239,13 @@ export default function Hero() {
                 className={`transition-transform duration-300 ${showAll ? "rotate-180" : ""}`}
               />
             </button>
+            <Link
+              href="/quran"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-semibold text-xs sm:text-sm bg-[#155DFC] hover:bg-[#124bc9] text-white transition-colors shadow-sm"
+            >
+              <span>Explore Complete 114 Surah Index</span>
+              <ArrowRight size={15} />
+            </Link>
           </div>
         )}
       </section>

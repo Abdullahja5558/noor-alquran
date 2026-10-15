@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback, use } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState, useRef, useCallback, use, Suspense } from "react";
+import { useRouter, useSearchParams, notFound } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -150,21 +151,20 @@ const createInitialAyahs = (sNum: number, reciterId: string, count: number): Aya
   }));
 };
 
-export default function SurahDetailPage({
-  params,
+function SurahDetailPageInner({
+  surahId,
+  staticMeta,
+  currentSNum,
 }: {
-  params: Promise<{ id: string }>;
+  surahId: string;
+  staticMeta: SurahStaticMeta;
+  currentSNum: number;
 }) {
-  const resolvedParams = use(params);
-  const surahId = resolvedParams.id;
   const router = useRouter();
   const searchParams = useSearchParams();
   const reciterParam = searchParams.get("reciter");
   const autoplayParam = searchParams.get("autoplay");
   const playlistParam = searchParams.get("playlist");
-
-  const currentSNum = parseInt(surahId, 10) || 1;
-  const staticMeta: SurahStaticMeta = getSurahMetaByNumber(currentSNum);
 
   const prevSurahNum = currentSNum > 1 ? currentSNum - 1 : null;
   const nextSurahNum = currentSNum < 114 ? currentSNum + 1 : null;
@@ -855,14 +855,14 @@ export default function SurahDetailPage({
 
       {/* --- TOP HEADER (NATURAL FULL-WIDTH DISTRIBUTION) --- */}
       <header className="shrink-0 flex-none z-30 w-full flex items-center justify-between pointer-events-auto py-1.5 sm:py-2.5 max-w-7xl mx-auto">
-        {/* Left: Back Button */}
-        <button
-          onClick={() => router.push("/quran")}
-          className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-white/90 hover:text-blue-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] transition-colors cursor-pointer active:scale-95"
+        {/* Left: Back Link for search engine discoverability */}
+        <Link
+          href="/quran"
+          className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-white/90 hover:text-blue-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] transition-colors active:scale-95"
         >
           <ArrowLeft size={16} />
           <span>Surahs</span>
-        </button>
+        </Link>
 
         {/* Center: Surah Title */}
         <div className="text-center drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] px-2">
@@ -1485,5 +1485,79 @@ export default function SurahDetailPage({
         </div>
       </footer>
     </div>
+  );
+}
+
+// Semantic skeleton rendered during SSR & static export to guarantee 100% crawlable indexable HTML for search engines
+function SurahPageSkeleton({ meta }: { meta: SurahStaticMeta }) {
+  return (
+    <div className="fixed inset-0 w-full h-[100dvh] max-h-[100dvh] font-sans text-white overflow-hidden flex flex-col justify-between select-none pt-[max(0.4rem,env(safe-area-inset-top))] pb-[max(0.4rem,env(safe-area-inset-bottom))] px-3 sm:px-6 md:px-8 z-10 overscroll-none bg-black">
+      <div className="fixed inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/65 -z-10 pointer-events-none" />
+      <header className="shrink-0 flex-none z-30 w-full flex items-center justify-between py-1.5 sm:py-2.5 max-w-7xl mx-auto">
+        <Link
+          href="/quran"
+          className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-white/90 hover:text-blue-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] transition-colors active:scale-95"
+        >
+          <ArrowLeft size={16} />
+          <span>Surahs</span>
+        </Link>
+        <div className="text-center drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] px-2">
+          <h1 className="text-xs sm:text-sm md:text-base font-black tracking-wide text-white">
+            {meta.englishName}{" "}
+            <span className="font-arabic text-blue-300 font-normal ml-1">
+              ({meta.name})
+            </span>
+          </h1>
+          <p className="text-[8px] sm:text-[9.5px] font-bold tracking-widest text-blue-200/90 uppercase">
+            {meta.revelationType} • {meta.numberOfAyahs} Ayahs
+          </p>
+        </div>
+        <div className="w-16" />
+      </header>
+
+      <main className="flex-1 min-h-0 w-full flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 max-w-4xl lg:max-w-5xl mx-auto text-center z-20 py-1 sm:py-2">
+        <div className="w-full py-3">
+          <p
+            dir="rtl"
+            className="font-arabic text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-blue-200 font-normal text-center drop-shadow-[0_4px_20px_rgba(0,0,0,0.95)] leading-loose"
+          >
+            {meta.number === 9 ? "بَرَآءَةٌ مِّنَ ٱللَّهِ وَرَسُولِهِۦ" : "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ"}
+          </p>
+          <p className="text-xs sm:text-sm text-blue-300/80 font-mono tracking-widest uppercase mt-2">
+            {meta.number === 9 ? "Surah At-Tawbah" : "In the Name of Allah, the Most Gracious, the Most Merciful"}
+          </p>
+        </div>
+      </main>
+
+      <footer className="shrink-0 flex-none z-30 w-full flex flex-col items-center gap-1.5 sm:gap-2 max-w-xl sm:max-w-2xl md:max-w-3xl mx-auto pb-1 sm:pb-2">
+        <div className="w-full rounded-[2rem] sm:rounded-full bg-black/50 backdrop-blur-2xl border border-white/20 px-3.5 sm:px-5 py-2.5 flex items-center justify-between text-xs text-white/70">
+          <span>Surah {meta.englishName} ({meta.name})</span>
+          <span>Connecting audio & translation...</span>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default function SurahDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = use(params);
+  const currentSNum = parseInt(resolvedParams.id, 10);
+  if (isNaN(currentSNum) || currentSNum < 1 || currentSNum > 114) {
+    notFound();
+  }
+  const staticMeta = getSurahMetaByNumber(currentSNum);
+
+  return (
+    <Suspense fallback={<SurahPageSkeleton meta={staticMeta} />}>
+      <SurahDetailPageInner
+        surahId={resolvedParams.id}
+        staticMeta={staticMeta}
+        currentSNum={currentSNum}
+      />
+    </Suspense>
   );
 }

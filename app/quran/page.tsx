@@ -6,6 +6,7 @@ import { ArrowLeft, Search, BookOpen } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { ALL_SURAHS_META } from "@/components/surahMeta";
 
 interface Surah {
   number: number;
@@ -17,24 +18,24 @@ interface Surah {
 }
 
 export default function QuranPage() {
-  const [surahs, setSurahs] = useState<Surah[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Pre-seed with all 114 Surahs so search crawlers and users receive 100% of links in the initial HTML response
+  const [surahs, setSurahs] = useState<Surah[]>(ALL_SURAHS_META);
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<"ALL" | "Meccan" | "Medinan">("ALL");
   const [navigatingId, setNavigatingId] = useState<number | null>(null);
 
   useEffect(() => {
+    // Optional background sync to guarantee live consistency without blocking initial render
     fetch("https://api.alquran.cloud/v1/surah")
       .then((res) => res.json())
       .then((data) => {
-        if (data.data) {
+        if (data.data && Array.isArray(data.data) && data.data.length === 114) {
           setSurahs(data.data);
         }
-        setLoading(false);
       })
       .catch((err) => {
-        console.error("Failed to load surahs", err);
-        setLoading(false);
+        console.warn("Background surah sync note:", err);
       });
   }, []);
 

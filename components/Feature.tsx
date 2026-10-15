@@ -7,6 +7,7 @@ import { Shield, Book, Heart, Sparkles, ArrowRight } from "lucide-react";
 export default function Feature() {
   return (
     <section className="py-16 sm:py-20 px-4 sm:px-6 relative">
+      <h2 className="sr-only">Key Islamic Learning Features & Authentic Resources</h2>
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
         
         {/* Large Feature Card */}
@@ -43,9 +44,9 @@ export default function Feature() {
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-500 flex items-center justify-center mb-5 sm:mb-6 shadow-sm">
               <Heart className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <h4 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white">
               Daily Reminders
-            </h4>
+            </h3>
             <p className="text-xs sm:text-sm italic leading-relaxed text-slate-600 dark:text-slate-400">
               &quot;Verily, in the remembrance of Allah do hearts find rest.&quot;
             </p>
@@ -66,9 +67,9 @@ export default function Feature() {
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 flex items-center justify-center mb-5 sm:mb-6 shadow-sm">
               <Shield className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <h4 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white">
+            <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white">
               Authentic Sources
-            </h4>
+            </h3>
             <p className="text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-400">
               Authenticated Tafsir, Hadith references from Sahih al-Bukhari and Muslim, and verified prayer calculations.
             </p>

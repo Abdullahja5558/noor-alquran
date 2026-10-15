@@ -64,15 +64,37 @@ export default function QuranIndexLayout({
 }) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "All 114 Surahs of Holy Quran",
-    "description": "Complete list of 114 Surahs of the Holy Quran with translations and audio recitations.",
-    "url": `${BASE_URL}/quran`,
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "Noor Al-Quran",
-      "url": BASE_URL,
-    },
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": BASE_URL,
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Holy Quran Index",
+            "item": `${BASE_URL}/quran`,
+          },
+        ],
+      },
+      {
+        "@type": "CollectionPage",
+        "@id": `${BASE_URL}/quran#collection`,
+        "name": "All 114 Surahs of Holy Quran",
+        "description": "Complete index of 114 Surahs of the Holy Quran with Arabic scripture, Urdu translation, and MP3 audio tilawat.",
+        "url": `${BASE_URL}/quran`,
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Noor Al-Quran",
+          "url": BASE_URL,
+        },
+      },
+    ],
   };
 
   return (

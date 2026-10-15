@@ -36,12 +36,34 @@ export default function PrayerTimeLayout({
 }) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Noor Al-Quran Prayer Times & Qibla",
-    "url": `${BASE_URL}/prayer-time`,
-    "applicationCategory": "UtilitiesApplication",
-    "operatingSystem": "All",
-    "description": "Real-time calculation of Islamic prayer times with Azan alerts and Qibla direction.",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": BASE_URL,
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Prayer Times",
+            "item": `${BASE_URL}/prayer-time`,
+          },
+        ],
+      },
+      {
+        "@type": "WebApplication",
+        "@id": `${BASE_URL}/prayer-time#app`,
+        "name": "Noor Al-Quran Prayer Times & Qibla",
+        "url": `${BASE_URL}/prayer-time`,
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All",
+        "description": "Real-time calculation of Islamic prayer times with Azan alerts and Qibla direction.",
+      },
+    ],
   };
 
   return (

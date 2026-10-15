@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { RECITERS_LIST, Reciter } from "./recitersData";
+import { ALL_SURAHS_META } from "./surahMeta";
 
 // Popular Surahs for quick listening inside the modal
 const POPULAR_SURAHS = [
@@ -32,7 +33,7 @@ export default function RecitersSection() {
   const [surahSearch, setSurahSearch] = useState("");
   const [allSurahs, setAllSurahs] = useState<
     { number: number; name: string; englishName: string; numberOfAyahs: number }[]
-  >([]);
+  >(ALL_SURAHS_META);
   const [loadingSurahs, setLoadingSurahs] = useState(false);
 
   // Country filter pills (clean names without flag emojis)
