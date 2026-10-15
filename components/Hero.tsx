@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { 
   BookOpen, 
-  ArrowDown,
+  ArrowDown, 
   ArrowRight, 
   Search, 
   X, 
@@ -14,6 +14,45 @@ import {
 import { ALL_SURAHS_META, SurahStaticMeta } from "@/components/surahMeta";
 
 const INITIAL_COUNT = 10;
+
+function TrustBadge() {
+  return (
+    <div className="mb-6 sm:mb-8 inline-flex items-center gap-2 sm:gap-3 select-none">
+      {/* Left Laurel Wreath */}
+      <div className="relative w-7 h-10 sm:w-9 sm:h-12 md:w-10 md:h-14 shrink-0">
+        <Image
+          src="/weather-L.png"
+          alt="Laurel Left"
+          fill
+          sizes="40px"
+          className="object-contain drop-shadow-[0_2px_8px_rgba(212,175,55,0.25)]"
+          priority
+        />
+      </div>
+
+      {/* Trust Text with Highlighted Blue Pill Span */}
+      <p className="text-xs sm:text-sm md:text-base font-medium tracking-tight text-slate-800 dark:text-neutral-200 whitespace-nowrap">
+        Trusted by{" "}
+        <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white font-bold px-2 sm:px-2.5 py-0.5 rounded-lg shadow-sm mx-1">
+          2.4M+
+        </span>{" "}
+        Quran listeners worldwide
+      </p>
+
+      {/* Right Laurel Wreath */}
+      <div className="relative w-7 h-10 sm:w-9 sm:h-12 md:w-10 md:h-14 shrink-0">
+        <Image
+          src="/weather-R.png"
+          alt="Laurel Right"
+          fill
+          sizes="40px"
+          className="object-contain drop-shadow-[0_2px_8px_rgba(212,175,55,0.25)]"
+          priority
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function Hero() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -77,6 +116,8 @@ export default function Hero() {
 
         {/* Hero Content Container */}
         <div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col items-center">
+          <TrustBadge />
+
           {/* Responsive Heading with Bricolage Grotesque font */}
           <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.22] sm:leading-[1.16] max-w-5xl mx-auto drop-shadow-sm text-balance">
             <span className="block md:whitespace-nowrap">
@@ -131,7 +172,7 @@ export default function Hero() {
           </p>
         </div>
 
-        {/* Minimal Underline Search Input (No Box, No Rounded Border, Just Clean Bottom Line) */}
+        {/* Minimal Underline Search Input */}
         <div className="w-full max-w-md mx-auto mb-10 sm:mb-12">
           <div className="relative flex items-center border-b border-slate-300 dark:border-neutral-700 focus-within:border-[#155DFC] dark:focus-within:border-[#155DFC] pb-2 transition-colors">
             <Search className="w-4 h-4 text-slate-400 shrink-0 ml-0.5" />
@@ -154,12 +195,7 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* 
-          Surahs Grid with Pill-shaped Rounded Borders like Navbar:
-          - Rounded-full pill borders matching the attached screenshot
-          - Generous width and comfortable internal spacing
-          - Clean home theme preserved (White / Pure Black with subtle border)
-        */}
+        {/* Surahs Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 md:gap-4.5">
           {displayedSurahs.map((surah: SurahStaticMeta) => {
             const arabicTitle = surah.name.startsWith("سورة") || surah.name.startsWith("سُورَة")
@@ -198,7 +234,7 @@ export default function Hero() {
                   </span>
                 </div>
 
-                {/* Faint corner number watermark matching Screenshot */}
+                {/* Faint corner number watermark */}
                 <span className="absolute right-4 -bottom-2 text-3xl sm:text-4xl font-black text-slate-100 dark:text-neutral-900/60 pointer-events-none select-none z-0">
                   {surah.number}
                 </span>
@@ -222,7 +258,7 @@ export default function Hero() {
           </div>
         )}
 
-        {/* View More & Complete Index Buttons (Shown when not searching) */}
+        {/* View More & Complete Index Buttons */}
         {!searchQuery.trim() && (
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
             <button

@@ -22,7 +22,7 @@ interface TopicItem {
 const TOPICS: TopicItem[] = [
   {
     id: "patience",
-    title: "Patience (Sabr)",
+    title: "Patience ",
     arabicTitle: "الصَّبْرُ",
     icon: <Anchor size={22} />,
     color: "from-blue-500/20 to-cyan-500/20",
@@ -35,7 +35,7 @@ const TOPICS: TopicItem[] = [
   },
   {
     id: "gratitude",
-    title: "Gratitude (Shukr)",
+    title: "Gratitude",
     arabicTitle: "الشُّكْرُ",
     icon: <Heart size={22} />,
     color: "from-blue-500/20 to-indigo-500/20",
@@ -48,7 +48,7 @@ const TOPICS: TopicItem[] = [
   },
   {
     id: "success",
-    title: "True Success (Falah)",
+    title: "True Success",
     arabicTitle: "الْفَلَاحُ",
     icon: <Target size={22} />,
     color: "from-amber-500/20 to-yellow-500/20",
@@ -61,7 +61,7 @@ const TOPICS: TopicItem[] = [
   },
   {
     id: "peace",
-    title: "Inner Peace (Sakina)",
+    title: "Inner Peace",
     arabicTitle: "السَّكِينَةُ",
     icon: <Sun size={22} />,
     color: "from-purple-500/20 to-indigo-500/20",

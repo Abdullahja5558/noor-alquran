@@ -156,3 +156,56 @@ button{
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* --- INFINITE MARQUEE (Testimonials) --- */
+@keyframes marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes marquee-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+
+.marquee {
+  position: relative;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
+}
+
+/* Default: cards travel right → left */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-left var(--marquee-duration, 60s) linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Reverse: cards travel left → right */
+.marquee-reverse .marquee-track {
+  animation-name: marquee-right;
+}
+
+/* Pause on hover only for real pointer devices (avoids sticky pause on touch) */
+@media (hover: hover) and (pointer: fine) {
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@media (max-width: 640px) {
+  .marquee {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%);
+  }
+}
+
+/* Respect reduced-motion by slowing down instead of freezing the rows */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation-duration: calc(var(--marquee-duration, 60s) * 1.5);
+  }
+}

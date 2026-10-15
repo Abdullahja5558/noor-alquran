@@ -3,7 +3,7 @@ import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import RecitersSection from '@/components/RecitersSection'
 import CollectionsSection from '@/components/CollectionsSection'
-import Feature from '@/components/Feature'
+import Testimonials from '@/components/Testimonials'
 import Topics from '@/components/Topic'
 import Footer from '@/components/Footer'
 
@@ -14,7 +14,7 @@ const Home = () => {
       <Hero />
       <RecitersSection />
       <CollectionsSection />
-      <Feature />
+      <Testimonials />
       <Topics />
       <Footer />
     </>

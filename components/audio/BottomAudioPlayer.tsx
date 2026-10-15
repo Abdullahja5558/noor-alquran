@@ -105,7 +105,7 @@ export const BottomAudioPlayer: React.FC = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", damping: 26, stiffness: 280 }}
         aria-label="Quran Audio Player"
-        className="fixed bottom-3 sm:bottom-4 md:bottom-5 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 w-auto sm:w-[560px] md:w-[620px] z-40 select-none"
+        className="fixed bottom-3 sm:bottom-2.5 md:bottom-1.5 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 w-auto sm:w-[560px] md:w-[620px] z-40 select-none"
       >
         {/* Sleek, Slim Frosted Glass Capsule */}
         <div
