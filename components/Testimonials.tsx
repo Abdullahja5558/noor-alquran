@@ -212,7 +212,7 @@ export default function Testimonials() {
             <span className="inline-block bg-[#155DFC] text-white px-3 sm:px-4.5 py-0.5 sm:py-1 rounded-xl sm:rounded-2xl mx-0.5 sm:mx-1">
               Peace
             </span>
-          </span>{" "}
+          </span>
         </h2>
       </div>
         
