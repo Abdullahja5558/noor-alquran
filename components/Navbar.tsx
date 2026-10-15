@@ -59,10 +59,10 @@ export default function Navbar() {
         }`}
       >
         <div
-          className={`transition-all duration-300 ease-out flex items-center justify-between ${
+          className={`transition-all duration-500 ease-out flex items-center justify-between ${
             scrolled
-              ? "pointer-events-auto max-w-5xl lg:max-w-6xl mx-auto px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white/90 dark:bg-black/85 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.14]"
-              : "w-full max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-8 bg-transparent border-none"
+              ? "pointer-events-auto max-w-5xl lg:max-w-6xl mx-auto px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white/40 dark:bg-black/35 backdrop-blur-3xl backdrop-saturate-200 border border-white/60 dark:border-white/15 shadow-[0_8px_32px_0_rgba(31,38,135,0.07),inset_0_1px_1px_0_rgba(255,255,255,0.7)] dark:shadow-[0_12px_40px_0_rgba(0,0,0,0.6),inset_0_1px_1px_0_rgba(255,255,255,0.15)] ring-1 ring-black/[0.03] dark:ring-white/[0.05]"
+              : "w-full max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-8 bg-transparent border-none shadow-none"
           }`}
         >
           {/* Logo */}
@@ -94,10 +94,10 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`px-3.5 py-1.5 rounded-full text-[13px] sm:text-sm font-medium transition-colors duration-150 ${
+                  className={`px-3.5 py-1.5 rounded-full text-[13px] sm:text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? "text-slate-950 dark:text-white font-semibold bg-slate-100 dark:bg-white/10"
-                      : "text-slate-600 dark:text-neutral-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-white/[0.06]"
+                      ? "text-slate-950 dark:text-white font-semibold bg-white/70 dark:bg-white/15 shadow-sm backdrop-blur-sm border border-white/60 dark:border-white/10"
+                      : "text-slate-600 dark:text-neutral-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/[0.08]"
                   }`}
                 >
                   {link.name}
@@ -112,7 +112,7 @@ export default function Navbar() {
             <button
               onClick={toggleTheme}
               aria-label="Toggle color theme"
-              className="w-9 h-9 rounded-full flex items-center justify-center text-slate-600 dark:text-neutral-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer select-none"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-slate-600 dark:text-neutral-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 transition-colors cursor-pointer select-none"
             >
               {mounted ? (
                 isDark ? (
@@ -128,7 +128,7 @@ export default function Navbar() {
             {/* Clean Minimalist About Link */}
             <Link
               href="/about"
-              className="hidden sm:inline-flex items-center px-4 py-1.5 text-xs font-medium rounded-full border border-slate-200 dark:border-white/10 text-slate-700 dark:text-neutral-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+              className="hidden sm:inline-flex items-center px-4 py-1.5 text-xs font-medium rounded-full border border-white/60 dark:border-white/15 text-slate-700 dark:text-neutral-200 hover:text-slate-950 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] dark:shadow-none"
             >
               About
             </Link>
@@ -137,7 +137,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle mobile menu"
-              className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-slate-700 dark:text-neutral-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+              className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-slate-700 dark:text-neutral-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 transition-colors cursor-pointer"
             >
               {isOpen ? <X size={19} /> : <Menu size={19} />}
             </button>
@@ -145,7 +145,7 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Drawer Menu (Real Glassmorphism & Clean Typography) */}
+      {/* Mobile Drawer Menu (Matching Liquid Glassmorphism) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -155,7 +155,7 @@ export default function Navbar() {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className={`fixed ${
               scrolled ? "top-16 sm:top-20" : "top-20"
-            } inset-x-3 sm:inset-x-6 max-w-md mx-auto rounded-[2rem] p-4 sm:p-5 flex flex-col gap-1.5 lg:hidden bg-white/95 dark:bg-black/95 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 z-50`}
+            } inset-x-3 sm:inset-x-6 max-w-md mx-auto rounded-[2rem] p-4 sm:p-5 flex flex-col gap-1.5 lg:hidden bg-white/65 dark:bg-black/55 backdrop-blur-3xl backdrop-saturate-200 border border-white/60 dark:border-white/15 shadow-[0_16px_40px_0_rgba(31,38,135,0.1),inset_0_1px_1px_0_rgba(255,255,255,0.7)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_0_rgba(255,255,255,0.12)] z-50`}
           >
             {NAV_LINKS.map((link) => {
               const isActive =
@@ -170,7 +170,7 @@ export default function Navbar() {
                   className={`px-4 py-3 rounded-2xl text-sm font-medium flex items-center justify-between transition-colors ${
                     isActive
                       ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-semibold shadow-sm"
-                      : "text-slate-700 dark:text-neutral-300 hover:bg-slate-100 dark:hover:bg-white/[0.06]"
+                      : "text-slate-800 dark:text-neutral-200 hover:bg-white/60 dark:hover:bg-white/[0.08]"
                   }`}
                 >
                   <span>{link.name}</span>
@@ -179,15 +179,15 @@ export default function Navbar() {
               );
             })}
 
-            <div className="pt-3 mt-1.5 border-t border-slate-200/70 dark:border-white/10 flex justify-between items-center px-1">
+            <div className="pt-3 mt-1.5 border-t border-slate-200/50 dark:border-white/10 flex justify-between items-center px-1">
               <Link
                 href="/about"
                 onClick={() => setIsOpen(false)}
-                className="text-xs font-medium text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                className="text-xs font-medium text-slate-600 dark:text-neutral-400 hover:text-slate-950 dark:hover:text-white transition-colors"
               >
                 About Project
               </Link>
-              <span className="text-[11px] font-arabic text-slate-400 dark:text-neutral-500">
+              <span className="text-[11px] font-arabic text-slate-500 dark:text-neutral-400">
                 نور القرآن الكريم
               </span>
             </div>
