@@ -213,11 +213,10 @@ export default function Testimonials() {
               Peace
             </span>
           </span>{" "}
-          <span className="font-arabic font-normal text-2xl sm:text-4xl text-[#155DFC] ml-1 sm:ml-2">
-            سكينة
-          </span>
         </h2>
       </div>
+        
+     
 
       <div className="relative flex flex-col gap-1 sm:gap-3">
         {/* Row 1 (top): right → left */}
