@@ -8,6 +8,7 @@ import React, {
   useRef,
   useCallback,
 } from "react";
+import { usePathname } from "next/navigation";
 import {
   ALL_SURAHS_META,
   getSurahMetaByNumber,
@@ -76,6 +77,30 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [reciterName] = useState("Mishary Rashid Alafasy");
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const pathname = usePathname();
+
+  // Automatically pause background full-surah player whenever user navigates to Quran reading pages (/quran/*)
+  useEffect(() => {
+    if (pathname && (pathname.startsWith("/quran") || pathname.startsWith("/qurann"))) {
+      if (audioRef.current && !audioRef.current.paused) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      }
+    }
+  }, [pathname]);
+
+  // Listen for stop-global-audio event from any dedicated player
+  useEffect(() => {
+    const handleStopGlobal = () => {
+      if (audioRef.current && !audioRef.current.paused) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      }
+    };
+    window.addEventListener("stop-global-audio", handleStopGlobal);
+    return () => window.removeEventListener("stop-global-audio", handleStopGlobal);
+  }, []);
+
   const isFallbackUrlRef = useRef(false);
 
   // Initialize Audio instance once

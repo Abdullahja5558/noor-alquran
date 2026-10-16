@@ -28,6 +28,7 @@ export const BottomAudioPlayer: React.FC = () => {
     isMuted,
     repeatMode,
     isPlaylistOpen,
+    pause,
     setVolume,
     toggleMute,
     toggleRepeat,
@@ -52,12 +53,14 @@ export const BottomAudioPlayer: React.FC = () => {
   const handlePlayAndNavigate = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    pause();
     router.push(`/quran/${currentSurah.number || 1}?autoplay=true`);
   };
 
   const handlePrevClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    pause();
     const prevNum = currentSurah.number <= 1 ? 114 : currentSurah.number - 1;
     router.push(`/quran/${prevNum}?autoplay=true`);
   };
@@ -65,6 +68,7 @@ export const BottomAudioPlayer: React.FC = () => {
   const handleNextClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    pause();
     const nextNum = currentSurah.number >= 114 ? 1 : currentSurah.number + 1;
     router.push(`/quran/${nextNum}?autoplay=true`);
   };
@@ -90,6 +94,7 @@ export const BottomAudioPlayer: React.FC = () => {
       setIsScrubbing(false);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
+      pause();
       router.push(`/quran/${currentSurah.number || 1}?autoplay=true`);
     };
 

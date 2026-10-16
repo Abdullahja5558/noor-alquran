@@ -14,8 +14,8 @@ const Home = () => {
       <Hero />
       <RecitersSection />
       <CollectionsSection />
-      <Testimonials />
       <Topics />
+      <Testimonials />
       <Footer />
     </>
   )

@@ -219,13 +219,17 @@ function SurahDetailPageInner({
 
   // Ambient & Mixer State
   const [selectedAmbience, setSelectedAmbience] = useState<AmbientType>("none");
-  const [ambienceVolume, setAmbienceVolume] = useState<number>(0.3);
+  const selectedAmbienceRef = useRef<AmbientType>("none");
+  const [ambienceVolume, setAmbienceVolume] = useState<number>(0.5);
   const [quranVolume, setQuranVolume] = useState<number>(1);
   const [isMixerOpen, setIsMixerOpen] = useState(false);
 
   // Refs for continuous uninterrupted playback
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const quranGainRef = useRef<GainNode | null>(null);
+  const ambientGainRef = useRef<GainNode | null>(null);
 
   const currentIndexRef = useRef(0);
   const currentPhaseRef = useRef<AudioPhase>(currentSNum !== 1 && currentSNum !== 9 ? "bismillah" : "arabic");
@@ -234,7 +238,54 @@ function SurahDetailPageInner({
   const ayahsRef = useRef<Ayah[]>(ayahs);
   const isLoopingRef = useRef(false);
   const quranVolRef = useRef(1);
+  const ambienceVolRef = useRef(1);
   const isTransitioningRef = useRef(false);
+  const hasAutoplayedRef = useRef<Record<string, boolean>>({});
+  const playAyahRef = useRef<((index: number, phase?: AudioPhase, mode?: AudioMode, reciterId?: string) => void) | null>(null);
+
+  // Web Audio booster for rich, loud, amplified recitation & ambience
+  const setupWebAudio = useCallback(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new AudioCtx();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === "suspended") {
+        ctx.resume().catch(() => {});
+      }
+
+      // Quran Audio Booster
+      if (audioRef.current && !quranGainRef.current) {
+        try {
+          const source = ctx.createMediaElementSource(audioRef.current);
+          const gainNode = ctx.createGain();
+          gainNode.gain.value = quranVolRef.current;
+          quranGainRef.current = gainNode;
+          source.connect(gainNode);
+          gainNode.connect(ctx.destination);
+        } catch {}
+      }
+
+      // Ambience Audio Booster
+      if (ambientAudioRef.current && !ambientGainRef.current) {
+        try {
+          const aSource = ctx.createMediaElementSource(ambientAudioRef.current);
+          const aGain = ctx.createGain();
+          aGain.gain.value = ambienceVolRef.current;
+          ambientGainRef.current = aGain;
+          aSource.connect(aGain);
+          aGain.connect(ctx.destination);
+        } catch {}
+      }
+    } catch (e) {
+      console.warn("Web Audio Gain Node initialization fallback", e);
+    }
+  }, []);
 
   // Audio Preload Cache
   const audioCache = useRef<Map<string, HTMLAudioElement>>(new Map());
@@ -285,9 +336,15 @@ function SurahDetailPageInner({
   // Play Ayah - Instant & 0ms Zero-Lag Audio Engine
   const playAyah = useCallback(
     (index: number, phase: AudioPhase = "arabic", mode: AudioMode = currentModeRef.current, reciterId: string = selectedReciter.id) => {
-      isTransitioningRef.current = false;
       const currentAyahs = ayahsRef.current.length > 0 ? ayahsRef.current : ayahs;
-      if (!currentAyahs[index] || !audioRef.current) return;
+      if (!currentAyahs[index] || !audioRef.current) {
+        isTransitioningRef.current = false;
+        return;
+      }
+
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("stop-global-audio"));
+      }
 
       setActiveAyahIndex(index);
       setAudioPhase(phase);
@@ -298,31 +355,59 @@ function SurahDetailPageInner({
       isPlayingRef.current = true;
 
       const targetUrl = getAudioUrl(index, phase, mode, reciterId);
-      if (!targetUrl) return;
+      if (!targetUrl) {
+        isTransitioningRef.current = false;
+        return;
+      }
 
       if (audioRef.current.src !== targetUrl) {
         audioRef.current.src = targetUrl;
       }
       audioRef.current.playbackRate = playbackRate;
-      audioRef.current.volume = quranVolRef.current;
+
+      setupWebAudio();
+      if (audioCtxRef.current && audioCtxRef.current.state === "suspended") {
+        audioCtxRef.current.resume().catch(() => {});
+      }
+      if (quranGainRef.current) {
+        quranGainRef.current.gain.value = quranVolRef.current;
+      } else {
+        audioRef.current.volume = Math.min(1, Math.max(0, quranVolRef.current));
+      }
 
       const playPromise = audioRef.current.play();
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
-            if (ambientAudioRef.current && ambientAudioRef.current.src && ambientAudioRef.current.paused) {
+            isTransitioningRef.current = false;
+            if (
+              selectedAmbienceRef.current !== "none" &&
+              ambientAudioRef.current &&
+              ambientAudioRef.current.src &&
+              ambientAudioRef.current.paused
+            ) {
+              if (ambientGainRef.current) {
+                ambientGainRef.current.gain.value = ambienceVolRef.current;
+              } else {
+                ambientAudioRef.current.volume = Math.min(1, Math.max(0, ambienceVolRef.current));
+              }
               ambientAudioRef.current.play().catch(() => {});
             }
           })
           .catch((e) => {
+            isTransitioningRef.current = false;
             console.warn("Audio play error", e);
           });
+      } else {
+        isTransitioningRef.current = false;
       }
 
       fastPreload(currentAyahs, index, 10);
     },
-    [ayahs, getAudioUrl, playbackRate, fastPreload, selectedReciter.id]
+    [ayahs, getAudioUrl, playbackRate, fastPreload, selectedReciter.id, setupWebAudio]
   );
+
+  playAyahRef.current = playAyah;
 
   // Handle live reciter selection (Works seamlessly in playlists & regular mode)
   const handleSelectReciter = (reciter: Reciter) => {
@@ -373,21 +458,31 @@ function SurahDetailPageInner({
   }, [isLoopingSingleAyah]);
 
   useEffect(() => {
+    selectedAmbienceRef.current = selectedAmbience;
+  }, [selectedAmbience]);
+
+  useEffect(() => {
     quranVolRef.current = quranVolume;
-    if (audioRef.current) {
-      audioRef.current.volume = quranVolume;
+    if (quranGainRef.current) {
+      quranGainRef.current.gain.value = quranVolume;
+    } else if (audioRef.current) {
+      audioRef.current.volume = Math.min(1, Math.max(0, quranVolume));
     }
   }, [quranVolume]);
 
   useEffect(() => {
-    if (ambientAudioRef.current) {
-      ambientAudioRef.current.volume = ambienceVolume;
+    ambienceVolRef.current = ambienceVolume;
+    if (ambientGainRef.current) {
+      ambientGainRef.current.gain.value = ambienceVolume;
+    } else if (ambientAudioRef.current) {
+      ambientAudioRef.current.volume = Math.min(1, Math.max(0, ambienceVolume));
     }
   }, [ambienceVolume]);
 
   // Handle ambient sound selection
   const handleSelectAmbience = (type: AmbientType) => {
     setSelectedAmbience(type);
+    selectedAmbienceRef.current = type;
     const sound = AMBIENT_TRACKS.find((t) => t.id === type);
 
     if (!ambientAudioRef.current) return;
@@ -396,9 +491,16 @@ function SurahDetailPageInner({
       ambientAudioRef.current.pause();
       ambientAudioRef.current.src = "";
     } else {
-      ambientAudioRef.current.src = sound.src;
-      ambientAudioRef.current.volume = ambienceVolume;
-      ambientAudioRef.current.load();
+      setupWebAudio();
+      const currentSrc = ambientAudioRef.current.src || "";
+      if (!currentSrc.endsWith(sound.src)) {
+        ambientAudioRef.current.src = sound.src;
+      }
+      if (ambientGainRef.current) {
+        ambientGainRef.current.gain.value = ambienceVolRef.current;
+      } else {
+        ambientAudioRef.current.volume = Math.min(1, Math.max(0, ambienceVolRef.current));
+      }
       ambientAudioRef.current
         .play()
         .catch((e) => console.warn("Ambient play prevented", e));
@@ -514,22 +616,9 @@ function SurahDetailPageInner({
     }
   }, [playAyah, handleSurahCompletion]);
 
+  // Clean & natural Ayah transition via native onEnded event (prevents rapid stutter and clipped audio)
   const handleAudioEnded = useCallback(() => {
     triggerNextPhase();
-  }, [triggerNextPhase]);
-
-  // Handle Time Update - Cleanly trim trailing 0.32s wasl bleed in EveryAyah audio slices during Arabic recitation
-  const handleTimeUpdate = useCallback(() => {
-    if (!audioRef.current || isTransitioningRef.current) return;
-    const { currentTime, duration } = audioRef.current;
-    if (!duration || isNaN(duration)) return;
-
-    // Apply wasl trim ONLY to regular Arabic Ayah recitation (never Bismillah, so Bismillah plays smoothly to completion)
-    if (currentPhaseRef.current === "arabic") {
-      if (duration > 2.5 && duration - currentTime <= 0.32) {
-        triggerNextPhase();
-      }
-    }
   }, [triggerNextPhase]);
 
   const handleAudioError = useCallback(() => {
@@ -558,10 +647,11 @@ function SurahDetailPageInner({
       ayahsRef.current = cached.ayahs;
       fastPreload(cached.ayahs, 0, 12);
 
-      if (autoplayParam === "true" || autoplayParam === "1") {
+      if ((autoplayParam === "true" || autoplayParam === "1") && !hasAutoplayedRef.current[surahId]) {
+        hasAutoplayedRef.current[surahId] = true;
         setTimeout(() => {
           const initialPhase = currentSNum !== 1 && currentSNum !== 9 ? "bismillah" : "arabic";
-          playAyah(0, initialPhase, audioMode);
+          playAyahRef.current?.(0, initialPhase, audioMode);
         }, 50);
       }
       return;
@@ -578,10 +668,11 @@ function SurahDetailPageInner({
         ayahsRef.current = parsed.ayahs;
         fastPreload(parsed.ayahs, 0, 12);
 
-        if (autoplayParam === "true" || autoplayParam === "1") {
+        if ((autoplayParam === "true" || autoplayParam === "1") && !hasAutoplayedRef.current[surahId]) {
+          hasAutoplayedRef.current[surahId] = true;
           setTimeout(() => {
             const initialPhase = currentSNum !== 1 && currentSNum !== 9 ? "bismillah" : "arabic";
-            playAyah(0, initialPhase, audioMode);
+            playAyahRef.current?.(0, initialPhase, audioMode);
           }, 50);
         }
         return;
@@ -591,10 +682,11 @@ function SurahDetailPageInner({
     }
 
     // Auto-play immediately if requested
-    if (autoplayParam === "true" || autoplayParam === "1") {
+    if ((autoplayParam === "true" || autoplayParam === "1") && !hasAutoplayedRef.current[surahId]) {
+      hasAutoplayedRef.current[surahId] = true;
       setTimeout(() => {
         const initialPhase = currentSNum !== 1 && currentSNum !== 9 ? "bismillah" : "arabic";
-        playAyah(0, initialPhase, audioMode);
+        playAyahRef.current?.(0, initialPhase, audioMode);
       }, 50);
     }
 
@@ -655,7 +747,24 @@ function SurahDetailPageInner({
     return () => {
       isMounted = false;
     };
-  }, [surahId, selectedReciter.id, autoplayParam, currentSNum, audioMode, fastPreload, playAyah]);
+  }, [surahId, selectedReciter.id, autoplayParam, currentSNum, audioMode, fastPreload]);
+
+  // Clean up Quran reader audio when navigating away, and stop background audio on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("stop-global-audio"));
+    }
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+      }
+      if (ambientAudioRef.current) {
+        ambientAudioRef.current.pause();
+        ambientAudioRef.current.src = "";
+      }
+    };
+  }, []);
 
   const togglePlayback = () => {
     if (isPlaying) {
@@ -664,6 +773,13 @@ function SurahDetailPageInner({
       setIsPlaying(false);
       isPlayingRef.current = false;
     } else {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("stop-global-audio"));
+      }
+      setupWebAudio();
+      if (audioCtxRef.current && audioCtxRef.current.state === "suspended") {
+        audioCtxRef.current.resume().catch(() => {});
+      }
       setIsPlaying(true);
       isPlayingRef.current = true;
       const targetUrl = getAudioUrl(activeAyahIndex, audioPhase, audioMode);
@@ -671,13 +787,18 @@ function SurahDetailPageInner({
         if (audioRef.current.src !== targetUrl || !audioRef.current.src) {
           audioRef.current.src = targetUrl;
         }
-        audioRef.current.volume = quranVolRef.current;
         audioRef.current.playbackRate = playbackRate;
+        if (quranGainRef.current) {
+          quranGainRef.current.gain.value = quranVolRef.current;
+        } else {
+          audioRef.current.volume = Math.min(1, Math.max(0, quranVolRef.current));
+        }
         audioRef.current.play().catch((err) => {
           console.warn("Playback prevented or interrupted", err);
         });
       }
-      if (selectedAmbience !== "none" && ambientAudioRef.current && ambientAudioRef.current.src) {
+      if (selectedAmbienceRef.current !== "none" && ambientAudioRef.current && ambientAudioRef.current.src) {
+        ambientAudioRef.current.volume = Math.min(1, Math.max(0, ambienceVolume));
         ambientAudioRef.current.play().catch(() => {});
       }
       fastPreload(ayahsRef.current.length > 0 ? ayahsRef.current : ayahs, activeAyahIndex, 10);
@@ -828,6 +949,12 @@ function SurahDetailPageInner({
     <div className="fixed inset-0 w-full h-[100dvh] max-h-[100dvh] font-sans text-white overflow-hidden flex flex-col justify-between select-none pt-[max(0.4rem,env(safe-area-inset-top))] pb-[max(0.4rem,env(safe-area-inset-bottom))] px-3 sm:px-6 md:px-8 z-10 overscroll-none">
       {/* --- NATURAL BACKGROUND VIDEO --- */}
       <video
+        ref={(el) => {
+          if (el) {
+            el.muted = true;
+            el.volume = 0;
+          }
+        }}
         autoPlay
         loop
         muted
@@ -844,14 +971,14 @@ function SurahDetailPageInner({
       {/* Hidden Native Audio Element for Quran Recitation */}
       <audio
         ref={audioRef}
+        crossOrigin="anonymous"
         onEnded={handleAudioEnded}
-        onTimeUpdate={handleTimeUpdate}
         onError={handleAudioError}
         preload="auto"
       />
 
       {/* Hidden Native Audio Element for Ambient Vocals/Soundscape */}
-      <audio ref={ambientAudioRef} loop preload="auto" />
+      <audio ref={ambientAudioRef} loop preload="none" crossOrigin="anonymous" />
 
       {/* --- TOP HEADER (NATURAL FULL-WIDTH DISTRIBUTION) --- */}
       <header className="shrink-0 flex-none z-30 w-full flex items-center justify-between pointer-events-auto py-1.5 sm:py-2.5 max-w-7xl mx-auto">
@@ -1197,57 +1324,163 @@ function SurahDetailPageInner({
                     </div>
                   </div>
 
-                  {/* Dual Volume Sliders */}
-                  <div className="flex flex-col gap-2.5 pt-3 border-t border-white/[0.08]">
+                  {/* Dual Volume Sliders (Seamless, No Box Wrappers - Matching Image 2) */}
+                  <div className="flex flex-col gap-4 pt-3.5 border-t border-white/10">
                     {/* Quran Recitation Volume */}
-                    <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col gap-2">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="flex items-center gap-2 font-semibold text-neutral-200">
-                          <Volume2 size={14} className="text-[#155DFC]" />
-                          <span>Quran Volume ({selectedReciter.name.split(" ")[0]})</span>
-                        </span>
-                        <span className="font-mono text-xs font-bold text-[#155DFC] bg-[#155DFC]/10 px-2 py-0.5 rounded-full border border-[#155DFC]/20">
-                          {Math.round(quranVolume * 100)}%
-                        </span>
-                      </div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        value={quranVolume}
-                        onChange={(e) => setQuranVolume(parseFloat(e.target.value))}
-                        className="w-full h-1.5 bg-white/15 rounded-full appearance-none cursor-pointer accent-[#155DFC] focus:outline-none"
-                      />
-                    </div>
-
-                    {/* Ambience Volume */}
-                    <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col gap-2">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="flex items-center gap-2 font-semibold text-neutral-200">
-                          <Headphones size={14} className="text-[#155DFC]" />
-                          <span>
-                            Ambience ({activeAmbientItem && activeAmbientItem.id !== "none" ? activeAmbientItem.title : "Off"})
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center justify-between text-xs px-0.5">
+                        <span className="font-semibold text-neutral-200 flex items-center gap-1.5">
+                          <span>Quran Volume</span>
+                          <span className="text-neutral-400 text-[11px] font-normal">
+                            ({selectedReciter.name.split(" ")[0]})
                           </span>
                         </span>
-                        <span className="font-mono text-xs font-bold text-[#155DFC] bg-[#155DFC]/10 px-2 py-0.5 rounded-full border border-[#155DFC]/20">
-                          {selectedAmbience === "none" ? "Muted" : `${Math.round(ambienceVolume * 100)}%`}
+                        <span
+                          className={`font-mono text-[11px] font-semibold px-2 py-0.5 rounded-md border transition-colors ${
+                            quranVolume > 1
+                              ? "text-sky-300 bg-sky-950/40 border-sky-800/40"
+                              : "text-white/80 bg-white/5 border-white/10"
+                          }`}
+                        >
+                          {Math.round(quranVolume * 100)}%
+                          {quranVolume > 1 ? " Boost" : ""}
                         </span>
                       </div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        disabled={selectedAmbience === "none"}
-                        value={ambienceVolume}
-                        onChange={(e) => setAmbienceVolume(parseFloat(e.target.value))}
-                        className={`w-full h-1.5 rounded-full appearance-none cursor-pointer accent-[#155DFC] focus:outline-none ${
-                          selectedAmbience === "none"
-                            ? "bg-white/10 opacity-30 cursor-not-allowed"
-                            : "bg-white/15"
-                        }`}
-                      />
+
+                      {/* Slider Row with Circle Button matching image 2 */}
+                      <div className="flex items-center gap-3 w-full">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const next = quranVolume > 0 ? 0 : 1;
+                            setQuranVolume(next);
+                            quranVolRef.current = next;
+                            setupWebAudio();
+                            if (quranGainRef.current) {
+                              quranGainRef.current.gain.value = next;
+                            } else if (audioRef.current) {
+                              audioRef.current.volume = Math.min(1, next);
+                            }
+                          }}
+                          className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all shrink-0 cursor-pointer"
+                          title={quranVolume === 0 ? "Unmute Quran" : "Mute Quran"}
+                        >
+                          {quranVolume === 0 ? (
+                            <VolumeX size={16} />
+                          ) : (
+                            <Volume2 size={16} />
+                          )}
+                        </button>
+                        <div className="relative flex-1 flex items-center py-2">
+                          <input
+                            type="range"
+                            min="0"
+                            max="2"
+                            step="0.05"
+                            value={quranVolume}
+                            onChange={(e) => {
+                              const v = parseFloat(e.target.value);
+                              setQuranVolume(v);
+                              quranVolRef.current = v;
+                              setupWebAudio();
+                              if (quranGainRef.current) {
+                                quranGainRef.current.gain.value = v;
+                              } else if (audioRef.current) {
+                                audioRef.current.volume = Math.min(1, Math.max(0, v));
+                              }
+                            }}
+                            className="modern-volume-slider"
+                            style={{
+                              background: `linear-gradient(to right, #ffffff ${(quranVolume / 2) * 100}%, rgba(255, 255, 255, 0.18) ${(quranVolume / 2) * 100}%)`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Ambience Volume (up to 200% with Web Audio Boost) */}
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center justify-between text-xs px-0.5">
+                        <span className="font-semibold text-neutral-200 flex items-center gap-1.5">
+                          <span>Ambience</span>
+                          <span className="text-neutral-400 text-[11px] font-normal">
+                            ({activeAmbientItem && activeAmbientItem.id !== "none" ? activeAmbientItem.title : "Off"})
+                          </span>
+                        </span>
+                        <span
+                          className={`font-mono text-[11px] font-semibold px-2 py-0.5 rounded-md border transition-colors ${
+                            selectedAmbience === "none"
+                              ? "text-neutral-500 bg-white/[0.02] border-white/5"
+                              : ambienceVolume > 1
+                              ? "text-sky-300 bg-sky-950/40 border-sky-800/40"
+                              : "text-white/80 bg-white/5 border-white/10"
+                          }`}
+                        >
+                          {selectedAmbience === "none"
+                            ? "Muted"
+                            : `${Math.round(ambienceVolume * 100)}%${ambienceVolume > 1 ? " Boost" : ""}`}
+                        </span>
+                      </div>
+
+                      {/* Slider Row with Circle Button matching image 2 */}
+                      <div className="flex items-center gap-3 w-full">
+                        <button
+                          type="button"
+                          disabled={selectedAmbience === "none"}
+                          onClick={() => {
+                            if (selectedAmbience === "none") return;
+                            const next = ambienceVolume > 0 ? 0 : 1;
+                            setAmbienceVolume(next);
+                            ambienceVolRef.current = next;
+                            setupWebAudio();
+                            if (ambientGainRef.current) {
+                              ambientGainRef.current.gain.value = next;
+                            } else if (ambientAudioRef.current) {
+                              ambientAudioRef.current.volume = Math.min(1, next);
+                            }
+                          }}
+                          className={`w-9 h-9 rounded-full flex items-center justify-center text-white transition-all shrink-0 ${
+                            selectedAmbience === "none"
+                              ? "bg-white/[0.04] text-neutral-500 cursor-not-allowed opacity-50"
+                              : "bg-white/10 hover:bg-white/20 active:scale-95 cursor-pointer"
+                          }`}
+                          title={selectedAmbience === "none" ? "Ambience is Off" : ambienceVolume === 0 ? "Unmute Ambience" : "Mute Ambience"}
+                        >
+                          {selectedAmbience === "none" || ambienceVolume === 0 ? (
+                            <VolumeX size={16} />
+                          ) : (
+                            <Headphones size={16} />
+                          )}
+                        </button>
+                        <div className="relative flex-1 flex items-center py-2">
+                          <input
+                            type="range"
+                            min="0"
+                            max="2"
+                            step="0.05"
+                            disabled={selectedAmbience === "none"}
+                            value={selectedAmbience === "none" ? 0 : ambienceVolume}
+                            onChange={(e) => {
+                              const v = parseFloat(e.target.value);
+                              setAmbienceVolume(v);
+                              ambienceVolRef.current = v;
+                              setupWebAudio();
+                              if (ambientGainRef.current) {
+                                ambientGainRef.current.gain.value = v;
+                              } else if (ambientAudioRef.current) {
+                                ambientAudioRef.current.volume = Math.min(1, Math.max(0, v));
+                              }
+                            }}
+                            className="modern-volume-slider"
+                            style={{
+                              background:
+                                selectedAmbience === "none"
+                                  ? "rgba(255, 255, 255, 0.08)"
+                                  : `linear-gradient(to right, #ffffff ${(ambienceVolume / 2) * 100}%, rgba(255, 255, 255, 0.18) ${(ambienceVolume / 2) * 100}%)`,
+                            }}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1561,3 +1794,4 @@ export default function SurahDetailPage({
     </Suspense>
   );
 }
+
