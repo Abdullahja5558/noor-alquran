@@ -220,13 +220,39 @@ export default function PrayerTimesPage() {
     Isha: <CloudMoon className="w-5 h-5 sm:w-6 sm:h-6" />,
   };
 
+  // Listen to stop-global-audio event to pause Adhan when other players activate
+  useEffect(() => {
+    const handleStop = () => {
+      if (adhanAudioRef.current && !adhanAudioRef.current.paused) {
+        adhanAudioRef.current.pause();
+        setIsAdhanPlaying(false);
+      }
+    };
+    window.addEventListener("stop-global-audio", handleStop);
+    return () => {
+      window.removeEventListener("stop-global-audio", handleStop);
+      if (adhanAudioRef.current) {
+        adhanAudioRef.current.pause();
+      }
+    };
+  }, []);
+
   const toggleAdhanAudio = () => {
     if (!adhanAudioRef.current) return;
     if (isAdhanPlaying) {
       adhanAudioRef.current.pause();
       setIsAdhanPlaying(false);
     } else {
-      adhanAudioRef.current.play().then(() => setIsAdhanPlaying(true)).catch(() => {});
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("stop-global-audio"));
+      }
+      adhanAudioRef.current
+        .play()
+        .then(() => setIsAdhanPlaying(true))
+        .catch((err) => {
+          console.warn("Adhan playback prevented", err);
+          setIsAdhanPlaying(false);
+        });
     }
   };
 
@@ -236,12 +262,14 @@ export default function PrayerTimesPage() {
     <div className="min-h-screen flex flex-col justify-between font-sans bg-[#f8fafc] dark:bg-[#000000] text-slate-900 dark:text-slate-100 overflow-x-hidden selection:bg-[#155DFC]/20">
       <Navbar />
 
-      {/* Adhan Audio Stream */}
+      {/* Authentic Adhan Audio Stream (Local 0ms instant playback) */}
       <audio
         ref={adhanAudioRef}
-        src="https://media.sd.ma/assabile/adhan_3743841/e2e50529dcfc.mp3"
+        src="/audio/adhan.mp3"
+        onPlay={() => setIsAdhanPlaying(true)}
+        onPause={() => setIsAdhanPlaying(false)}
         onEnded={() => setIsAdhanPlaying(false)}
-        preload="none"
+        preload="auto"
       />
 
       <main className="flex-1 pt-28 sm:pt-32 pb-16 sm:pb-20 px-3 sm:px-6 md:px-8 max-w-5xl mx-auto w-full">
@@ -313,14 +341,28 @@ export default function PrayerTimesPage() {
             {/* Adhan Audio Button */}
             <button
               onClick={toggleAdhanAudio}
-              className={`flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full border text-xs font-semibold transition-colors cursor-pointer ${
+              className={`flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full border text-xs font-semibold transition-all cursor-pointer ${
                 isAdhanPlaying
-                  ? "bg-[#155DFC] text-white border-[#155DFC]"
-                  : "bg-white dark:bg-white/[0.04] border-slate-200/80 dark:border-white/[0.08] text-slate-700 dark:text-neutral-300 hover:text-[#155DFC]"
+                  ? "bg-[#155DFC] text-white border-[#155DFC] shadow-sm shadow-[#155DFC]/20"
+                  : "bg-white dark:bg-white/[0.04] border-slate-200/80 dark:border-white/[0.08] text-slate-700 dark:text-neutral-300 hover:text-[#155DFC] dark:hover:text-[#155DFC] hover:border-[#155DFC]/40"
               }`}
+              title={isAdhanPlaying ? "Pause Adhan" : "Play Adhan (Mishary Rashid Alafasy)"}
             >
-              {isAdhanPlaying ? <VolumeX size={14} /> : <Volume2 size={14} />}
-              <span>{isAdhanPlaying ? "Stop Adhan" : "Play Adhan"}</span>
+              {isAdhanPlaying ? (
+                <>
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                  </span>
+                  <VolumeX size={14} />
+                  <span>Stop Adhan</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 size={14} />
+                  <span>Play Adhan</span>
+                </>
+              )}
             </button>
           </div>
         </div>
