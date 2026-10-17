@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowLeft, Search, BookOpen } from "lucide-react";
+import React, { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { ArrowLeft, Search } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -17,13 +17,22 @@ interface Surah {
   revelationType: string;
 }
 
-export default function QuranPage() {
+function QuranPageContent() {
+  const searchParams = useSearchParams();
+  const queryParam = searchParams.get("search") || searchParams.get("q") || "";
+
   // Pre-seed with all 114 Surahs so search crawlers and users receive 100% of links in the initial HTML response
   const [surahs, setSurahs] = useState<Surah[]>(ALL_SURAHS_META);
   const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(queryParam);
   const [filterType, setFilterType] = useState<"ALL" | "Meccan" | "Medinan">("ALL");
   const [navigatingId, setNavigatingId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (queryParam) {
+      setSearch(queryParam);
+    }
+  }, [queryParam]);
 
   useEffect(() => {
     // Optional background sync to guarantee live consistency without blocking initial render
@@ -87,11 +96,13 @@ export default function QuranPage() {
                     placeholder="Search Surah (e.g. Yaseen, 36)..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
+                    aria-label="Search Surah by name, number, or translation"
                     className="w-full pl-3 pr-8 bg-transparent border-none rounded-none outline-none ring-0 focus:ring-0 focus:outline-none text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500"
                   />
                   {search && (
                     <button
                       onClick={() => setSearch("")}
+                      aria-label="Clear search input"
                       className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xs px-1 cursor-pointer"
                     >
                       Clear
@@ -108,11 +119,11 @@ export default function QuranPage() {
                     onClick={() => setFilterType(type)}
                     className={`flex-1 sm:flex-none px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer text-center ${
                       filterType === type
-                        ? "bg-[#155DFC] text-white"
+                        ? "bg-[#155DFC] text-white shadow-sm font-bold"
                         : "text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white"
                     }`}
                   >
-                    {type}
+                    {type === "ALL" ? "All 114" : type}
                   </button>
                 ))}
               </div>
@@ -121,17 +132,20 @@ export default function QuranPage() {
         </div>
 
         {/* Surahs Grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {[...Array(9)].map((_, i) => (
-              <div key={i} className="h-20 rounded-full bg-slate-100 dark:bg-white/[0.03] border border-slate-200/60 dark:border-white/[0.06] animate-pulse" />
-            ))}
-          </div>
-        ) : filteredSurahs.length === 0 ? (
-          <div className="p-12 sm:p-16 text-center rounded-[2.5rem] bg-white dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.08]">
-            <BookOpen size={40} className="mx-auto text-slate-400 mb-3" />
-            <h3 className="font-heading text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1">No Surah Found</h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-neutral-400">Try searching with a different Surah name or number.</p>
+        {filteredSurahs.length === 0 ? (
+          <div className="text-center py-20 bg-white dark:bg-[#070709] rounded-3xl border border-slate-200/80 dark:border-white/[0.08] p-8 max-w-md mx-auto">
+            <p className="text-slate-500 dark:text-neutral-400 text-sm">
+              No Surahs found matching &quot;{search}&quot;.
+            </p>
+            <button
+              onClick={() => {
+                setSearch("");
+                setFilterType("ALL");
+              }}
+              className="mt-4 px-5 py-2 text-xs font-semibold text-[#155DFC] bg-[#155DFC]/10 rounded-full hover:bg-[#155DFC]/20 transition-colors"
+            >
+              Reset Search & Filters
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
@@ -173,7 +187,7 @@ export default function QuranPage() {
                           {surah.revelationType} • {surah.numberOfAyahs} Verses
                           {isOpening && (
                             <span className="text-[#155DFC] font-semibold ml-1">
-                              • Loading...
+                              • Opening...
                             </span>
                           )}
                         </p>
@@ -181,7 +195,11 @@ export default function QuranPage() {
                     </div>
 
                     <div className="text-right shrink-0 pl-3">
-                      <h4 className="font-arabic text-lg sm:text-xl text-slate-900 dark:text-neutral-100 group-hover:text-[#155DFC] transition-colors">
+                      <h4
+                        lang="ar"
+                        dir="rtl"
+                        className="font-arabic text-lg sm:text-xl text-slate-900 dark:text-neutral-100 group-hover:text-[#155DFC] transition-colors"
+                      >
                         {surah.name}
                       </h4>
                       <p className="text-[10px] text-slate-400 dark:text-neutral-500 font-medium truncate">
@@ -198,5 +216,13 @@ export default function QuranPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function QuranPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#f8fafc] dark:bg-[#000000]" />}>
+      <QuranPageContent />
+    </Suspense>
   );
 }

@@ -3,57 +3,32 @@ import { Metadata } from "next";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
 
 export const metadata: Metadata = {
-  title: "All 114 Surahs – Holy Quran Index with Audio & Translation",
+  title: "Holy Quran Index – All 114 Surahs with Urdu Translation",
   description:
-    "Browse, search, and read all 114 Surahs of the Holy Quran with Arabic text, word-by-word Urdu and English translation, and audio recitations by Mishary Alafasy, Sudais, and Abdul Basit.",
-  keywords: [
-    "Quran Surahs list",
-    "All 114 Surahs",
-    "Quran Index",
-    "Read Quran online",
-    "Surah list with Urdu translation",
-    "Holy Quran MP3",
-    "Meccan Surahs",
-    "Medinan Surahs",
-    "full quran in urdu",
-    "read quran in urdu",
-    "quran in urdu translation",
-    "quran mp3",
-    "quran in urdu mp3",
-    "quran karim",
-    "quran meaning in urdu",
-    "quran online",
-    "quran sharif",
-    "quran with urdu translation",
-    "quran with urdu",
-    "quran with urdu pdf",
-    "listen quran in urdu",
-    "quran urdu",
-    "read quran in urdu online",
-    "quran english translation",
-    "quran translation in urdu",
-    "quran translation in english",
-    "quran translation online",
-    "quran urdu translation",
-    "quran sharif in urdu",
-    "quran sharif in urdu mp3",
-    "quran sharif mp3 free download",
-    "قرآن مجید کی تمام 114 سورتیں",
-    "قرآن پاک کی فہرست",
-    "قرآن مجید اردو ترجمہ کے ساتھ",
-    "سورتوں کی فہرست",
-    "تلاوت قرآن پاک mp3",
-    "القرآن الكريم فهرس السور",
-  ],
+    "Browse, search, and read all 114 Surahs of the Holy Quran with Arabic scripture, word-by-word Urdu and English translation, and MP3 audio tilawat.",
   alternates: {
     canonical: `${BASE_URL}/quran`,
   },
   openGraph: {
-    title: "All 114 Surahs – Holy Quran Index with Audio & Translation",
+    title: "Holy Quran Index – All 114 Surahs with Urdu Translation",
     description:
       "Explore and read all 114 Surahs of the Quran with Urdu and English translation and high-quality audio recitation.",
     url: `${BASE_URL}/quran`,
-    images: ["/favicon5.png"],
+    images: [
+      {
+        url: `${BASE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "All 114 Surahs of the Holy Quran – Noor Al-Quran",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Holy Quran Index – All 114 Surahs with Urdu Translation",
+    description:
+      "Explore and read all 114 Surahs of the Quran with Urdu and English translation.",
+    images: [`${BASE_URL}/opengraph-image`],
   },
 };
 

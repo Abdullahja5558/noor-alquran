@@ -108,7 +108,7 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
     if (typeof window === "undefined") return;
 
     const audio = new Audio();
-    audio.preload = "metadata";
+    audio.preload = "none";
     audio.src = getSurahAudioUrl(1, false);
     audioRef.current = audio;
 

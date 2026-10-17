@@ -1,11 +1,24 @@
-import React from 'react'
-import Navbar from '@/components/Navbar'
-import Hero from '@/components/Hero'
-import RecitersSection from '@/components/RecitersSection'
-import CollectionsSection from '@/components/CollectionsSection'
-import Testimonials from '@/components/Testimonials'
-import Topics from '@/components/Topic'
-import Footer from '@/components/Footer'
+import React from "react";
+import dynamic from "next/dynamic";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import Footer from "@/components/Footer";
+
+const RecitersSection = dynamic(() => import("@/components/RecitersSection"), {
+  ssr: true,
+});
+
+const CollectionsSection = dynamic(() => import("@/components/CollectionsSection"), {
+  ssr: true,
+});
+
+const Topics = dynamic(() => import("@/components/Topic"), {
+  ssr: true,
+});
+
+const Testimonials = dynamic(() => import("@/components/Testimonials"), {
+  ssr: true,
+});
 
 const Home = () => {
   return (
@@ -18,7 +31,7 @@ const Home = () => {
       <Testimonials />
       <Footer />
     </>
-  )
-}
+  );
+};
 
 export default Home;

@@ -3,26 +3,30 @@ import { Metadata } from "next";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
 
 export const metadata: Metadata = {
-  title: "Quran Recitations & Curated Audio Playlists – Noor Al-Quran",
+  title: "Quran Audio Playlists – Heart Touching Tilawat MP3",
   description:
-    "Listen to hand-picked Quran audio playlists, heart-touching Tilawat collections, morning and evening Athkar, Ruqyah Shariah, and emotional recitations by famous Qaris.",
-  keywords: [
-    "Quran playlists",
-    "Quran audio collection",
-    "Heart touching Quran recitation",
-    "Ruqyah Shariah audio",
-    "Quran Tilawat MP3",
-    "Relaxing Quran audio",
-    "Noor Al-Quran Playlists",
-  ],
+    "Listen to curated Quran recitations and audio playlists for tranquil sleep, deep focus, and emotional peace by world-renowned Qaris.",
   alternates: {
     canonical: `${BASE_URL}/playlists`,
   },
   openGraph: {
-    title: "Quran Recitations & Curated Audio Playlists – Noor Al-Quran",
+    title: "Quran Audio Playlists – Heart Touching Tilawat MP3",
     description: "Curated Quran playlists and emotional Tilawat by world-renowned Qaris.",
     url: `${BASE_URL}/playlists`,
-    images: ["/favicon5.png"],
+    images: [
+      {
+        url: `${BASE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "Quran Audio Playlists – Noor Al-Quran",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Quran Audio Playlists – Heart Touching Tilawat MP3",
+    description: "Curated Quran playlists and emotional Tilawat by world-renowned Qaris.",
+    images: [`${BASE_URL}/opengraph-image`],
   },
 };
 

@@ -171,6 +171,7 @@ button{
 .marquee {
   position: relative;
   overflow: hidden;
+  contain: layout paint;
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
           mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
 }

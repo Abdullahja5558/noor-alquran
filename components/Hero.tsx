@@ -61,11 +61,10 @@ function TrustBadge({ isMobile }: { isMobile: boolean }) {
       <div className="relative w-7 h-10 sm:w-9 sm:h-12 md:w-10 md:h-14 shrink-0">
         <Image
           src="/weather-L.png"
-          alt="Laurel Left"
+          alt="Laurel Left Trust Badge"
           fill
           sizes="40px"
           className="object-contain drop-shadow-[0_2px_8px_rgba(212,175,55,0.25)]"
-          priority
         />
       </div>
 
@@ -80,11 +79,10 @@ function TrustBadge({ isMobile }: { isMobile: boolean }) {
       <div className="relative w-7 h-10 sm:w-9 sm:h-12 md:w-10 md:h-14 shrink-0">
         <Image
           src="/weather-R.png"
-          alt="Laurel Right"
+          alt="Laurel Right Trust Badge"
           fill
           sizes="40px"
           className="object-contain drop-shadow-[0_2px_8px_rgba(212,175,55,0.25)]"
-          priority
         />
       </div>
     </motion.div>
@@ -136,8 +134,7 @@ export default function Hero() {
             src="/bg-hero-light.png"
             alt="Hero background light"
             fill
-            priority
-            sizes="100vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1920px"
             className="object-cover object-center dark:hidden"
           />
 
@@ -146,7 +143,7 @@ export default function Hero() {
             alt="Hero background dark"
             fill
             priority
-            sizes="100vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1920px"
             className="object-cover object-center hidden dark:block"
           />
 
@@ -247,6 +244,7 @@ export default function Hero() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search Surah (e.g. Yasin, 36, Rahman)..."
+              aria-label="Search Surah by name, number, or meaning"
               className="w-full pl-3 pr-8 bg-transparent border-none rounded-none outline-none ring-0 focus:ring-0 focus:outline-none text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500"
             />
             {searchQuery && (
@@ -290,7 +288,11 @@ export default function Hero() {
                 </div>
 
                 <div className="flex flex-col items-end shrink-0 pl-2 z-10">
-                  <span className="font-arabic text-base sm:text-lg font-bold text-slate-900 dark:text-white text-right leading-tight">
+                  <span
+                    lang="ar"
+                    dir="rtl"
+                    className="font-arabic text-base sm:text-lg font-bold text-slate-900 dark:text-white text-right leading-tight"
+                  >
                     {arabicTitle}
                   </span>
                   <span className="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-400 dark:text-neutral-500 font-semibold mt-0.5 text-right truncate max-w-[120px]">

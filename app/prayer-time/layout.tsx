@@ -3,29 +3,32 @@ import { Metadata } from "next";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
 
 export const metadata: Metadata = {
-  title: "Accurate Prayer Times, Azan & Qibla Direction | Namaz Timings Today",
+  title: "Namaz Prayer Times Today – Accurate Azan & Salah Schedule",
   description:
-    "Get accurate daily prayer times (Fajr, Dhuhr, Asr, Maghrib, Isha) for Karachi, Lahore, Islamabad, and global cities with countdown to next prayer, Azan audio alerts, and Qibla compass.",
-  keywords: [
-    "Prayer Times Pakistan",
-    "Namaz Timings Today",
-    "Fajr time Karachi",
-    "Maghrib time Lahore",
-    "Isha time Islamabad",
-    "Azan time online",
-    "Qibla direction compass",
-    "Islamic prayer schedule",
-    "Noor Al-Quran Prayer Times",
-  ],
+    "Accurate daily Islamic prayer times (Fajr, Dhuhr, Asr, Maghrib, Isha) for Lahore, Karachi, Islamabad, and global cities with Azan audio alerts.",
   alternates: {
     canonical: `${BASE_URL}/prayer-time`,
   },
   openGraph: {
-    title: "Accurate Prayer Times, Azan & Qibla Direction | Noor Al-Quran",
+    title: "Namaz Prayer Times Today – Accurate Azan & Salah Schedule",
     description:
-      "Check daily Namaz timings, upcoming prayer countdown, and authentic Azan notifications for any city worldwide.",
+      "Check daily Namaz timings, upcoming prayer countdown, and authentic Azan notifications for Lahore, Karachi, and any city worldwide.",
     url: `${BASE_URL}/prayer-time`,
-    images: ["/favicon5.png"],
+    images: [
+      {
+        url: `${BASE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "Prayer Times & Azan – Noor Al-Quran",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Namaz Prayer Times Today – Accurate Azan & Salah Schedule",
+    description:
+      "Check daily Namaz timings, upcoming prayer countdown, and authentic Azan notifications.",
+    images: [`${BASE_URL}/opengraph-image`],
   },
 };
 

@@ -3,26 +3,30 @@ import { Metadata } from "next";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
 
 export const metadata: Metadata = {
-  title: "Digital Tasbeeh Counter Online – Dhikr, Zikr & SubhanAllah Tracker",
+  title: "Digital Tasbeeh Counter Online – Dhikr & Zikr Tracker",
   description:
-    "Free online digital Tasbeeh counter with sound effects, haptic vibration, reset capability, custom targets, and daily Dhikr tracking (SubhanAllah, Alhamdulillah, Allahu Akbar).",
-  keywords: [
-    "Digital Tasbeeh online",
-    "Tasbeeh counter web",
-    "Dhikr counter",
-    "Zikr counter online",
-    "SubhanAllah counter",
-    "Free online tasbih",
-    "Noor Al-Quran Tasbeeh",
-  ],
+    "Free online digital Tasbeeh counter with vibration, reset feature, custom targets, and daily Dhikr tracking for SubhanAllah, Alhamdulillah, and Astaghfar.",
   alternates: {
     canonical: `${BASE_URL}/tasbeeh`,
   },
   openGraph: {
-    title: "Digital Tasbeeh Counter Online – Noor Al-Quran",
+    title: "Digital Tasbeeh Counter Online – Dhikr & Zikr Tracker",
     description: "Count your daily dhikr with our modern interactive digital Tasbeeh counter.",
     url: `${BASE_URL}/tasbeeh`,
-    images: ["/favicon5.png"],
+    images: [
+      {
+        url: `${BASE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "Digital Tasbeeh Counter – Noor Al-Quran",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Digital Tasbeeh Counter Online – Dhikr & Zikr Tracker",
+    description: "Free online digital Tasbeeh counter with custom targets and sound effects.",
+    images: [`${BASE_URL}/opengraph-image`],
   },
 };
 

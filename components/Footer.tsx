@@ -33,6 +33,8 @@ export default function Footer() {
       title: "Spiritual Essentials",
       links: [
         { name: "Prayer Times (Namaz)", href: "/prayer-time" },
+        { name: "Namaz Time Lahore", href: "/prayer-time/lahore" },
+        { name: "Namaz Time Karachi", href: "/prayer-time/karachi" },
         { name: "Daily Duas & Azkar", href: "/dua" },
         { name: "Digital Tasbeeh Counter", href: "/tasbeeh" },
         { name: "Islamic Hijri Calendar", href: "/calendar" },

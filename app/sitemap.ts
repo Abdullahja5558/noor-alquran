@@ -1,11 +1,11 @@
 import { MetadataRoute } from "next";
 import { ALL_SURAHS_META } from "@/components/surahMeta";
+import { CITIES_LIST } from "@/lib/prayerTimes";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Stable release date prevents misleading search engines with fluctuating timestamps
-  const contentDate = new Date("2025-02-15T00:00:00.000Z");
+  const contentDate = new Date("2026-03-01T00:00:00.000Z");
 
   // Static core routes
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -65,7 +65,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Top searched Surahs globally (Yaseen, Rahman, Mulk, Baqarah, Kahf, Waqiah, Fatiha, Ikhlas, Falaq, Nas)
+  // City prayer time routes
+  const cityRoutes: MetadataRoute.Sitemap = CITIES_LIST.map((city) => ({
+    url: `${BASE_URL}/prayer-time/${city.slug}`,
+    lastModified: contentDate,
+    changeFrequency: "daily",
+    priority: 0.88,
+  }));
+
+  // Top searched Surahs globally
   const HIGH_PRIORITY_SURAHS = new Set([1, 2, 18, 36, 55, 56, 67, 112, 113, 114]);
 
   // Dynamic routes for all 114 Surahs
@@ -76,5 +84,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: HIGH_PRIORITY_SURAHS.has(surah.number) ? 0.98 : 0.9,
   }));
 
-  return [...staticRoutes, ...surahRoutes];
+  return [...staticRoutes, ...cityRoutes, ...surahRoutes];
 }

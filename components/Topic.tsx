@@ -132,7 +132,11 @@ export default function Topics() {
                   {item.icon}
                 </div>
 
-                <span className="font-arabic text-xl sm:text-2xl mb-1 text-blue-600 dark:text-blue-400 font-normal">
+                <span
+                  lang="ar"
+                  dir="rtl"
+                  className="font-arabic text-xl sm:text-2xl mb-1 text-blue-600 dark:text-blue-400 font-normal"
+                >
                   {item.arabicTitle}
                 </span>
 
@@ -193,7 +197,11 @@ export default function Topics() {
 
               {/* Arabic Verse */}
               <div className="p-6 sm:p-8 rounded-3xl bg-slate-50/70 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.07] text-center my-6 relative">
-                <p className="font-arabic text-2xl sm:text-3xl leading-loose text-slate-900 dark:text-neutral-100">
+                <p
+                  lang="ar"
+                  dir="rtl"
+                  className="font-arabic text-2xl sm:text-3xl leading-loose text-slate-900 dark:text-neutral-100"
+                >
                   {selectedTopic.ayahArabic}
                 </p>
               </div>
@@ -203,7 +211,11 @@ export default function Topics() {
                 <span className="text-[11px] font-bold text-[#155DFC] block mb-1">
                   اردو ترجمہ
                 </span>
-                <p className="font-urdu text-lg sm:text-xl leading-relaxed text-slate-800 dark:text-neutral-200">
+                <p
+                  lang="ur"
+                  dir="rtl"
+                  className="font-urdu text-lg sm:text-xl leading-relaxed text-slate-800 dark:text-neutral-200"
+                >
                   {selectedTopic.ayahUrdu}
                 </p>
               </div>
@@ -213,7 +225,11 @@ export default function Topics() {
                 <span className="text-[11px] font-bold text-[#155DFC] block mb-1">
                   English Translation
                 </span>
-                <p className="text-xs sm:text-sm md:text-base text-slate-700 dark:text-neutral-300 leading-relaxed font-normal">
+                <p
+                  lang="en"
+                  dir="ltr"
+                  className="text-xs sm:text-sm md:text-base text-slate-700 dark:text-neutral-300 leading-relaxed font-normal"
+                >
                   &quot;{selectedTopic.ayahEnglish}&quot;
                 </p>
               </div>

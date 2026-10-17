@@ -117,7 +117,6 @@ export default function CollectionsSection() {
                     fill
                     sizes="(max-width: 640px) 44vw, (max-width: 1024px) 32vw, 340px"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    priority={collection.id === "sleep-mode" || collection.id === "focus-work"}
                   />
 
                   {/* Center Glassmorphism Play Button Overlay on Hover */}
@@ -250,7 +249,11 @@ export default function CollectionsSection() {
                     </div>
 
                     <div className="flex items-center gap-3.5 shrink-0 pl-2">
-                      <span className="font-arabic text-base sm:text-lg text-slate-800 dark:text-neutral-200">
+                      <span
+                        lang="ar"
+                        dir="rtl"
+                        className="font-arabic text-base sm:text-lg text-slate-800 dark:text-neutral-200"
+                      >
                         {track.name}
                       </span>
                       <div className="w-8 h-8 rounded-full bg-white dark:bg-white/10 text-slate-700 dark:text-neutral-300 group-hover:bg-[#155DFC] group-hover:text-white flex items-center justify-center transition-all shrink-0">

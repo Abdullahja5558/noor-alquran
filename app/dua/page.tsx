@@ -213,6 +213,7 @@ export default function DuaPage() {
                     <button
                       onClick={() => speakDua(dua)}
                       title="Listen Arabic Recitation"
+                      aria-label={speakingDuaId === dua.id ? `Stop recitation for ${dua.title}` : `Listen to Arabic recitation for ${dua.title}`}
                       className={`p-2.5 rounded-full border transition-all cursor-pointer ${
                         speakingDuaId === dua.id
                           ? "bg-[#155DFC] border-[#155DFC] text-white"
@@ -249,7 +250,11 @@ export default function DuaPage() {
 
                 {/* Arabic Text (Fully selectable on mobile) */}
                 <div className="text-center my-6 sm:my-8 px-2 select-text">
-                  <p className="font-arabic text-2xl sm:text-3xl md:text-4xl leading-loose text-slate-900 dark:text-white select-text selection:bg-[#155DFC]/30">
+                  <p
+                    lang="ar"
+                    dir="rtl"
+                    className="font-arabic text-2xl sm:text-3xl md:text-4xl leading-loose text-slate-900 dark:text-white select-text selection:bg-[#155DFC]/30"
+                  >
                     {dua.arabic}
                   </p>
                 </div>
@@ -259,7 +264,11 @@ export default function DuaPage() {
                   <span className="text-[11px] font-bold text-[#155DFC] block mb-1 select-none">
                     اردو ترجمہ
                   </span>
-                  <p className="font-urdu text-lg sm:text-xl leading-relaxed text-slate-800 dark:text-neutral-200 select-text selection:bg-[#155DFC]/30">
+                  <p
+                    lang="ur"
+                    dir="rtl"
+                    className="font-urdu text-lg sm:text-xl leading-relaxed text-slate-800 dark:text-neutral-200 select-text selection:bg-[#155DFC]/30"
+                  >
                     {dua.urdu}
                   </p>
                 </div>
@@ -269,7 +278,11 @@ export default function DuaPage() {
                   <span className="text-[11px] font-bold text-[#155DFC] block mb-1 select-none">
                     English Meaning
                   </span>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 font-normal leading-relaxed select-text selection:bg-[#155DFC]/30">
+                  <p
+                    lang="en"
+                    dir="ltr"
+                    className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 font-normal leading-relaxed select-text selection:bg-[#155DFC]/30"
+                  >
                     &quot;{dua.english}&quot;
                   </p>
                 </div>

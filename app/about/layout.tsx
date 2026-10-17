@@ -3,23 +3,30 @@ import { Metadata } from "next";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
 
 export const metadata: Metadata = {
-  title: "About Noor Al-Quran – Our Mission & Digital Islamic Platform",
+  title: "About Noor Al-Quran – Mission & Islamic Digital Platform",
   description:
-    "Learn about Noor Al-Quran, our mission to spread Quranic wisdom freely worldwide, modern technological features, authentic sources, and community impact.",
-  keywords: [
-    "About Noor Al-Quran",
-    "Islamic web app mission",
-    "Holy Quran digital learning",
-    "Authentic Quran recitation platform",
-  ],
+    "Learn about the mission, authentic Quranic sources, and technology powering Noor Al-Quran, a free ad-free Islamic sanctuary for the global Ummah.",
   alternates: {
     canonical: `${BASE_URL}/about`,
   },
   openGraph: {
-    title: "About Noor Al-Quran – Our Mission & Digital Islamic Platform",
+    title: "About Noor Al-Quran – Mission & Islamic Digital Platform",
     description: "Learn about the mission and technology behind Noor Al-Quran.",
     url: `${BASE_URL}/about`,
-    images: ["/favicon5.png"],
+    images: [
+      {
+        url: `${BASE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "About Noor Al-Quran",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Noor Al-Quran – Mission & Islamic Digital Platform",
+    description: "Learn about the mission and technology behind Noor Al-Quran.",
+    images: [`${BASE_URL}/opengraph-image`],
   },
 };
 

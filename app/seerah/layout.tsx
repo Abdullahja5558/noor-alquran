@@ -3,27 +3,30 @@ import { Metadata } from "next";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
 
 export const metadata: Metadata = {
-  title: "Seerah of Prophet Muhammad ﷺ – Life Timeline & Islamic History",
+  title: "Seerah of Prophet Muhammad ﷺ – Timeline & Milestones",
   description:
-    "Explore the complete, inspiring life timeline of Prophet Muhammad ﷺ from noble birth, first revelation at Cave Hira, migration to Madinah, to the Farewell Pilgrimage.",
-  keywords: [
-    "Seerah of Prophet Muhammad",
-    "Life of Prophet Muhammad",
-    "Seerat un Nabi timeline",
-    "Prophet Muhammad history",
-    "Cave Hira revelation",
-    "Hijrah to Madinah",
-    "Islamic history",
-    "Noor Al-Quran Seerah",
-  ],
+    "Chronological life timeline and pivotal events of Prophet Muhammad ﷺ from noble birth and Cave Hira revelation to migration and the Farewell Pilgrimage.",
   alternates: {
     canonical: `${BASE_URL}/seerah`,
   },
   openGraph: {
-    title: "Seerah of Prophet Muhammad ﷺ – Noor Al-Quran",
+    title: "Seerah of Prophet Muhammad ﷺ – Timeline & Milestones",
     description: "Detailed chronological timeline of the life and legacy of the Prophet Muhammad ﷺ.",
     url: `${BASE_URL}/seerah`,
-    images: ["/favicon5.png"],
+    images: [
+      {
+        url: `${BASE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "Seerah of Prophet Muhammad – Noor Al-Quran",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Seerah of Prophet Muhammad ﷺ – Timeline & Milestones",
+    description: "Chronological history of the life of Prophet Muhammad ﷺ.",
+    images: [`${BASE_URL}/opengraph-image`],
   },
 };
 
