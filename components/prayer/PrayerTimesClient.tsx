@@ -26,8 +26,10 @@ import { CITIES_LIST, getPrayerTimesForCity, PrayerResult } from "@/lib/prayerTi
 
 export default function PrayerTimesClient({
   initialCitySlug = "lahore",
+  isCityPage = false,
 }: {
   initialCitySlug?: string;
+  isCityPage?: boolean;
 }) {
   const initialData: PrayerResult = useMemo(
     () => getPrayerTimesForCity(initialCitySlug),
@@ -358,9 +360,9 @@ export default function PrayerTimesClient({
         {/* Hero Title */}
         <section className="text-center mb-8 sm:mb-10">
           <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-3 text-slate-900 dark:text-white">
-            Prayer{" "}
+            {isCityPage ? `${selectedCity} ` : "Prayer "}
             <span className="bg-[#155DFC] text-white px-4 py-0.5 rounded-full text-2xl sm:text-4xl md:text-5xl font-extrabold align-middle inline-block">
-              Times (Namaz)
+              {isCityPage ? "Prayer Times" : "Times (Namaz)"}
             </span>
           </h1>
           <p className="max-w-xl mx-auto text-xs sm:text-sm text-slate-600 dark:text-neutral-400 font-normal mt-2 leading-relaxed">

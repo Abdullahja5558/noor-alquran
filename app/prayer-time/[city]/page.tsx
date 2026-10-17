@@ -112,7 +112,7 @@ export default async function CityPrayerTimePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <PrayerTimesClient initialCitySlug={city.slug} />
+      <PrayerTimesClient initialCitySlug={city.slug} isCityPage={true} />
     </>
   );
 }

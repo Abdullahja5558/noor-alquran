@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -99,30 +99,12 @@ export default function SurahReaderClient({
   initialData: SurahDetailData;
 }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const reciterParam = searchParams.get("reciter");
-  const autoplayParam = searchParams.get("autoplay");
-  const playlistParam = searchParams.get("playlist");
-
   const currentSNum = initialData.surahInfo.number;
   const surahId = String(currentSNum);
   const prevSurahNum = initialData.prevSurah?.number ?? null;
   const nextSurahNum = initialData.nextSurah?.number ?? null;
 
-  const [selectedReciter, setSelectedReciter] = useState<Reciter>(() => {
-    if (reciterParam) {
-      const found = RECITERS_LIST.find((r) => r.id === reciterParam);
-      if (found) return found;
-    }
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("noor_selected_reciter");
-      if (saved) {
-        const found = RECITERS_LIST.find((r) => r.id === saved);
-        if (found) return found;
-      }
-    }
-    return RECITERS_LIST[0]; // Mishary Rashid Alafasy
-  });
+  const [selectedReciter, setSelectedReciter] = useState<Reciter>(RECITERS_LIST[0]);
 
   const [isMixerOpen, setIsMixerOpen] = useState(false);
   const [activeMixerTab, setActiveMixerTab] = useState<"reciters" | "soundscapes">("reciters");
@@ -378,9 +360,24 @@ export default function SurahReaderClient({
       .join("");
   };
 
-  // Autoplay and bookmark effects on mount
+  // Autoplay, reciter selection and bookmark effects on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const reciterParam = params.get("reciter");
+      const autoplayParam = params.get("autoplay");
+
+      if (reciterParam) {
+        const found = RECITERS_LIST.find((r) => r.id === reciterParam);
+        if (found) setSelectedReciter(found);
+      } else {
+        const saved = localStorage.getItem("noor_selected_reciter");
+        if (saved) {
+          const found = RECITERS_LIST.find((r) => r.id === saved);
+          if (found) setSelectedReciter(found);
+        }
+      }
+
       const savedBookmark = localStorage.getItem(`bookmark_surah_${surahId}`);
       if (savedBookmark) {
         setBookmarkedAyah(parseInt(savedBookmark, 10));
@@ -394,7 +391,7 @@ export default function SurahReaderClient({
         }, 150);
       }
     }
-  }, [autoplayParam, currentSNum, surahId]);
+  }, [currentSNum, surahId]);
 
   // Clean up Quran reader audio when navigating away
   useEffect(() => {
