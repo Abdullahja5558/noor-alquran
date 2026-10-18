@@ -188,20 +188,22 @@ export default function SurahReaderClient({
       const currentAyahs = ayahsRef.current.length > 0 ? ayahsRef.current : ayahs;
       if (!currentAyahs || index < 0 || index >= currentAyahs.length) return;
 
+      const effectivePhase: AudioPhase = mode === "ur" ? "translation" : phase;
+
       setActiveAyahIndex(index);
       currentIndexRef.current = index;
-      setAudioPhase(phase);
-      currentPhaseRef.current = phase;
+      setAudioPhase(effectivePhase);
+      currentPhaseRef.current = effectivePhase;
 
       const targetAyah = currentAyahs[index];
       if (!targetAyah) return;
 
-      if (phase === "bismillah") {
+      if (effectivePhase === "bismillah") {
         const bismillahUrl = getBismillahAudioUrl(selectedReciter.id, currentSNum);
         playAudioSource(bismillahUrl);
-      } else if (phase === "arabic") {
+      } else if (effectivePhase === "arabic") {
         playAudioSource(targetAyah.audio);
-      } else if (phase === "translation") {
+      } else if (effectivePhase === "translation") {
         if (mode.includes("ur")) {
           playAudioSource(targetAyah.audioUrdu);
         } else if (mode.includes("en")) {
@@ -219,15 +221,16 @@ export default function SurahReaderClient({
 
   // Advance to next audio phase or next ayah
   const handleAudioEnded = useCallback(() => {
-    if (isLoopingRef.current) {
-      playAyah(currentIndexRef.current, "arabic", currentModeRef.current);
-      return;
-    }
-
-    const currentPhase = currentPhaseRef.current;
     const currentMode = currentModeRef.current;
     const currentIdx = currentIndexRef.current;
+    const currentPhase = currentPhaseRef.current;
     const currentAyahs = ayahsRef.current.length > 0 ? ayahsRef.current : ayahs;
+
+    if (isLoopingRef.current) {
+      const loopPhase: AudioPhase = currentMode === "ur" ? "translation" : "arabic";
+      playAyah(currentIdx, loopPhase, currentMode);
+      return;
+    }
 
     if (currentPhase === "bismillah") {
       playAyah(currentIdx, "arabic", currentMode);
@@ -243,7 +246,8 @@ export default function SurahReaderClient({
 
     // Move to next Ayah
     if (currentIdx + 1 < currentAyahs.length) {
-      playAyah(currentIdx + 1, "arabic", currentMode);
+      const nextPhase: AudioPhase = currentMode === "ur" ? "translation" : "arabic";
+      playAyah(currentIdx + 1, nextPhase, currentMode);
     } else {
       // Reached end of Surah
       if (nextSurahNum) {
@@ -271,7 +275,8 @@ export default function SurahReaderClient({
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("stop-global-audio"));
       }
-      playAyah(activeAyahIndex, audioPhase, audioMode);
+      const targetPhase: AudioPhase = audioMode === "ur" ? "translation" : audioPhase;
+      playAyah(activeAyahIndex, targetPhase, audioMode);
     }
   };
 
@@ -298,7 +303,8 @@ export default function SurahReaderClient({
     ayahsRef.current = updated;
     setIsMixerOpen(false);
     if (isPlaying) {
-      playAyah(activeAyahIndex, "arabic", audioMode);
+      const startingPhase: AudioPhase = audioMode === "ur" ? "translation" : "arabic";
+      playAyah(activeAyahIndex, startingPhase, audioMode);
     }
   };
 
@@ -821,8 +827,12 @@ export default function SurahReaderClient({
                 const newMode = m.id as AudioMode;
                 setAudioMode(newMode);
                 currentModeRef.current = newMode;
+                const startingPhase: AudioPhase = newMode === "ur" ? "translation" : "arabic";
                 if (isPlaying) {
-                  playAyah(activeAyahIndex, "arabic", newMode);
+                  playAyah(activeAyahIndex, startingPhase, newMode);
+                } else {
+                  setAudioPhase(startingPhase);
+                  currentPhaseRef.current = startingPhase;
                 }
               }}
               className={`px-3 sm:px-3.5 py-1 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
@@ -1003,7 +1013,8 @@ export default function SurahReaderClient({
                   const targetIndex = targetAyah - 1;
                   setScrubPreviewAyah(null);
                   if (targetIndex >= 0 && targetIndex < ayahs.length) {
-                    playAyah(targetIndex, "arabic", audioMode);
+                    const startingPhase: AudioPhase = audioMode === "ur" ? "translation" : "arabic";
+                    playAyah(targetIndex, startingPhase, audioMode);
                   }
                 }}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"

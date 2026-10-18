@@ -50,7 +50,7 @@ const getUrduAudioUrl = (surahNum: number, ayahNum: number) => {
 const getEnglishAudioUrl = (surahNum: number, ayahNum: number) => {
   const s = String(surahNum).padStart(3, "0");
   const a = String(ayahNum).padStart(3, "0");
-  return `https://everyayah.com/data/translations/Ibrahim_Walk_192kbps_Quran_with_English/${s}${a}.mp3`;
+  return `https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/${s}${a}.mp3`;
 };
 
 export function getSurahData(surahNumber: number): SurahDetailData {
