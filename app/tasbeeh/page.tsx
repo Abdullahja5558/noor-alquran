@@ -74,6 +74,30 @@ const DHIKR_PRESETS: DhikrPreset[] = [
     meaning: "There is no deity except Allah",
     defaultTarget: 100,
   },
+  {
+    id: "lahawla",
+    arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّٰهِ",
+    transliteration: "La Hawla Wala Quwwata Illa Billah",
+    urdu: "اللہ کے سوا کوئی طاقت و قوت نہیں",
+    meaning: "There is no power nor strength except with Allah",
+    defaultTarget: 100,
+  },
+  {
+    id: "hasbunallah",
+    arabic: "حَسْبُنَا ٱللَّٰهُ وَنِعْمَ ٱلْوَكِيلُ",
+    transliteration: "HasbunAllahu Wa Ni'mal Wakeel",
+    urdu: "ہمیں اللہ کافی ہے اور وہ بہترین کارساز ہے",
+    meaning: "Allah is sufficient for us, and He is the best Disposer of affairs",
+    defaultTarget: 100,
+  },
+  {
+    id: "subhanallah-wa-bihamdihi",
+    arabic: "سُبْحَانَ ٱللَّٰهِ وَبِحَمْدِهِ",
+    transliteration: "SubhanAllahi Wa Bihamdihi",
+    urdu: "اللہ پاک ہے اور اپنی حمد کے ساتھ ہے",
+    meaning: "Glory be to Allah and His is the praise",
+    defaultTarget: 100,
+  },
 ];
 
 export default function TasbeehPage() {
@@ -103,6 +127,35 @@ export default function TasbeehPage() {
       document.body.style.overflow = "";
     }
   }, [isSettingsOpen]);
+
+  // Dhikr Carousel Slider (iPhone Camera Style)
+  const dhikrScrollRef = React.useRef<HTMLDivElement | null>(null);
+  const [isDraggingDhikr, setIsDraggingDhikr] = useState(false);
+  const [dhikrStartX, setDhikrStartX] = useState(0);
+  const [dhikrScrollLeft, setDhikrScrollLeft] = useState(0);
+  const dhikrMovedRef = React.useRef(false);
+
+  const handleDhikrMouseDown = (e: React.MouseEvent) => {
+    if (!dhikrScrollRef.current) return;
+    setIsDraggingDhikr(true);
+    dhikrMovedRef.current = false;
+    setDhikrStartX(e.pageX - dhikrScrollRef.current.offsetLeft);
+    setDhikrScrollLeft(dhikrScrollRef.current.scrollLeft);
+  };
+
+  const handleDhikrMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingDhikr || !dhikrScrollRef.current) return;
+    const x = e.pageX - dhikrScrollRef.current.offsetLeft;
+    const walk = (x - dhikrStartX) * 1.5;
+    if (Math.abs(walk) > 4) {
+      dhikrMovedRef.current = true;
+    }
+    dhikrScrollRef.current.scrollLeft = dhikrScrollLeft - walk;
+  };
+
+  const handleDhikrMouseUpOrLeave = () => {
+    setIsDraggingDhikr(false);
+  };
 
   // Synthetic Tactile Click Sound Generator
   const playClickSound = useCallback(() => {
@@ -217,21 +270,48 @@ export default function TasbeehPage() {
           </p>
         </div>
 
-        {/* Dhikr Selector Pills */}
-        <div className="w-full overflow-x-auto no-scrollbar pb-3 mb-6 sm:mb-8 flex gap-2 justify-start sm:justify-center">
-          {DHIKR_PRESETS.map((preset) => (
-            <button
-              key={preset.id}
-              onClick={() => handleSelectDhikr(preset)}
-              className={`px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all border cursor-pointer ${
-                activeDhikr.id === preset.id
-                  ? "bg-[#155DFC] text-white border-[#155DFC]"
-                  : "bg-white dark:bg-white/[0.04] border-slate-200/80 dark:border-white/[0.08] text-slate-600 dark:text-neutral-300 hover:bg-slate-100 dark:hover:bg-white/[0.08]"
-              }`}
-            >
-              {preset.transliteration}
-            </button>
-          ))}
+        {/* Dhikr Selector Carousel - iPhone Camera Mode Style Slider */}
+        <div className="relative w-full max-w-[310px] xs:max-w-[340px] sm:max-w-[390px] mx-auto mb-6 sm:mb-8 select-none">
+          {/* Left Edge Subtle Fade */}
+          <div className="pointer-events-none absolute left-0 inset-y-0 w-8 z-10 bg-gradient-to-r from-[#f8fafc] dark:from-[#000000] to-transparent" />
+
+          {/* Right Edge Subtle Fade */}
+          <div className="pointer-events-none absolute right-0 inset-y-0 w-8 z-10 bg-gradient-to-l from-[#f8fafc] dark:from-[#000000] to-transparent" />
+
+          {/* Drag & Touch Scroll Track (2-3 items visible with next peeking out) */}
+          <div
+            ref={dhikrScrollRef}
+            onMouseDown={handleDhikrMouseDown}
+            onMouseMove={handleDhikrMouseMove}
+            onMouseUp={handleDhikrMouseUpOrLeave}
+            onMouseLeave={handleDhikrMouseUpOrLeave}
+            className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-8 py-2 cursor-grab active:cursor-grabbing snap-x snap-mandatory"
+          >
+            {DHIKR_PRESETS.map((preset) => {
+              const isSelected = activeDhikr.id === preset.id;
+              return (
+                <button
+                  key={preset.id}
+                  onClick={(e) => {
+                    if (dhikrMovedRef.current) return;
+                    handleSelectDhikr(preset);
+                    e.currentTarget.scrollIntoView({
+                      behavior: "smooth",
+                      block: "nearest",
+                      inline: "center",
+                    });
+                  }}
+                  className={`shrink-0 snap-center px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                    isSelected
+                      ? "bg-[#155DFC] text-white shadow-sm scale-[1.02] border border-[#155DFC]"
+                      : "bg-white dark:bg-white/[0.04] text-slate-700 dark:text-neutral-300 border border-slate-200/80 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.08]"
+                  }`}
+                >
+                  {preset.transliteration}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Dedicated Tasbeeh Center Card */}

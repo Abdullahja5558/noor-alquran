@@ -71,12 +71,13 @@ export default function IslamicCalendarPage() {
   };
 
   const islamicEvents = [
-    { title: "Ramadan Mubarak", date: "9th Hijri Month", icon: <Moon size={15} />, color: "bg-blue-500" },
+    { title: "Ramadan Mubarak (Fasting)", date: "9th Hijri Month", icon: <Moon size={15} />, color: "bg-blue-500" },
+    { title: "Laylat al-Qadr (Night of Decree)", date: "Last 10 Nights of Ramadan", icon: <Star size={15} />, color: "bg-emerald-500" },
     { title: "Eid-ul-Fitr", date: "1st Shawwal", icon: <Star size={15} />, color: "bg-amber-500" },
     { title: "Day of Arafah (Hajj)", date: "9th Dhul-Hijjah", icon: <Sun size={15} />, color: "bg-indigo-500" },
     { title: "Eid-ul-Adha", date: "10th Dhul-Hijjah", icon: <Star size={15} />, color: "bg-purple-500" },
-    { title: "Ashura", date: "10th Muharram", icon: <Moon size={15} />, color: "bg-rose-500" },
-    { title: "Mawlid an-Nabi ﷺ", date: "12th Rabi' al-Awwal", icon: <Moon size={15} />, color: "bg-[#155DFC]" },
+    { title: "Days of Tashreeq", date: "11th - 13th Dhul-Hijjah", icon: <Sun size={15} />, color: "bg-orange-500" },
+    { title: "Ashura (Fasting of Musa AS)", date: "10th Muharram", icon: <Moon size={15} />, color: "bg-rose-500" },
   ];
 
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();

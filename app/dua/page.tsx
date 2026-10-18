@@ -24,7 +24,47 @@ export default function DuaPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [speakingDuaId, setSpeakingDuaId] = useState<number | null>(null);
 
-  const categories = ["All", "Protection", "Success", "Peace of Mind", "Forgiveness", "Guidance"];
+  const categories = [
+    "All",
+    "Morning & Evening",
+    "Prayer & Worship",
+    "Health & Healing",
+    "Family & Home",
+    "Protection",
+    "Success",
+    "Peace of Mind",
+    "Forgiveness",
+    "Guidance",
+  ];
+
+  // Category Carousel Slider (iPhone Camera Style)
+  const categoryScrollRef = React.useRef<HTMLDivElement | null>(null);
+  const [isDraggingCategory, setIsDraggingCategory] = useState(false);
+  const [categoryStartX, setCategoryStartX] = useState(0);
+  const [categoryScrollLeft, setCategoryScrollLeft] = useState(0);
+  const categoryMovedRef = React.useRef(false);
+
+  const handleCategoryMouseDown = (e: React.MouseEvent) => {
+    if (!categoryScrollRef.current) return;
+    setIsDraggingCategory(true);
+    categoryMovedRef.current = false;
+    setCategoryStartX(e.pageX - categoryScrollRef.current.offsetLeft);
+    setCategoryScrollLeft(categoryScrollRef.current.scrollLeft);
+  };
+
+  const handleCategoryMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingCategory || !categoryScrollRef.current) return;
+    const x = e.pageX - categoryScrollRef.current.offsetLeft;
+    const walk = (x - categoryStartX) * 1.5;
+    if (Math.abs(walk) > 4) {
+      categoryMovedRef.current = true;
+    }
+    categoryScrollRef.current.scrollLeft = categoryScrollLeft - walk;
+  };
+
+  const handleCategoryMouseUpOrLeave = () => {
+    setIsDraggingCategory(false);
+  };
 
   const filteredDuas = DUA_DATA.filter((dua) => {
     const matchesCategory = activeCategory === "All" || dua.category === activeCategory;
@@ -164,21 +204,48 @@ export default function DuaPage() {
           </div>
         </section>
 
-        {/* Category Pills */}
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-8 justify-start sm:justify-center">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                activeCategory === cat
-                  ? "bg-[#155DFC] text-white"
-                  : "bg-white dark:bg-white/[0.04] text-slate-700 dark:text-neutral-300 border border-slate-200/80 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.08]"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* Category Carousel - iPhone Camera Mode Style Slider */}
+        <div className="relative w-full max-w-[310px] xs:max-w-[340px] sm:max-w-[390px] mx-auto mb-8 select-none">
+          {/* Left Edge Subtle Fade */}
+          <div className="pointer-events-none absolute left-0 inset-y-0 w-8 z-10 bg-gradient-to-r from-[#f8fafc] dark:from-[#000000] to-transparent" />
+
+          {/* Right Edge Subtle Fade */}
+          <div className="pointer-events-none absolute right-0 inset-y-0 w-8 z-10 bg-gradient-to-l from-[#f8fafc] dark:from-[#000000] to-transparent" />
+
+          {/* Drag & Touch Scroll Track (2-3 items visible with next peeking out) */}
+          <div
+            ref={categoryScrollRef}
+            onMouseDown={handleCategoryMouseDown}
+            onMouseMove={handleCategoryMouseMove}
+            onMouseUp={handleCategoryMouseUpOrLeave}
+            onMouseLeave={handleCategoryMouseUpOrLeave}
+            className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-8 py-2 cursor-grab active:cursor-grabbing snap-x snap-mandatory"
+          >
+            {categories.map((cat) => {
+              const isSelected = activeCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={(e) => {
+                    if (categoryMovedRef.current) return;
+                    setActiveCategory(cat);
+                    e.currentTarget.scrollIntoView({
+                      behavior: "smooth",
+                      block: "nearest",
+                      inline: "center",
+                    });
+                  }}
+                  className={`shrink-0 snap-center px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                    isSelected
+                      ? "bg-[#155DFC] text-white shadow-sm scale-[1.02]"
+                      : "bg-white dark:bg-white/[0.04] text-slate-700 dark:text-neutral-300 border border-slate-200/80 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.08]"
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Duas List */}

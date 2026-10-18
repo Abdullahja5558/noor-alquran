@@ -36,6 +36,35 @@ export default function RecitersSection() {
   >(ALL_SURAHS_META);
   const [loadingSurahs, setLoadingSurahs] = useState(false);
 
+  // Country Carousel Slider (iPhone Camera Style)
+  const countryScrollRef = useRef<HTMLDivElement | null>(null);
+  const [isDraggingCountry, setIsDraggingCountry] = useState(false);
+  const [countryStartX, setCountryStartX] = useState(0);
+  const [countryScrollLeft, setCountryScrollLeft] = useState(0);
+  const countryMovedRef = useRef(false);
+
+  const handleCountryMouseDown = (e: React.MouseEvent) => {
+    if (!countryScrollRef.current) return;
+    setIsDraggingCountry(true);
+    countryMovedRef.current = false;
+    setCountryStartX(e.pageX - countryScrollRef.current.offsetLeft);
+    setCountryScrollLeft(countryScrollRef.current.scrollLeft);
+  };
+
+  const handleCountryMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingCountry || !countryScrollRef.current) return;
+    const x = e.pageX - countryScrollRef.current.offsetLeft;
+    const walk = (x - countryStartX) * 1.5;
+    if (Math.abs(walk) > 4) {
+      countryMovedRef.current = true;
+    }
+    countryScrollRef.current.scrollLeft = countryScrollLeft - walk;
+  };
+
+  const handleCountryMouseUpOrLeave = () => {
+    setIsDraggingCountry(false);
+  };
+
   // Country filter pills (clean names without flag emojis)
   const countries = useMemo(() => {
     return [
@@ -159,18 +188,40 @@ export default function RecitersSection() {
             </div>
           </div>
 
-          {/* Country Filter Pills - Clean, Smooth & Responsive */}
-          <div className="w-full max-w-2xl mx-auto mt-6 pt-1">
-            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 justify-start sm:justify-center px-1 select-none">
+          {/* Country Filter Carousel - iPhone Camera Mode Style Slider */}
+          <div className="relative w-full max-w-[300px] xs:max-w-[330px] sm:max-w-[360px] mx-auto mt-6 pt-1 select-none">
+            {/* Left Edge Subtle Fade */}
+            <div className="pointer-events-none absolute left-0 inset-y-0 w-8 z-10 bg-gradient-to-r from-[#f8fafc] dark:from-[#000000] to-transparent" />
+
+            {/* Right Edge Subtle Fade */}
+            <div className="pointer-events-none absolute right-0 inset-y-0 w-8 z-10 bg-gradient-to-l from-[#f8fafc] dark:from-[#000000] to-transparent" />
+
+            {/* Drag & Touch Scroll Track (2 to 3 pills show with next peeking) */}
+            <div
+              ref={countryScrollRef}
+              onMouseDown={handleCountryMouseDown}
+              onMouseMove={handleCountryMouseMove}
+              onMouseUp={handleCountryMouseUpOrLeave}
+              onMouseLeave={handleCountryMouseUpOrLeave}
+              className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-8 py-1.5 cursor-grab active:cursor-grabbing snap-x snap-mandatory"
+            >
               {countries.map((c) => {
                 const isSelected = selectedCountry === c.id;
                 return (
                   <button
                     key={c.id}
-                    onClick={() => setSelectedCountry(c.id)}
-                    className={`shrink-0 px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                    onClick={(e) => {
+                      if (countryMovedRef.current) return;
+                      setSelectedCountry(c.id);
+                      e.currentTarget.scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest",
+                        inline: "center",
+                      });
+                    }}
+                    className={`shrink-0 snap-center px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                       isSelected
-                        ? "bg-[#155DFC] text-white shadow-sm"
+                        ? "bg-[#155DFC] text-white shadow-sm scale-[1.02]"
                         : "bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-neutral-300 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-white/[0.08]"
                     }`}
                   >
