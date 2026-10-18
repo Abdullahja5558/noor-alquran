@@ -1,12 +1,13 @@
-// duaData.ts
+// components/duaData.ts
 
 export interface Dua {
   id: number;
   title: string;
+  titleUrdu: string;
   arabic: string;
   urdu: string;
   english: string;
-  category: string;
+  category: "Protection" | "Success" | "Peace of Mind" | "Forgiveness" | "Guidance";
   ref: string;
 }
 
@@ -14,6 +15,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 1,
     title: "Relief from Difficulties (Ayah Kareema)",
+    titleUrdu: "مشکلات و پریشانی سے نجات (آیت کریمہ)",
     arabic: "لَّا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ",
     urdu: "تیرے سوا کوئی معبود نہیں، تو پاک ہے، بے شک میں ہی ظالموں میں سے تھا۔",
     english: "There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers.",
@@ -23,6 +25,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 2,
     title: "Protection from All Harm",
+    titleUrdu: "ہر قسم کے نقصان اور شر سے حفاظت",
     arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
     urdu: "اللہ کے نام کے ساتھ، جس کے نام کی برکت سے زمین اور آسمان میں کوئی چیز نقصان نہیں پہنچا سکتی، اور وہ خوب سننے والا، جاننے والا ہے۔",
     english: "In the Name of Allah, with whose Name nothing can cause harm in the earth or in the heavens, and He is the All-Hearing, the All-Knowing.",
@@ -32,6 +35,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 3,
     title: "Refuge in Allah's Perfect Words",
+    titleUrdu: "مخلوقات کے شر سے اللہ کی پناہ",
     arabic: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
     urdu: "میں اللہ کے مکمل کلمات کے ذریعے اس کی پیدا کردہ تمام مخلوقات کے شر سے پناہ مانگتا ہوں۔",
     english: "I seek refuge in the perfect words of Allah from the evil of what He has created.",
@@ -41,6 +45,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 4,
     title: "Comprehensive Protection & Well-Being",
+    titleUrdu: "دنیا و آخرت میں عافیت اور سلامتی کی دعا",
     arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ",
     urdu: "اے اللہ! میں تجھ سے دنیا اور آخرت میں معافی اور عافیت و سلامتی کا سوال کرتا ہوں۔",
     english: "O Allah, I ask You for pardon and well-being in this world and the Hereafter.",
@@ -50,15 +55,17 @@ export const DUA_DATA: Dua[] = [
   {
     id: 5,
     title: "Supplication for a Steadfast Heart",
+    titleUrdu: "دین حق پر دل کو ثابت قدم رکھنے کی دعا",
     arabic: "يَا مُقَلِّبَ الْقُلُوبِ ثَبِّتْ قَلْبِي عَلَىٰ دِينِكَ",
     urdu: "اے دلوں کو پھیرنے والے! میرے دل کو اپنے دین پر ثابت قدم رکھ۔",
     english: "O Turner of the hearts, make my heart firm upon Your religion.",
     category: "Peace of Mind",
-    ref: "Jami` at-Tirmidhi 2140 | Hasan",
+    ref: "Jami` at-Tirmidhi 2140 | Sahih",
   },
   {
     id: 6,
     title: "Relief from Anxiety and Sorrow",
+    titleUrdu: "غم، فکر، قرض اور پریشانی سے نجات کی دعا",
     arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ وَالْعَجْزِ وَالْكَسَلِ وَالْجُبْنِ وَالْبُخْلِ وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ",
     urdu: "اے اللہ! میں غم، پریشانی، عاجزی، سستی، بزدلی، کنجوسی، قرض کے بوجھ اور لوگوں کے دباؤ سے تیری پناہ مانگتا ہوں۔",
     english: "O Allah, I seek refuge in You from grief, anxiety, incapacity, laziness, cowardice, miserliness, the burden of debt and overpowering of men.",
@@ -68,6 +75,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 7,
     title: "Tranquility of the Heart",
+    titleUrdu: "دل کے اطمینان اور سکون کا ذکر",
     arabic: "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ",
     urdu: "یاد رکھو! اللہ کے ذکر ہی سے دلوں کو اطمینان اور سکون حاصل ہوتا ہے۔",
     english: "Unquestionably, by the remembrance of Allah hearts are assured.",
@@ -77,6 +85,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 8,
     title: "Seeking Beneficial Knowledge & Success",
+    titleUrdu: "علم میں برکت اور اضافے کی دعا",
     arabic: "رَّبِّ زِدْنِي عِلْمًا",
     urdu: "اے میرے پروردگار! میرے علم میں مزید اضافہ فرما۔",
     english: "My Lord, increase me in knowledge.",
@@ -86,15 +95,17 @@ export const DUA_DATA: Dua[] = [
   {
     id: 9,
     title: "Dua for Ease in Every Task",
+    titleUrdu: "ہر مشکل کام کو آسان بنانے کی دعا",
     arabic: "اللَّهُمَّ لَا سَهْلَ إِلَّا مَا جَعَلْتَهُ سَهْلًا وَأَنْتَ تَجْعَلُ الْحَزْنَ إِذَا شِئْتَ سَهْلًا",
     urdu: "اے اللہ! کوئی کام آسان نہیں سوائے اس کے جسے تو آسان بنا دے، اور تو جب چاہے مشکل کو آسان کر دیتا ہے۔",
     english: "O Allah, there is no ease other than what You make easy, and You make hardship easy if You will.",
     category: "Success",
-    ref: "Sahih Ibn Hibban 974",
+    ref: "Sahih Ibn Hibban 974 | Sahih",
   },
   {
     id: 10,
     title: "Relying Upon Allah (Tawakkul)",
+    titleUrdu: "اللہ تعالیٰ پر مکمل توکل اور بھروسہ",
     arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
     urdu: "ہمیں اللہ ہی کافی ہے اور وہ بہترین کارساز ہے۔",
     english: "Sufficient for us is Allah, and [He is] the best Disposer of affairs.",
@@ -104,6 +115,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 11,
     title: "Sayyid al-Istighfar (Chief of Forgiveness)",
+    titleUrdu: "سید الاستغفار (بخشش کی سب سے بڑی دعا)",
     arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
     urdu: "اے اللہ! تو ہی میرا رب ہے، تیرے سوا کوئی معبود نہیں۔ تو نے مجھے پیدا کیا اور میں تیرا بندہ ہوں، اور میں اپنی طاقت کے مطابق تیرے عہد پر قائم ہوں۔ میں اپنے گناہوں کا اعتراف کرتا ہوں اور تیری نعمتوں کا شکر گزار ہوں، پس مجھے بخش دے کیونکہ تیرے سوا کوئی گناہوں کو معاف نہیں کر سکتا۔",
     english: "O Allah, You are my Lord, none has the right to be worshiped but You created me and I am Your slave. I abide by Your covenant and promise as best I can. Forgive me, for none forgives sins except You.",
@@ -113,6 +125,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 12,
     title: "Dua for Parents and Family",
+    titleUrdu: "والدین اور تمام مومنین کی مغفرت کی دعا",
     arabic: "رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ",
     urdu: "اے ہمارے پروردگار! مجھے، میرے والدین کو اور تمام مومنوں کو اس دن بخش دینا جس دن حساب قائم ہوگا۔",
     english: "Our Lord, forgive me and my parents and the believers the Day the account is established.",
@@ -122,6 +135,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 13,
     title: "Dua for Guidance and Righteousness",
+    titleUrdu: "سیدھی راہ اور درستگی عمل کی دعا",
     arabic: "اللَّهُمَّ اهْدِنِي وَسَدِّدْنِي",
     urdu: "اے اللہ! مجھے سیدھی راہ کی ہدایت عطا فرما اور مجھے درست راہ پر ثابت قدم رکھ۔",
     english: "O Allah, guide me and keep me steadfast on the right path.",
@@ -131,6 +145,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 14,
     title: "Supplication for Success in Both Worlds",
+    titleUrdu: "دنیا و آخرت کی جامع بھلائی کی دعا",
     arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
     urdu: "اے ہمارے رب! ہمیں دنیا میں بھی بھلائی عطا فرما اور آخرت میں بھی بھلائی عطا فرما اور ہمیں آگ کے عذاب سے بچا۔",
     english: "Our Lord, give us in this world [that which is] good and in the Hereafter [that which is] good and protect us from the punishment of the Fire.",
@@ -140,6 +155,7 @@ export const DUA_DATA: Dua[] = [
   {
     id: 15,
     title: "Dua When Leaving the House",
+    titleUrdu: "گھر سے نکلتے وقت کی مسنون دعا",
     arabic: "بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
     urdu: "اللہ کے نام سے، میں نے اللہ پر بھروسہ کیا، گناہوں سے بچنے کی طاقت اور نیکی کرنے کی قوت صرف اللہ ہی کی مدد سے ہے۔",
     english: "In the name of Allah, I place my trust in Allah; there is no might nor power except with Allah.",
@@ -149,10 +165,151 @@ export const DUA_DATA: Dua[] = [
   {
     id: 16,
     title: "Dua for Sincere Repentance",
+    titleUrdu: "سچی توبہ اور بخشش طلب کرنے کی دعا",
     arabic: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ",
     urdu: "اے میرے پروردگار! میری مغفرت فرما اور میری توبہ قبول فرما، بے شک تو ہی توبہ قبول کرنے والا، نہایت رحم فرمانے والا ہے۔",
     english: "My Lord, forgive me and accept my repentance. Indeed, You are the Accepter of repentance, the Most Merciful.",
     category: "Forgiveness",
     ref: "Sunan Abi Dawood 1516 | Sahih",
+  },
+  {
+    id: 17,
+    title: "Dua Before Sleeping",
+    titleUrdu: "سوتے وقت کی مسنون دعا",
+    arabic: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",
+    urdu: "اے اللہ! تیرے ہی نام کے ساتھ میں مرتا (سوتا) ہوں اور جیتا (جاگتا) ہوں۔",
+    english: "In Your Name, O Allah, I die and I live.",
+    category: "Protection",
+    ref: "Sahih al-Bukhari 6324",
+  },
+  {
+    id: 18,
+    title: "Dua Upon Waking Up",
+    titleUrdu: "صبح نیند سے بیدار ہونے کی دعا",
+    arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
+    urdu: "تمام تعریفیں اللہ کے لیے ہیں جس نے ہمیں سلانے کے بعد دوبارہ زندہ کیا، اور اسی کی طرف لوٹ کر جانا ہے۔",
+    english: "All praise is for Allah who gave us life after having taken it from us and unto Him is the resurrection.",
+    category: "Peace of Mind",
+    ref: "Sahih al-Bukhari 6312",
+  },
+  {
+    id: 19,
+    title: "Dua for Entering the Mosque",
+    titleUrdu: "مسجد میں داخل ہونے کی مسنون دعا",
+    arabic: "اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ",
+    urdu: "اے اللہ! میرے لیے اپنی رحمت کے دروازے کھول دے۔",
+    english: "O Allah, open the gates of Your mercy for me.",
+    category: "Guidance",
+    ref: "Sahih Muslim 713",
+  },
+  {
+    id: 20,
+    title: "Dua for Leaving the Mosque",
+    titleUrdu: "مسجد سے نکلتے وقت کی دعا",
+    arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ",
+    urdu: "اے اللہ! میں تجھ سے تیرے فضل کا سوال کرتا ہوں۔",
+    english: "O Allah, I ask You of Your bounty.",
+    category: "Success",
+    ref: "Sahih Muslim 713",
+  },
+  {
+    id: 21,
+    title: "Dua for Settling Debt and Financial Relief",
+    titleUrdu: "قرض کی ادائیگی اور حلال رزق میں کفایت کی دعا",
+    arabic: "اللَّهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ",
+    urdu: "اے اللہ! مجھے حلال روزی دے کر حرام سے بچا، اور اپنے فضل سے اپنے سوا ہر کسی سے بے نیاز کر دے۔",
+    english: "O Allah, suffice me with what is lawful against what is prohibited, and enrich me with Your bounty from all besides You.",
+    category: "Success",
+    ref: "Jami` at-Tirmidhi 3563 | Sahih",
+  },
+  {
+    id: 22,
+    title: "Supplication for Guidance, Piety & Contentment",
+    titleUrdu: "ہدایت، تقویٰ، پاکدامنی اور استغناء کی دعا",
+    arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى وَالتُّقَى وَالْعَفَافَ وَالْغِنَى",
+    urdu: "اے اللہ! میں تجھ سے ہدایت، تقویٰ، پاکدامنی اور دل کی بے نیازی کا سوال کرتا ہوں۔",
+    english: "O Allah, I ask You for guidance, piety, chastity, and self-sufficiency.",
+    category: "Guidance",
+    ref: "Sahih Muslim 2721",
+  },
+  {
+    id: 23,
+    title: "Dua for Breaking the Fast (Iftar)",
+    titleUrdu: "افطار کے وقت کی مسنون دعا",
+    arabic: "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ",
+    urdu: "پیاس بجھ گئی، رگیں تر ہو گئیں، اور ان شاء اللہ اجر ثابت ہو گیا۔",
+    english: "The thirst has gone, the veins are moistened, and the reward is confirmed, if Allah wills.",
+    category: "Success",
+    ref: "Sunan Abi Dawood 2357 | Sahih",
+  },
+  {
+    id: 24,
+    title: "Refuge from Useless Knowledge & Unanswered Dua",
+    titleUrdu: "بے فائدہ علم اور غیر قبول دعا سے پناہ",
+    arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عِلْمٍ لَا يَنْفَعُ، وَمِنْ قَلْبٍ لَا يَخْشَعُ، وَمِنْ نَفْسٍ لَا تَشْبَعُ، وَمِنْ دَعْوَةٍ لَا يُسْتَجَابُ لَهَا",
+    urdu: "اے اللہ! میں ایسے علم سے جو نفع نہ دے، ایسے دل سے جو خوف خدا سے خالی ہو، ایسے نفس سے جو سیر نہ ہو، اور ایسی دعا سے جو قبول نہ کی جائے، تیری پناہ مانگتا ہوں۔",
+    english: "O Allah, I seek refuge in You from knowledge that does not benefit, from a heart that does not fear You, from a soul that is never satisfied, and from a supplication that is not answered.",
+    category: "Guidance",
+    ref: "Sahih Muslim 2722",
+  },
+  {
+    id: 25,
+    title: "Dua After Finishing a Meal",
+    titleUrdu: "کھانے سے فراغت کے بعد شکر گزاری کی دعا",
+    arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ",
+    urdu: "تمام تعریفیں اللہ کے لیے ہیں جس نے مجھے یہ کھانا کھلایا اور میری کسی طاقت و قدرت کے بغیر مجھے یہ رزق عطا فرمایا۔",
+    english: "Praise be to Allah Who has fed me this and provided it for me without any power or strength from myself.",
+    category: "Peace of Mind",
+    ref: "Sunan Abi Dawood 4023 | Sahih",
+  },
+  {
+    id: 26,
+    title: "Supplication for Mercy upon Parents",
+    titleUrdu: "والدین کے لیے رحمت و شفقت کی دعا",
+    arabic: "رَّبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا",
+    urdu: "اے میرے رب! ان دونوں (والدین) پر رحم فرما جیسا کہ انہوں نے بچپن میں مجھے پالا۔",
+    english: "My Lord, have mercy upon them as they brought me up [when I was] small.",
+    category: "Forgiveness",
+    ref: "Surah Al-Isra 17:24",
+  },
+  {
+    id: 27,
+    title: "Morning & Evening Comprehensive Protection",
+    titleUrdu: "صبح و شام کی جامع حفاظت اور شرور سے پناہ",
+    arabic: "اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ، فَاطِرَ السَّمَاوَاتِ وَالأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ",
+    urdu: "اے اللہ! غیب اور ظاہر کے جاننے والے، زمین و آسمان کے خالق، ہر چیز کے پالنہار اور مالک! میں اپنے نفس کے شر سے اور شیطان اور اس کے شرک سے تیری پناہ مانگتا ہوں۔",
+    english: "O Allah, Knower of the unseen and seen, Creator of the heavens and earth, Lord and Sovereign of all things, I seek refuge in You from the evil of my soul and from the evil of Satan and his shirk.",
+    category: "Protection",
+    ref: "Jami` at-Tirmidhi 3392 | Sahih",
+  },
+  {
+    id: 28,
+    title: "Dua When Entering the House",
+    titleUrdu: "گھر میں داخل ہوتے وقت کی مسنون دعا",
+    arabic: "بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَى اللَّهِ رَبِّنَا تَوَكَّلْنَا",
+    urdu: "ہم اللہ کے نام سے داخل ہوئے اور اللہ کے نام سے نکلے، اور اپنے رب اللہ ہی پر ہم نے بھروسہ کیا۔",
+    english: "In the name of Allah we enter, in the name of Allah we leave, and upon Allah our Lord we place our trust.",
+    category: "Protection",
+    ref: "Sunan Abi Dawood 5096 | Sahih",
+  },
+  {
+    id: 29,
+    title: "Dua for Patience & Strength in Hardship",
+    titleUrdu: "صبر، استقامت اور مشکلات پر فتح کی دعا",
+    arabic: "رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا وَثَبِّتْ أَقْدَامَنَا وَانصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ",
+    urdu: "اے ہمارے رب! ہم پر صبر انڈیل دے، ہمارے قدم جمائے رکھ اور کافر قوم کے مقابلے میں ہماری مدد فرما۔",
+    english: "Our Lord, pour upon us patience and plant firmly our feet and give us victory over the disbelieving people.",
+    category: "Peace of Mind",
+    ref: "Surah Al-Baqarah 2:250",
+  },
+  {
+    id: 30,
+    title: "Refuge from Severe Afflictions & Misfortune",
+    titleUrdu: "شدید آزمائش، بدبختی اور بلاؤں سے پناہ",
+    arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ جَهْدِ الْبَلَاءِ، وَدَرَكِ الشَّقَاءِ، وَسُوءِ الْقَضَاءِ، وَشَمَاتَةِ الأَعْدَاءِ",
+    urdu: "اے اللہ! میں آزمائش کی مشقت، بدبختی کی گرفت، برے فیصلے اور دشمنوں کی ہنسی سے تیری پناہ مانگتا ہوں۔",
+    english: "O Allah, I seek refuge in You from the difficulty of afflictions, the depths of misery, an evil decree, and the malice of enemies.",
+    category: "Protection",
+    ref: "Sahih al-Bukhari 6347",
   },
 ];

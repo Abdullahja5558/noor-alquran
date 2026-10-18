@@ -27,7 +27,7 @@ import {
   ListMusic,
 } from "lucide-react";
 import { RECITERS_LIST, Reciter } from "@/components/recitersData";
-import { COLLECTIONS_DATA } from "@/components/playlistsData";
+import { COLLECTIONS_DATA, CollectionItem } from "@/components/playlistsData";
 import { SurahDetailData, Ayah } from "@/lib/quranData";
 
 interface SurahMeta {
@@ -105,6 +105,14 @@ export default function SurahReaderClient({
   const nextSurahNum = initialData.nextSurah?.number ?? null;
 
   const [selectedReciter, setSelectedReciter] = useState<Reciter>(RECITERS_LIST[0]);
+  const selectedReciterRef = useRef<Reciter>(RECITERS_LIST[0]);
+
+  const [activePlaylist, setActivePlaylist] = useState<CollectionItem | null>(null);
+  const activePlaylistRef = useRef<CollectionItem | null>(null);
+
+  useEffect(() => {
+    selectedReciterRef.current = selectedReciter;
+  }, [selectedReciter]);
 
   const [isMixerOpen, setIsMixerOpen] = useState(false);
   const [activeMixerTab, setActiveMixerTab] = useState<"reciters" | "soundscapes">("reciters");
@@ -199,7 +207,7 @@ export default function SurahReaderClient({
       if (!targetAyah) return;
 
       if (effectivePhase === "bismillah") {
-        const bismillahUrl = getBismillahAudioUrl(selectedReciter.id, currentSNum);
+        const bismillahUrl = getBismillahAudioUrl(selectedReciterRef.current.id, currentSNum);
         playAudioSource(bismillahUrl);
       } else if (effectivePhase === "arabic") {
         playAudioSource(targetAyah.audio);
@@ -250,14 +258,32 @@ export default function SurahReaderClient({
       playAyah(currentIdx + 1, nextPhase, currentMode);
     } else {
       // Reached end of Surah
-      if (nextSurahNum) {
-        router.push(`/quran/${nextSurahNum}?autoplay=true`);
+      const playlist = activePlaylistRef.current;
+      const plTracks = playlist?.tracks ?? [];
+      const plIdx = plTracks.findIndex((t) => t.surahNumber === currentSNum);
+
+      if (playlist && plIdx !== -1) {
+        if (plIdx + 1 < plTracks.length) {
+          // Play next track in playlist line-wise!
+          const nextPlSurah = plTracks[plIdx + 1].surahNumber;
+          router.push(
+            `/quran/${nextPlSurah}?reciter=${selectedReciterRef.current.id}&autoplay=true&playlist=${playlist.id}`
+          );
+        } else {
+          // Finished playlist
+          setIsPlaying(false);
+          isPlayingRef.current = false;
+        }
+      } else if (nextSurahNum) {
+        router.push(
+          `/quran/${nextSurahNum}?reciter=${selectedReciterRef.current.id}&autoplay=true`
+        );
       } else {
         setIsPlaying(false);
         isPlayingRef.current = false;
       }
     }
-  }, [ayahs, nextSurahNum, playAyah, router]);
+  }, [ayahs, currentSNum, nextSurahNum, playAyah, router]);
 
   const handleAudioError = useCallback(() => {
     console.warn("Audio load error, advancing to next phase/ayah");
@@ -324,15 +350,39 @@ export default function SurahReaderClient({
     }
   };
 
+  const playlistTracks = activePlaylist?.tracks ?? [];
+  const currentPlaylistTrackIdx = playlistTracks.findIndex((t) => t.surahNumber === currentSNum);
+  const isPlaylistMode = activePlaylist !== null && currentPlaylistTrackIdx !== -1;
+  const nextPlaylistSurahNum =
+    isPlaylistMode && currentPlaylistTrackIdx + 1 < playlistTracks.length
+      ? playlistTracks[currentPlaylistTrackIdx + 1].surahNumber
+      : null;
+  const prevPlaylistSurahNum =
+    isPlaylistMode && currentPlaylistTrackIdx > 0
+      ? playlistTracks[currentPlaylistTrackIdx - 1].surahNumber
+      : null;
+
   const handleGoToPrevSurah = () => {
-    if (prevSurahNum) {
-      router.push(`/quran/${prevSurahNum}`);
+    if (isPlaylistMode) {
+      if (prevPlaylistSurahNum) {
+        router.push(
+          `/quran/${prevPlaylistSurahNum}?reciter=${selectedReciter.id}&autoplay=true&playlist=${activePlaylist.id}`
+        );
+      }
+    } else if (prevSurahNum) {
+      router.push(`/quran/${prevSurahNum}?reciter=${selectedReciter.id}`);
     }
   };
 
   const handleGoToNextSurah = () => {
-    if (nextSurahNum) {
-      router.push(`/quran/${nextSurahNum}`);
+    if (isPlaylistMode) {
+      if (nextPlaylistSurahNum) {
+        router.push(
+          `/quran/${nextPlaylistSurahNum}?reciter=${selectedReciter.id}&autoplay=true&playlist=${activePlaylist.id}`
+        );
+      }
+    } else if (nextSurahNum) {
+      router.push(`/quran/${nextSurahNum}?reciter=${selectedReciter.id}`);
     }
   };
 
@@ -366,23 +416,50 @@ export default function SurahReaderClient({
       .join("");
   };
 
-  // Autoplay, reciter selection and bookmark effects on mount
+  // Autoplay, reciter selection, playlist and bookmark effects on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const reciterParam = params.get("reciter");
       const autoplayParam = params.get("autoplay");
+      const playlistParam = params.get("playlist");
+
+      let activeReciter = RECITERS_LIST[0];
 
       if (reciterParam) {
         const found = RECITERS_LIST.find((r) => r.id === reciterParam);
-        if (found) setSelectedReciter(found);
+        if (found) {
+          setSelectedReciter(found);
+          selectedReciterRef.current = found;
+          activeReciter = found;
+        }
       } else {
         const saved = localStorage.getItem("noor_selected_reciter");
         if (saved) {
           const found = RECITERS_LIST.find((r) => r.id === saved);
-          if (found) setSelectedReciter(found);
+          if (found) {
+            setSelectedReciter(found);
+            selectedReciterRef.current = found;
+            activeReciter = found;
+          }
         }
       }
+
+      if (playlistParam) {
+        const foundPl = COLLECTIONS_DATA.find((c) => c.id === playlistParam);
+        if (foundPl) {
+          setActivePlaylist(foundPl);
+          activePlaylistRef.current = foundPl;
+        }
+      }
+
+      // Update ayahs with the selected reciter's audio URLs!
+      const updated = initialData.ayahs.map((a) => ({
+        ...a,
+        audio: getEveryAyahUrl(activeReciter.id, currentSNum, a.numberInSurah),
+      }));
+      setAyahs(updated);
+      ayahsRef.current = updated;
 
       const savedBookmark = localStorage.getItem(`bookmark_surah_${surahId}`);
       if (savedBookmark) {
@@ -397,7 +474,7 @@ export default function SurahReaderClient({
         }, 150);
       }
     }
-  }, [currentSNum, surahId]);
+  }, [currentSNum, initialData.ayahs, surahId]);
 
   // Clean up Quran reader audio when navigating away
   useEffect(() => {
@@ -466,6 +543,15 @@ export default function SurahReaderClient({
 
         {/* Center: Surah Title */}
         <div className="text-center drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] px-2">
+          {isPlaylistMode && (
+            <div className="mb-0.5">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-[8px] sm:text-[9.5px] font-bold text-blue-300 uppercase tracking-wider">
+                <span>{activePlaylist.title}</span>
+                <span className="text-white/40">•</span>
+                <span>Track {currentPlaylistTrackIdx + 1} of {playlistTracks.length}</span>
+              </span>
+            </div>
+          )}
           <h1 className="text-xs sm:text-sm md:text-base font-black tracking-wide text-white">
             {surahInfo.englishName}{" "}
             <span lang="ar" dir="rtl" className="font-arabic text-blue-300 font-normal ml-1">
@@ -891,8 +977,16 @@ export default function SurahReaderClient({
 
               <button
                 onClick={handleGoToPrevSurah}
-                disabled={!prevSurahNum}
-                title={prevSurahNum ? `Previous Surah (${prevSurahNum})` : "First Surah"}
+                disabled={isPlaylistMode ? !prevPlaylistSurahNum : !prevSurahNum}
+                title={
+                  isPlaylistMode
+                    ? prevPlaylistSurahNum
+                      ? `Previous in Playlist (${playlistTracks[currentPlaylistTrackIdx - 1]?.englishName})`
+                      : "First Surah in Playlist"
+                    : prevSurahNum
+                    ? `Previous Surah (${prevSurahNum})`
+                    : "First Surah"
+                }
                 className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-white hover:text-blue-300 disabled:opacity-30 disabled:hover:text-white cursor-pointer active:scale-90 transition-transform"
                 aria-label="Previous Surah"
               >
@@ -913,8 +1007,16 @@ export default function SurahReaderClient({
 
               <button
                 onClick={handleGoToNextSurah}
-                disabled={!nextSurahNum}
-                title={nextSurahNum ? `Next Surah (${nextSurahNum})` : "Last Surah"}
+                disabled={isPlaylistMode ? !nextPlaylistSurahNum : !nextSurahNum}
+                title={
+                  isPlaylistMode
+                    ? nextPlaylistSurahNum
+                      ? `Next in Playlist (${playlistTracks[currentPlaylistTrackIdx + 1]?.englishName})`
+                      : "Last Surah in Playlist"
+                    : nextSurahNum
+                    ? `Next Surah (${nextSurahNum})`
+                    : "Last Surah"
+                }
                 className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-white hover:text-blue-300 disabled:opacity-30 disabled:hover:text-white cursor-pointer active:scale-90 transition-transform"
                 aria-label="Next Surah"
               >

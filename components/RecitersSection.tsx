@@ -159,40 +159,19 @@ export default function RecitersSection() {
             </div>
           </div>
 
-          {/* 
-            Horizontal Tab Slider:
-            - Exactly 2 full tabs visible + 3rd tab half visible (inviting scroll)
-            - Corner shadow/fade gradient on the right
-            - No left/right arrow buttons
-          */}
-          <div className="relative w-full max-w-[280px] sm:max-w-[290px] mx-auto mt-6 pt-1">
-            {/* Left subtle shadow (when scrolled) */}
-            <div className="pointer-events-none absolute left-0 inset-y-0 w-6 z-10 bg-gradient-to-r from-[#f8fafc] dark:from-black to-transparent" />
-
-            {/* Right corner shadow overlaying the half-visible 3rd item */}
-            <div className="pointer-events-none absolute right-0 inset-y-0 w-12 sm:w-14 z-10 bg-gradient-to-l from-[#f8fafc] dark:from-black to-transparent" />
-
-            {/* Scrollable Container (Shows 2 full + 3rd half) */}
-            <div
-              className="overflow-x-auto no-scrollbar scroll-smooth flex items-center gap-2 px-1 py-1 snap-x snap-mandatory select-none cursor-grab active:cursor-grabbing"
-            >
+          {/* Country Filter Pills - Clean, Smooth & Responsive */}
+          <div className="w-full max-w-2xl mx-auto mt-6 pt-1">
+            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 justify-start sm:justify-center px-1 select-none">
               {countries.map((c) => {
                 const isSelected = selectedCountry === c.id;
                 return (
                   <button
                     key={c.id}
-                    onClick={(e) => {
-                      setSelectedCountry(c.id);
-                      e.currentTarget.scrollIntoView({
-                        behavior: "smooth",
-                        block: "nearest",
-                        inline: "center",
-                      });
-                    }}
-                    className={`shrink-0 snap-center px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                    onClick={() => setSelectedCountry(c.id)}
+                    className={`shrink-0 px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                       isSelected
-                        ? "bg-[#155DFC] text-white"
-                        : "bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-neutral-300 hover:text-slate-900 dark:hover:text-white"
+                        ? "bg-[#155DFC] text-white shadow-sm"
+                        : "bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-neutral-300 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-white/[0.08]"
                     }`}
                   >
                     <span>{c.name}</span>

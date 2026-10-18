@@ -30,6 +30,7 @@ export default function DuaPage() {
     const matchesCategory = activeCategory === "All" || dua.category === activeCategory;
     const matchesSearch =
       dua.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      dua.titleUrdu.includes(searchTerm) ||
       dua.urdu.includes(searchTerm) ||
       dua.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
       dua.arabic.includes(searchTerm);
@@ -38,7 +39,7 @@ export default function DuaPage() {
   });
 
   const copyToClipboard = async (dua: Dua) => {
-    const fullText = `🤲 ${dua.title}\n\n${dua.arabic}\n\nاردو: ${dua.urdu}\n\nEnglish: ${dua.english}\n\nRef: ${dua.ref}`;
+    const fullText = `🤲 ${dua.title} (${dua.titleUrdu})\n\n${dua.arabic}\n\nاردو: ${dua.urdu}\n\nEnglish: ${dua.english}\n\nRef: ${dua.ref}`;
     let success = false;
 
     // Tier 1: Modern Navigator Clipboard API
@@ -192,24 +193,29 @@ export default function DuaPage() {
                 key={`dua-${dua.id}`}
                 className="relative p-6 sm:p-8 rounded-[2.2rem] bg-white dark:bg-[#070709] border border-slate-200/80 dark:border-white/[0.08] transition-all"
               >
-                {/* Dua Header */}
-                <div className="flex items-center justify-between mb-5 pb-3.5 border-b border-slate-200/80 dark:border-white/[0.08] gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/60 dark:border-white/10 text-[#155DFC] flex items-center justify-center shrink-0">
+                {/* Dua Header - Mobile Responsive & Clear Purpose */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 mb-5 pb-3.5 border-b border-slate-200/80 dark:border-white/[0.08]">
+                  <div className="flex items-start sm:items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200/60 dark:border-white/10 text-[#155DFC] flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
                       <BookOpen size={16} />
                     </div>
-                    <div className="min-w-0">
-                      <h3 className="font-heading text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="text-[10px] sm:text-[11px] font-bold text-[#155DFC] bg-[#155DFC]/10 dark:bg-[#155DFC]/20 px-2.5 py-0.5 rounded-full whitespace-nowrap">
+                          {dua.category}
+                        </span>
+                        <span className="font-urdu text-xs sm:text-sm text-slate-700 dark:text-neutral-300 font-semibold" dir="rtl">
+                          {dua.titleUrdu}
+                        </span>
+                      </div>
+                      <h3 className="font-heading text-sm sm:text-base md:text-lg font-bold text-slate-900 dark:text-white leading-snug break-words">
                         {dua.title}
                       </h3>
-                      <span className="text-[11px] font-semibold text-[#155DFC] block">
-                        {dua.category}
-                      </span>
                     </div>
                   </div>
 
                   {/* Actions (Audio & Copy) */}
-                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
                     <button
                       onClick={() => speakDua(dua)}
                       title="Listen Arabic Recitation"
