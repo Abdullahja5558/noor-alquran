@@ -220,7 +220,13 @@ export default function RecitersSection() {
               onMouseMove={handleCountryMouseMove}
               onMouseUp={handleCountryMouseUpOrLeave}
               onMouseLeave={handleCountryMouseUpOrLeave}
-              className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-8 py-1.5 cursor-grab active:cursor-grabbing snap-x snap-mandatory"
+              style={{
+                WebkitOverflowScrolling: "touch",
+                overscrollBehaviorX: "contain",
+                scrollSnapType: isDraggingCountry ? "none" : "x mandatory",
+                scrollBehavior: isDraggingCountry ? "auto" : "smooth",
+              }}
+              className="flex items-center gap-2 overflow-x-auto no-scrollbar px-8 py-1.5 cursor-grab active:cursor-grabbing select-none"
             >
               {countries.map((c) => {
                 const isSelected = selectedCountry === c.id;
