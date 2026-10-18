@@ -135,6 +135,23 @@ export default function TasbeehPage() {
   const [dhikrScrollLeft, setDhikrScrollLeft] = useState(0);
   const dhikrMovedRef = React.useRef(false);
 
+  // Wheel listener for ultra-smooth trackpad and mouse-wheel horizontal scrolling
+  useEffect(() => {
+    const el = dhikrScrollRef.current;
+    if (!el) return;
+    const handleWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && e.deltaY !== 0) {
+        e.preventDefault();
+        el.scrollBy({
+          left: e.deltaY * 1.2,
+          behavior: "smooth",
+        });
+      }
+    };
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, []);
+
   const handleDhikrMouseDown = (e: React.MouseEvent) => {
     if (!dhikrScrollRef.current) return;
     setIsDraggingDhikr(true);
@@ -146,7 +163,7 @@ export default function TasbeehPage() {
   const handleDhikrMouseMove = (e: React.MouseEvent) => {
     if (!isDraggingDhikr || !dhikrScrollRef.current) return;
     const x = e.pageX - dhikrScrollRef.current.offsetLeft;
-    const walk = (x - dhikrStartX) * 1.5;
+    const walk = (x - dhikrStartX) * 1.3;
     if (Math.abs(walk) > 4) {
       dhikrMovedRef.current = true;
     }
@@ -285,7 +302,13 @@ export default function TasbeehPage() {
             onMouseMove={handleDhikrMouseMove}
             onMouseUp={handleDhikrMouseUpOrLeave}
             onMouseLeave={handleDhikrMouseUpOrLeave}
-            className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-8 py-2 cursor-grab active:cursor-grabbing snap-x snap-mandatory"
+            style={{
+              WebkitOverflowScrolling: "touch",
+              overscrollBehaviorX: "contain",
+              scrollSnapType: isDraggingDhikr ? "none" : "x mandatory",
+              scrollBehavior: isDraggingDhikr ? "auto" : "smooth",
+            }}
+            className="flex items-center gap-2 overflow-x-auto no-scrollbar px-8 py-2 cursor-grab active:cursor-grabbing select-none"
           >
             {DHIKR_PRESETS.map((preset) => {
               const isSelected = activeDhikr.id === preset.id;

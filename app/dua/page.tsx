@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -44,6 +44,23 @@ export default function DuaPage() {
   const [categoryScrollLeft, setCategoryScrollLeft] = useState(0);
   const categoryMovedRef = React.useRef(false);
 
+  // Wheel listener for ultra-smooth trackpad and mouse-wheel horizontal scrolling
+  useEffect(() => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    const handleWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && e.deltaY !== 0) {
+        e.preventDefault();
+        el.scrollBy({
+          left: e.deltaY * 1.2,
+          behavior: "smooth",
+        });
+      }
+    };
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, []);
+
   const handleCategoryMouseDown = (e: React.MouseEvent) => {
     if (!categoryScrollRef.current) return;
     setIsDraggingCategory(true);
@@ -55,7 +72,7 @@ export default function DuaPage() {
   const handleCategoryMouseMove = (e: React.MouseEvent) => {
     if (!isDraggingCategory || !categoryScrollRef.current) return;
     const x = e.pageX - categoryScrollRef.current.offsetLeft;
-    const walk = (x - categoryStartX) * 1.5;
+    const walk = (x - categoryStartX) * 1.3;
     if (Math.abs(walk) > 4) {
       categoryMovedRef.current = true;
     }
@@ -219,7 +236,13 @@ export default function DuaPage() {
             onMouseMove={handleCategoryMouseMove}
             onMouseUp={handleCategoryMouseUpOrLeave}
             onMouseLeave={handleCategoryMouseUpOrLeave}
-            className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-8 py-2 cursor-grab active:cursor-grabbing snap-x snap-mandatory"
+            style={{
+              WebkitOverflowScrolling: "touch",
+              overscrollBehaviorX: "contain",
+              scrollSnapType: isDraggingCategory ? "none" : "x mandatory",
+              scrollBehavior: isDraggingCategory ? "auto" : "smooth",
+            }}
+            className="flex items-center gap-2 overflow-x-auto no-scrollbar px-8 py-2 cursor-grab active:cursor-grabbing select-none"
           >
             {categories.map((cat) => {
               const isSelected = activeCategory === cat;

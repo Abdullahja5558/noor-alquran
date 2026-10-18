@@ -43,6 +43,23 @@ export default function RecitersSection() {
   const [countryScrollLeft, setCountryScrollLeft] = useState(0);
   const countryMovedRef = useRef(false);
 
+  // Wheel listener for ultra-smooth trackpad and mouse-wheel horizontal scrolling
+  useEffect(() => {
+    const el = countryScrollRef.current;
+    if (!el) return;
+    const handleWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && e.deltaY !== 0) {
+        e.preventDefault();
+        el.scrollBy({
+          left: e.deltaY * 1.2,
+          behavior: "smooth",
+        });
+      }
+    };
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, []);
+
   const handleCountryMouseDown = (e: React.MouseEvent) => {
     if (!countryScrollRef.current) return;
     setIsDraggingCountry(true);
@@ -54,7 +71,7 @@ export default function RecitersSection() {
   const handleCountryMouseMove = (e: React.MouseEvent) => {
     if (!isDraggingCountry || !countryScrollRef.current) return;
     const x = e.pageX - countryScrollRef.current.offsetLeft;
-    const walk = (x - countryStartX) * 1.5;
+    const walk = (x - countryStartX) * 1.3;
     if (Math.abs(walk) > 4) {
       countryMovedRef.current = true;
     }
