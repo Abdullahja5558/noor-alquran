@@ -33,6 +33,9 @@ interface AudioPlayerContextType {
   reciterId: string;
   reciterName: string;
 
+  hideBottomPlayer: boolean;
+  setHideBottomPlayer: (hide: boolean) => void;
+
   // Actions
   play: () => Promise<void>;
   pause: () => void;
@@ -73,6 +76,7 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isShuffle, setIsShuffle] = useState(false);
   const [repeatMode, setRepeatMode] = useState<RepeatMode>("all");
   const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
+  const [hideBottomPlayer, setHideBottomPlayer] = useState(false);
   const [reciterId] = useState("ar.alafasy");
   const [reciterName] = useState("Mishary Rashid Alafasy");
 
@@ -389,6 +393,8 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
         isShuffle,
         repeatMode,
         isPlaylistOpen,
+        hideBottomPlayer,
+        setHideBottomPlayer,
         reciterId,
         reciterName,
         play,

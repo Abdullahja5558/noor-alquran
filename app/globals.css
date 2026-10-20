@@ -255,3 +255,9 @@ button{
 .modern-volume-slider::-moz-range-thumb:hover {
   background-color: #f1f5f9;
 }
+
+/* Hide floating audio player completely on 404 page */
+body:has(#not-found-page) aside[aria-label="Quran Audio Player"],
+body:has([data-not-found-page]) aside[aria-label="Quran Audio Player"] {
+  display: none !important;
+}

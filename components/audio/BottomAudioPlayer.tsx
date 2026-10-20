@@ -28,6 +28,7 @@ export const BottomAudioPlayer: React.FC = () => {
     isMuted,
     repeatMode,
     isPlaylistOpen,
+    hideBottomPlayer,
     pause,
     setVolume,
     toggleMute,
@@ -40,12 +41,12 @@ export const BottomAudioPlayer: React.FC = () => {
   const [scrubPercent, setScrubPercent] = useState<number>(14);
   const scrubberRef = useRef<HTMLDivElement | null>(null);
 
-  // Do NOT show player on /quran or /quran/* or /qurann/* pages
+  // Do NOT show player on /quran or /quran/* or /qurann/* pages, or 404 not-found page
   const isQuranPage =
     Boolean(pathname?.startsWith("/quran")) ||
     Boolean(pathname?.startsWith("/qurann"));
 
-  if (isQuranPage) {
+  if (isQuranPage || hideBottomPlayer) {
     return null;
   }
 
