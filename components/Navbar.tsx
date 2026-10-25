@@ -91,31 +91,24 @@ export default function Navbar() {
                 pathname === link.href ||
                 (link.href === "/quran" && pathname.startsWith("/quran"));
 
-              if (link.href === "/ai") {
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className={`ml-1 px-3.5 py-1.5 rounded-full text-[13px] sm:text-sm font-semibold transition-all duration-200 bg-blue-600 text-white hover:bg-blue-700 shadow-xs ${
-                      isActive ? "ring-2 ring-blue-400 dark:ring-blue-300 ring-offset-1" : ""
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                );
-              }
+              const isAi = link.href === "/ai";
 
               return (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`px-3.5 py-1.5 rounded-full text-[13px] sm:text-sm font-medium transition-all duration-200 ${
+                  className={`px-3.5 py-1.5 rounded-full text-[13px] sm:text-sm font-medium transition-all duration-200 inline-flex items-center gap-1.5 ${
                     isActive
                       ? "text-slate-950 dark:text-white font-semibold bg-white/70 dark:bg-white/15 shadow-sm backdrop-blur-sm border border-white/60 dark:border-white/10"
                       : "text-slate-600 dark:text-neutral-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/[0.08]"
                   }`}
                 >
-                  {link.name}
+                  {isAi && (
+                    <span className="text-base sm:text-[17px] leading-none select-none font-bold text-slate-900 dark:text-white">
+                      ✦
+                    </span>
+                  )}
+                  <span>{link.name}</span>
                 </Link>
               );
             })}
@@ -177,19 +170,7 @@ export default function Navbar() {
                 pathname === link.href ||
                 (link.href === "/quran" && pathname.startsWith("/quran"));
 
-              if (link.href === "/ai") {
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className="px-4 py-3 rounded-2xl text-sm font-semibold flex items-center justify-between transition-colors bg-blue-600 text-white shadow-xs"
-                  >
-                    <span>{link.name}</span>
-                    <span className="text-xs">→</span>
-                  </Link>
-                );
-              }
+              const isAi = link.href === "/ai";
 
               return (
                 <Link
@@ -202,7 +183,14 @@ export default function Navbar() {
                       : "text-slate-800 dark:text-neutral-200 hover:bg-white/60 dark:hover:bg-white/[0.08]"
                   }`}
                 >
-                  <span>{link.name}</span>
+                  <span className="inline-flex items-center gap-2">
+                    {isAi && (
+                      <span className="text-base sm:text-lg leading-none select-none font-bold text-slate-900 dark:text-white">
+                        ✦
+                      </span>
+                    )}
+                    <span>{link.name}</span>
+                  </span>
                   <span className="text-xs opacity-40">→</span>
                 </Link>
               );

@@ -37,8 +37,9 @@ const SURAH_KEYWORD_MAP: { [key: string]: { num: number; name: string } } = {
   kahf: { num: 18, name: "Al-Kahf" },
   maryam: { num: 19, name: "Maryam" },
   taha: { num: 20, name: "Taha" },
-  nur: { num: 24, name: "An-Nur" },
-  noor: { num: 24, name: "An-Nur" },
+  "surah an-nur": { num: 24, name: "An-Nur" },
+  "surah noor": { num: 24, name: "An-Nur" },
+  "surah nur": { num: 24, name: "An-Nur" },
   yasin: { num: 36, name: "Yasin" },
   yaseen: { num: 36, name: "Yasin" },
   rahman: { num: 55, name: "Ar-Rahman" },
@@ -113,7 +114,12 @@ export default function NoorAiPage() {
   }, [messages]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [messages, isLoading]);
 
   const isDark = mounted ? resolvedTheme === "dark" || theme === "dark" : false;
@@ -272,7 +278,19 @@ export default function NoorAiPage() {
   };
 
   const detectDeepLinks = (text: string) => {
+    if (!text || text.length < 80) return [];
     const lower = text.toLowerCase();
+
+    // Skip generic greetings, welcomes or intros
+    if (
+      lower.includes("how may i assist") ||
+      lower.includes("how can i assist") ||
+      lower.includes("welcome to noor") ||
+      lower.includes("companion for exploring")
+    ) {
+      return [];
+    }
+
     const links: { title: string; href: string; icon: string }[] = [];
 
     for (const [kw, data] of Object.entries(SURAH_KEYWORD_MAP)) {
@@ -287,25 +305,37 @@ export default function NoorAiPage() {
       }
     }
 
-    if (lower.includes("dua") || lower.includes("masnoon") || lower.includes("azkar")) {
+    if (
+      (lower.includes("dua") || lower.includes("masnoon") || lower.includes("azkar")) &&
+      (lower.includes("parh") || lower.includes("recite") || lower.includes("supplication") || lower.includes("tarjuma") || lower.includes("fazeelat"))
+    ) {
       if (!links.some((l) => l.href === "/dua")) {
         links.push({ title: "Open Daily Duas", href: "/dua", icon: "🤲" });
       }
     }
 
-    if (lower.includes("tasbeeh") || lower.includes("tasbih") || lower.includes("dhikr") || lower.includes("zikr")) {
+    if (
+      (lower.includes("tasbeeh") || lower.includes("tasbih") || lower.includes("dhikr") || lower.includes("zikr")) &&
+      (lower.includes("counter") || lower.includes("count") || lower.includes("digital") || lower.includes("wird"))
+    ) {
       if (!links.some((l) => l.href === "/tasbeeh")) {
         links.push({ title: "Open Digital Tasbeeh", href: "/tasbeeh", icon: "📿" });
       }
     }
 
-    if (lower.includes("namaz") || lower.includes("salah") || lower.includes("prayer") || lower.includes("waqt")) {
+    if (
+      (lower.includes("namaz") || lower.includes("salah") || lower.includes("prayer") || lower.includes("waqt")) &&
+      (lower.includes("time") || lower.includes("auqat") || lower.includes("timing") || lower.includes("schedule"))
+    ) {
       if (!links.some((l) => l.href === "/prayer-time")) {
         links.push({ title: "Prayer Times", href: "/prayer-time", icon: "🕌" });
       }
     }
 
-    if (lower.includes("seerah") || lower.includes("seerat") || lower.includes("nabawi") || lower.includes("badr") || lower.includes("uhud")) {
+    if (
+      (lower.includes("seerah") || lower.includes("seerat") || lower.includes("nabawi") || lower.includes("badr") || lower.includes("uhud")) &&
+      (lower.includes("timeline") || lower.includes("history") || lower.includes("life") || lower.includes("waqia"))
+    ) {
       if (!links.some((l) => l.href === "/seerah")) {
         links.push({ title: "Explore Seerah Timeline", href: "/seerah", icon: "📜" });
       }
@@ -330,9 +360,9 @@ export default function NoorAiPage() {
       <div
         key={key}
         dir="rtl"
-        className="my-3.5 sm:my-4 p-4 sm:p-5 rounded-2xl bg-slate-50/90 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-right select-text shadow-2xs"
+        className="my-3 sm:my-4 p-3.5 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-50/90 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-right select-text shadow-2xs"
       >
-        <p className="font-arabic text-xl sm:text-2xl md:text-[25px] text-slate-900 dark:text-white leading-[2.1] sm:leading-[2.3] tracking-wide font-normal">
+        <p className="font-arabic text-lg sm:text-2xl md:text-[25px] text-slate-900 dark:text-white leading-[2] sm:leading-[2.2] md:leading-[2.3] tracking-wide font-normal">
           {cleanArabic}
         </p>
       </div>
@@ -531,7 +561,7 @@ export default function NoorAiPage() {
       </div>
 
       {/* Top Header Bar */}
-      <header className="relative z-30 shrink-0 flex items-center justify-between px-3.5 sm:px-8 py-2.5 sm:py-4 w-full max-w-7xl mx-auto backdrop-blur-md bg-[#fafafa]/80 dark:bg-[#070709]/80">
+      <header className="shrink-0 h-14 sm:h-16 w-full z-30 flex items-center justify-between px-3.5 sm:px-6 md:px-8 bg-transparent">
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/"
@@ -557,7 +587,7 @@ export default function NoorAiPage() {
             className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-[13px] font-medium border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-neutral-900/70 hover:bg-white dark:hover:bg-neutral-800 backdrop-blur-md shadow-xs transition-all cursor-pointer text-slate-700 dark:text-neutral-200 hover:text-slate-950 dark:hover:text-white"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>New Chat</span>
+            <span className="hidden xs:inline">New Chat</span>
           </button>
 
           <button
@@ -574,27 +604,27 @@ export default function NoorAiPage() {
 
           <Link
             href="/quran"
-            className="hidden sm:inline-flex items-center px-3 sm:px-3.5 py-1.5 text-xs font-medium rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:opacity-90 transition-opacity"
+            className="hidden sm:inline-flex items-center px-3.5 py-1.5 text-xs font-medium rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:opacity-90 transition-opacity"
           >
             Read Quran
           </Link>
         </div>
       </header>
 
-      {/* Main Center Area (Scrollable container when messages exist) */}
+      {/* Main Center Area */}
       <main
         ref={scrollContainerRef}
-        className="relative z-10 flex-1 flex flex-col w-full max-w-3xl mx-auto px-4 sm:px-6 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className={`relative z-10 flex-1 flex flex-col w-full overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
       >
         {messages.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-center px-3 sm:px-4 select-none pb-36 sm:pb-48 -translate-y-8 sm:-translate-y-12">
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-4 select-none pb-20 sm:pb-28 -translate-y-8 sm:-translate-y-12 md:-translate-y-16">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="max-w-xl mx-auto space-y-3 sm:space-y-4"
             >
-              <div className="inline-flex items-center justify-center text-slate-900 dark:text-white text-xl sm:text-3xl mb-0.5 animate-pulse">
+              <div className="inline-flex items-center justify-center text-slate-900 dark:text-white text-2xl sm:text-3xl mb-0.5 animate-pulse">
                 ✦
               </div>
 
@@ -602,13 +632,13 @@ export default function NoorAiPage() {
                 As-salamu <span className="font-normal text-slate-400 dark:text-neutral-500">Alaykum</span>
               </h1>
 
-              <p className="text-sm sm:text-base md:text-lg text-slate-500 dark:text-neutral-400 max-w-md mx-auto font-normal leading-relaxed px-2">
+              <p className="text-xs sm:text-base md:text-lg text-slate-500 dark:text-neutral-400 max-w-md mx-auto font-normal leading-relaxed px-2">
                 I&apos;m your Islamic AI companion. Ask me anything about the Quran, Seerah, Duas, daily guidance, and I&apos;ll help you get things done.
               </p>
             </motion.div>
           </div>
         ) : (
-          <div className="w-full pt-3 sm:pt-4 pb-32 sm:pb-36 space-y-6 sm:space-y-8">
+          <div className="w-full max-w-2xl sm:max-w-3xl mx-auto px-4 sm:px-6 pt-5 pb-36 sm:pb-44 space-y-6 sm:space-y-8">
             {messages.map((message) => {
               const isUser = message.role === "user";
               const deepLinks = !isUser && message.content ? detectDeepLinks(message.content) : [];
@@ -619,7 +649,7 @@ export default function NoorAiPage() {
                   className={`flex flex-col ${isUser ? "items-end" : "items-start"} w-full`}
                 >
                   {isUser ? (
-                    <div className="max-w-[85%] sm:max-w-[75%] px-4 sm:px-5 py-3 rounded-2xl bg-slate-900 dark:bg-neutral-200 text-white dark:text-slate-950 font-normal text-[15px] sm:text-[15.5px] leading-relaxed shadow-xs">
+                    <div className="max-w-[85%] sm:max-w-[70%] px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-normal text-[14.5px] sm:text-[15.5px] leading-relaxed shadow-xs">
                       {message.content}
                     </div>
                   ) : (
@@ -658,7 +688,7 @@ export default function NoorAiPage() {
                         )}
 
                         {message.content && (
-                          <div className="mt-3 flex items-center gap-2 text-slate-400 dark:text-neutral-500 text-xs">
+                          <div className="mt-3 flex items-center gap-2 text-slate-400 dark:text-neutral-500 text-xs flex-wrap">
                             <button
                               onClick={() => handleCopy(message.id, message.content)}
                               className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-neutral-200 transition-colors cursor-pointer"
@@ -721,25 +751,15 @@ export default function NoorAiPage() {
         <AnimatePresence>
           {!isTypingOrChatting && (
             <motion.div
-              initial={{ opacity: 0, scaleY: 0.9 }}
-              animate={{ opacity: 1, scaleY: 1 }}
-              exit={{ opacity: 0, scaleY: 0.8 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: "easeInOut" }}
-              className="absolute -bottom-6 sm:-bottom-8 inset-x-0 h-36 sm:h-56 md:h-72 overflow-hidden pointer-events-none select-none"
+              className="absolute bottom-0 inset-x-0 h-36 sm:h-52 md:h-64 lg:h-72 overflow-hidden pointer-events-none select-none flex flex-col justify-end"
             >
-              <motion.div
-                animate={{
-                  y: [0, -4, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="w-full h-full flex flex-col justify-end"
-              >
+              <div className="w-full h-full flex flex-col justify-end">
                 <svg
-                  className="w-full h-full"
+                  className="w-full h-[calc(100%-4px)]"
                   viewBox="0 0 1440 280"
                   fill="none"
                   preserveAspectRatio="none"
@@ -778,27 +798,79 @@ export default function NoorAiPage() {
                     </linearGradient>
                   </defs>
 
-                  <path
+                  {/* Secondary Wave Path - Smooth undulating curve */}
+                  <motion.path
                     d="M0,130 C320,50 520,180 820,100 C1120,20 1320,140 1440,110 L1440,320 L0,320 Z"
+                    animate={{
+                      d: [
+                        "M0,130 C320,50 520,180 820,100 C1120,20 1320,140 1440,110 L1440,320 L0,320 Z",
+                        "M0,118 C340,70 500,165 800,115 C1100,35 1300,125 1440,120 L1440,320 L0,320 Z",
+                        "M0,130 C320,50 520,180 820,100 C1120,20 1320,140 1440,110 L1440,320 L0,320 Z",
+                      ],
+                    }}
+                    transition={{
+                      duration: 7,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                     fill={isDark ? "url(#waveSecondaryDark)" : "#0f172a"}
                     opacity={isDark ? "0.4" : "0.5"}
                   />
 
-                  <path
+                  {/* Primary Wave Body - Top moves, bottom stays locked */}
+                  <motion.path
                     d="M0,90 C280,10 480,150 760,70 C1060,-10 1260,120 1440,70 L1440,320 L0,320 Z"
+                    animate={{
+                      d: [
+                        "M0,90 C280,10 480,150 760,70 C1060,-10 1260,120 1440,70 L1440,320 L0,320 Z",
+                        "M0,82 C295,25 495,135 780,82 C1045,5 1245,105 1440,78 L1440,320 L0,320 Z",
+                        "M0,90 C280,10 480,150 760,70 C1060,-10 1260,120 1440,70 L1440,320 L0,320 Z",
+                      ],
+                    }}
+                    transition={{
+                      duration: 5.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                     fill={isDark ? "url(#waveBodyDark)" : "url(#waveBodyLight)"}
                   />
 
-                  <path
+                  {/* Primary Glowing Crest Line */}
+                  <motion.path
                     d="M0,90 C280,10 480,150 760,70 C1060,-10 1260,120 1440,70"
+                    animate={{
+                      d: [
+                        "M0,90 C280,10 480,150 760,70 C1060,-10 1260,120 1440,70",
+                        "M0,82 C295,25 495,135 780,82 C1045,5 1245,105 1440,78",
+                        "M0,90 C280,10 480,150 760,70 C1060,-10 1260,120 1440,70",
+                      ],
+                    }}
+                    transition={{
+                      duration: 5.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                     stroke={isDark ? "url(#waveGlowDark)" : "url(#waveGlowLight)"}
                     strokeWidth={isDark ? "3" : "2.5"}
                     fill="none"
                     strokeLinecap="round"
                   />
 
-                  <path
+                  {/* Secondary Highlight Line */}
+                  <motion.path
                     d="M100,110 C380,35 560,135 840,85 C1140,30 1320,105 1440,80"
+                    animate={{
+                      d: [
+                        "M100,110 C380,35 560,135 840,85 C1140,30 1320,105 1440,80",
+                        "M100,120 C365,50 580,120 825,95 C1155,20 1305,115 1440,90",
+                        "M100,110 C380,35 560,135 840,85 C1140,30 1320,105 1440,80",
+                      ],
+                    }}
+                    transition={{
+                      duration: 6.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                     stroke={isDark ? "#ffffff" : "url(#waveGlowLight)"}
                     strokeWidth="1"
                     strokeOpacity={isDark ? "0.6" : "0.35"}
@@ -806,19 +878,20 @@ export default function NoorAiPage() {
                   />
                 </svg>
 
+                {/* Grounding Base - Permanently at bottom: 0 with 0 movement */}
                 <div className={`w-full h-8 shrink-0 ${isDark ? "bg-[#e2e8f0]" : "bg-black"}`} />
-              </motion.div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <div className="relative px-3 sm:px-6 pb-3 sm:pb-6 pt-2 sm:pt-3 pointer-events-auto">
-          <div className="w-full max-w-2xl mx-auto">
+        <div className="relative px-3 sm:px-6 md:px-8 pb-3 sm:pb-5 pt-3 pointer-events-auto pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+          <div className="w-full max-w-2xl lg:max-w-3xl mx-auto">
             <div
               ref={pillContainerRef}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className="relative group rounded-full shadow-[0_12px_45px_rgba(0,0,0,0.14)] dark:shadow-[0_12px_50px_rgba(0,0,0,0.85)] transition-all"
+              className="relative group rounded-full transition-all"
             >
               {pillSize.width > 0 && pillSize.height > 0 && (
                 <svg
@@ -846,11 +919,11 @@ export default function NoorAiPage() {
                 </svg>
               )}
 
-              <div className="relative flex items-center gap-2 p-1.5 sm:p-2 rounded-full bg-white dark:bg-[#18181c] border border-slate-300/80 dark:border-white/15 w-full backdrop-blur-2xl">
+              <div className="relative flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-full bg-white dark:bg-[#18181c] border border-slate-300/80 dark:border-white/15 w-full">
                 <button
                   type="button"
                   onClick={handleNewChat}
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors shrink-0 cursor-pointer ml-1"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors shrink-0 cursor-pointer ml-0.5 sm:ml-1"
                   title="New conversation"
                 >
                   <Sparkles className="w-4 h-4" />
@@ -861,7 +934,7 @@ export default function NoorAiPage() {
                   value={input}
                   onChange={handleTextareaInput}
                   onKeyDown={handleKeyDown}
-                  placeholder="Type your message..."
+                  placeholder="Feel free to Ask....."
                   rows={1}
                   className="flex-1 bg-transparent border-none outline-none resize-none px-2 py-1.5 text-sm sm:text-[15px] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-500 leading-normal max-h-[130px]"
                 />
@@ -870,21 +943,26 @@ export default function NoorAiPage() {
                   type="button"
                   onClick={() => handleSend()}
                   disabled={!input.trim() || isLoading}
-                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer ${
+                  className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer ${
                     input.trim() && !isLoading
-                      ? "bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:scale-105 shadow-md"
+                      ? "bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:scale-105"
                       : "bg-slate-100 dark:bg-white/10 text-slate-300 dark:text-neutral-600 cursor-not-allowed"
                   }`}
                   aria-label="Send message"
                 >
                   {isLoading ? (
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <Send className="w-4 h-4 translate-x-px" />
+                    <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4 translate-x-px" />
                   )}
                 </button>
               </div>
             </div>
+
+            {/* AI double-check disclaimer */}
+            <p className="mt-2 text-center text-[11px] text-slate-400 dark:text-neutral-500 font-normal select-none">
+              Noor AI can make mistakes. Please verify important Islamic information.
+            </p>
           </div>
         </div>
       </div>
