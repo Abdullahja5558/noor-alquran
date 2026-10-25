@@ -261,3 +261,19 @@ body:has(#not-found-page) aside[aria-label="Quran Audio Player"],
 body:has([data-not-found-page]) aside[aria-label="Quran Audio Player"] {
   display: none !important;
 }
+
+/* --- NOOR AI INPUT MOVING BORDER BEAM --- */
+@keyframes borderBeamTrack {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.border-beam-line {
+  stroke-dasharray: 22 78;
+  stroke-dashoffset: 100;
+  animation: borderBeamTrack 4s linear infinite;
+}

@@ -17,6 +17,13 @@ export default function manifest(): MetadataRoute.Manifest {
     prefer_related_applications: false,
     shortcuts: [
       {
+        name: "Noor AI Assistant (نور اے آئی)",
+        short_name: "Noor AI",
+        description: "Ask Islamic questions, Quran tafseer, and Masnoon duas",
+        url: "/ai",
+        icons: [{ src: "/favicon5.png", sizes: "192x192" }],
+      },
+      {
         name: "Holy Quran (All 114 Surahs)",
         short_name: "Al-Quran",
         description: "Read complete Holy Quran with Urdu translation",

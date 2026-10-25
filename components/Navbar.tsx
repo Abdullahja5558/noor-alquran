@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Menu, X, BookOpen, Sun, Moon } from "lucide-react";
+import { Menu, X, BookOpen, Sun, Moon, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { name: "Tasbeeh", href: "/tasbeeh" },
   { name: "Calendar", href: "/calendar" },
   { name: "Seerah", href: "/seerah" },
+  { name: "Noor AI", href: "/ai" },
 ];
 
 export default function Navbar() {
@@ -90,6 +91,20 @@ export default function Navbar() {
                 pathname === link.href ||
                 (link.href === "/quran" && pathname.startsWith("/quran"));
 
+              if (link.href === "/ai") {
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className={`ml-1 px-3.5 py-1.5 rounded-full text-[13px] sm:text-sm font-semibold transition-all duration-200 bg-blue-600 text-white hover:bg-blue-700 shadow-xs ${
+                      isActive ? "ring-2 ring-blue-400 dark:ring-blue-300 ring-offset-1" : ""
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              }
+
               return (
                 <Link
                   key={link.name}
@@ -161,6 +176,20 @@ export default function Navbar() {
               const isActive =
                 pathname === link.href ||
                 (link.href === "/quran" && pathname.startsWith("/quran"));
+
+              if (link.href === "/ai") {
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="px-4 py-3 rounded-2xl text-sm font-semibold flex items-center justify-between transition-colors bg-blue-600 text-white shadow-xs"
+                  >
+                    <span>{link.name}</span>
+                    <span className="text-xs">→</span>
+                  </Link>
+                );
+              }
 
               return (
                 <Link
