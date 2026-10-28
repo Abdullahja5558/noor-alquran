@@ -16,78 +16,9 @@ import { ALL_SURAHS_META, SurahStaticMeta } from "@/components/surahMeta";
 
 const INITIAL_COUNT = 10;
 
-function getDynamicListenersCount(): string {
-  const START_DATE = new Date("2026-10-01T00:00:00Z").getTime();
-  const BASE_COUNT = 2.6;
-  const now = Date.now();
-  const elapsedDays = Math.max(0, Math.floor((now - START_DATE) / (1000 * 60 * 60 * 24)));
 
-  let currentCount = BASE_COUNT;
-  let remainingDays = elapsedDays;
-  let seed = 42;
 
-  while (remainingDays > 0) {
-    seed = (seed * 9301 + 49297) % 233280;
-    const intervalDays = 14 + (seed % 17);
-    if (remainingDays >= intervalDays) {
-      currentCount = Math.round((currentCount + 0.1) * 10) / 10;
-      remainingDays -= intervalDays;
-    } else {
-      break;
-    }
-  }
 
-  return `${currentCount.toFixed(1)}M+`;
-}
-
-function TrustBadge({ isMobile }: { isMobile: boolean }) {
-  const [listenerCount, setListenerCount] = useState("2.6M+");
-
-  useEffect(() => {
-    setListenerCount(getDynamicListenersCount());
-  }, []);
-
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: -6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: isMobile ? 0.35 : 0.65, 
-        delay: 0, 
-        ease: [0.22, 1, 0.36, 1] 
-      }}
-      className="mb-4 sm:mb-6 inline-flex items-center gap-2 sm:gap-3 select-none"
-    >
-      <div className="relative w-7 h-10 sm:w-9 sm:h-12 md:w-10 md:h-14 shrink-0">
-        <Image
-          src="/weather-L.png"
-          alt="Laurel Left Trust Badge"
-          fill
-          sizes="40px"
-          className="object-contain drop-shadow-[0_2px_8px_rgba(212,175,55,0.25)]"
-        />
-      </div>
-
-      <p className="text-xs sm:text-sm md:text-base font-medium tracking-tight text-slate-800 dark:text-neutral-200 whitespace-nowrap">
-        Trusted by{" "}
-        <span className="inline-block whitespace-nowrap bg-[#155DFC] text-white font-bold px-2 sm:px-2.5 py-0.5 rounded-lg shadow-sm mx-1">
-          {listenerCount}
-        </span>{" "}
-        Quran listeners worldwide
-      </p>
-
-      <div className="relative w-7 h-10 sm:w-9 sm:h-12 md:w-10 md:h-14 shrink-0">
-        <Image
-          src="/weather-R.png"
-          alt="Laurel Right Trust Badge"
-          fill
-          sizes="40px"
-          className="object-contain drop-shadow-[0_2px_8px_rgba(212,175,55,0.25)]"
-        />
-      </div>
-    </motion.div>
-  );
-}
 
 export default function Hero() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -127,7 +58,7 @@ export default function Hero() {
   return (
     <div className="relative w-full">
       {/* 100vh Hero Section */}
-      <section className="relative w-full min-h-[100dvh] flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 pt-14 sm:pt-16 pb-20 sm:pb-24 overflow-hidden">
+      <section className="relative w-full min-h-[100dvh] flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8 pt-14 sm:pt-16 pb-20 sm:pb-15 overflow-hidden">
         {/* Background Images */}
         <div className="absolute inset-0 pointer-events-none select-none z-0">
           <Image
@@ -153,7 +84,7 @@ export default function Hero() {
 
         {/* Hero Content Container */}
         <div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col items-center -mt-6 sm:-mt-8 md:mt-2 lg:mt-3">
-          <TrustBadge isMobile={isMobile} />
+
 
           {/* Heading: Snappy on mobile, gentle on desktop */}
           <motion.h1 
