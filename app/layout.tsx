@@ -5,6 +5,7 @@ import { AudioPlayerProvider } from "@/components/audio/AudioPlayerContext";
 import { BottomAudioPlayer } from "@/components/audio/BottomAudioPlayer";
 import { LenisProvider } from "@/components/LenisProvider";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Metadata, Viewport } from "next";
 
 const geistSans = Geist({
@@ -298,6 +299,7 @@ export default function RootLayout({
           </LenisProvider>
         </ThemeProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
