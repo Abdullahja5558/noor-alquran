@@ -360,6 +360,8 @@ function StoriesContent() {
                     src={story.image}
                     alt={`Prophet ${cleanName} (A.S.)`}
                     fill
+                    quality={95}
+                    priority={story.order <= 4}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover"
                   />
@@ -543,7 +545,8 @@ function StoriesContent() {
                     alt={activeStory.nameEn}
                     fill
                     priority
-                    sizes="(max-width: 640px) 192px, (max-width: 768px) 224px, 256px"
+                    quality={95}
+                    sizes="(max-width: 640px) 384px, (max-width: 768px) 448px, 512px"
                     className="object-cover"
                   />
                   {/* Subtle inner frame */}

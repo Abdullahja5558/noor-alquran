@@ -69,6 +69,8 @@ export default function StoriesSection() {
                   src={story.image}
                   alt={`Prophet ${cleanName} (A.S.)`}
                   fill
+                  quality={95}
+                  priority={idx < 2}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
                 />
