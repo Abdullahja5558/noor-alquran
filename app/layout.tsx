@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { AudioPlayerProvider } from "@/components/audio/AudioPlayerContext";
 import { BottomAudioPlayer } from "@/components/audio/BottomAudioPlayer";
 import { LenisProvider } from "@/components/LenisProvider";
+import { Analytics } from "@vercel/analytics/react";
 import { Metadata, Viewport } from "next";
 
 const geistSans = Geist({
@@ -296,6 +297,7 @@ export default function RootLayout({
             </AudioPlayerProvider>
           </LenisProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
