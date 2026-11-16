@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AudioPlayerProvider } from "@/components/audio/AudioPlayerContext";
 import { BottomAudioPlayer } from "@/components/audio/BottomAudioPlayer";
+import { LenisProvider } from "@/components/LenisProvider";
 import { Metadata, Viewport } from "next";
 
 const geistSans = Geist({
@@ -288,10 +289,12 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <AudioPlayerProvider>
-            {children}
-            <BottomAudioPlayer />
-          </AudioPlayerProvider>
+          <LenisProvider>
+            <AudioPlayerProvider>
+              {children}
+              <BottomAudioPlayer />
+            </AudioPlayerProvider>
+          </LenisProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -70,9 +70,6 @@ export default function Footer() {
                 <span className="text-xl sm:text-2xl font-bold tracking-tight">
                   Noor<span className="font-light opacity-80">Quran</span>
                 </span>
-                <span className="font-arabic text-sm text-neutral-500 dark:text-neutral-400 ml-1.5">
-                  نور القرآن الكريم
-                </span>
               </div>
             </Link>
 

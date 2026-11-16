@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { name: "Tasbeeh", href: "/tasbeeh" },
   { name: "Calendar", href: "/calendar" },
   { name: "Seerah", href: "/seerah" },
+  { name: "Stories", href: "/stories" },
   { name: "Noor AI", href: "/ai" },
 ];
 
@@ -77,9 +78,6 @@ export default function Navbar() {
             <div className="flex items-baseline gap-1.5">
               <span className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white">
                 Noor<span className="font-normal text-slate-500 dark:text-neutral-400">Quran</span>
-              </span>
-              <span className="hidden sm:inline-block font-arabic text-xs text-slate-400 dark:text-neutral-500 opacity-80">
-                نور القرآن
               </span>
             </div>
           </Link>
@@ -204,8 +202,8 @@ export default function Navbar() {
               >
                 About Project
               </Link>
-              <span className="text-[11px] font-arabic text-slate-500 dark:text-neutral-400">
-                نور القرآن الكريم
+              <span className="text-[11px] font-medium text-slate-500 dark:text-neutral-400">
+                Noor Al-Quran
               </span>
             </div>
           </motion.div>

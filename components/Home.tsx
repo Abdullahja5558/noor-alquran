@@ -12,6 +12,10 @@ const CollectionsSection = dynamic(() => import("@/components/CollectionsSection
   ssr: true,
 });
 
+const StoriesSection = dynamic(() => import("@/components/StoriesSection"), {
+  ssr: true,
+});
+
 const Topics = dynamic(() => import("@/components/Topic"), {
   ssr: true,
 });
@@ -27,6 +31,7 @@ const Home = () => {
       <Hero />
       <RecitersSection />
       <CollectionsSection />
+      <StoriesSection />
       <Topics />
       <Testimonials />
       <Footer />

@@ -17,6 +17,10 @@ button{
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   :root {
     --background: #f8fafc;
     --foreground: #0f172a;
