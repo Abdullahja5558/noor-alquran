@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -149,7 +149,7 @@ function ScrollWordReveal({
   );
 }
 
-export default function StoriesPage() {
+function StoriesContent() {
   const searchParams = useSearchParams();
   const storyParam = searchParams.get("id");
 
@@ -711,5 +711,13 @@ export default function StoriesPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function StoriesPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FAFAFA] dark:bg-[#080B10]" />}>
+      <StoriesContent />
+    </Suspense>
   );
 }
