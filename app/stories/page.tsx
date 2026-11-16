@@ -19,86 +19,88 @@ import {
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { STORIES_DATA, ProphetStory } from "@/data/storiesData";
-import Lenis from "lenis";
+import { STORY_REFERENCES, SURAH_NAMES, GENERAL_SOURCES } from "@/data/storyReferences";
 
-// Book cover color matching themes for the directory cards
+// Book cover color matching themes for the directory cards (Clean, harmonious, elegant dark palette)
 const PROPHET_BOX_COLORS: Record<string, string> = {
-  adam: "bg-[#233122] border-[#374c35]/70",       // Emerald Paradise Green
-  idris: "bg-[#182338] border-[#29395a]/70",      // Royal Indigo Blue
-  nuh: "bg-[#241c22] border-[#3d2f39]/70",        // Deep Storm Maroon
-  hud: "bg-[#1a2b2f] border-[#2c474d]/70",        // Slate Teal
-  saleh: "bg-[#33211c] border-[#52352c]/70",      // Terracotta Clay
-  ibrahim: "bg-[#141b2b] border-[#24304d]/70",    // Midnight Kaaba Navy
-  lut: "bg-[#2b1822] border-[#472738]/70",        // Burgundy Oasis
-  ismail: "bg-[#2f2519] border-[#4d3c29]/70",     // Desert Sand Ochre
-  ishaq: "bg-[#2c201a] border-[#4a352b]/70",      // Earthy Brown
-  yaqub: "bg-[#202920] border-[#334233]/70",      // Olive Sage
-  yunus: "bg-[#122233] border-[#1e3854]/70",      // Deep Ocean Blue
+  adam: "bg-[#283b27] border-[#486546]/70",       // Paradise Forest Green
+  idris: "bg-[#1a2735] border-[#32465c]/70",      // Celestial Deep Slate Blue
+  nuh: "bg-[#213038] border-[#3d5461]/70",        // Ocean Storm Slate
+  hud: "bg-[#293a3a] border-[#4a6464]/70",        // Sandstorm Slate Teal
+  saleh: "bg-[#413025] border-[#6f5443]/70",      // Terracotta Mountain Clay
+  ibrahim: "bg-[#263343] border-[#455972]/70",    // Midnight Sanctuary Navy
+  lut: "bg-[#3b2728] border-[#654648]/70",        // Deep Burgundy Oasis
+  ismail: "bg-[#55361b] border-[#8e5e34]/70",     // Desert Amber Ochre
+  ishaq: "bg-[#5b3121] border-[#97563d]/70",      // Canaan Russet Bronze
+  yaqub: "bg-[#403e2c] border-[#6d6a4e]/70",      // Olive Sage Earth
+  yusuf: "bg-[#240a18] border-[#421a2f]/70",      // Royal Egyptian Damson Plum
+  ayyub: "bg-[#48261c] border-[#7a4535]/70",      // Patience Warm Rust
+  shuayb: "bg-[#1f2327] border-[#3a4046]/70",     // Madyan Charcoal Slate
+  musa: "bg-[#1b2c35] border-[#344e5c]/70",       // Parted Red Sea Deep Teal
+  harun: "bg-[#271214] border-[#462629]/70",      // High Priesthood Crimson Mahogany
+  dhulkifl: "bg-[#19232b] border-[#31404d]/70",   // Midnight Covenant Slate
+  dawud: "bg-[#261934] border-[#45315b]/70",      // Royal Psalms Deep Purple / Violet
+  sulayman: "bg-[#311518] border-[#562b2f]/70",   // Imperial Wine Red / Maroon
+  ilyas: "bg-[#171a25] border-[#2e3243]/70",      // Mount Carmel Night Indigo
+  alyasa: "bg-[#191e2a] border-[#31394b]/70",     // Jordan Valley Deep Navy
+  yunus: "bg-[#1b2735] border-[#34465c]/70",      // Deep Abyssal Ocean Navy
+  zakariyya: "bg-[#171d26] border-[#2e3745]/70",  // Sanctuary Mihrab Midnight
+  yahya: "bg-[#201b21] border-[#3c343d]/70",      // Pure Ascetic Forest Dark
+  isa: "bg-[#161624] border-[#2c2c42]/70",        // Celestial Midnight Indigo
+  muhammad: "bg-[#221a11] border-[#3f3120]/70",   // Warm Antique Gold & Bronze (Clean dark harmony)
 };
 
-// Subtle reader atmospheric backgrounds (Gentle and low-glow as requested)
-const PROPHET_MODAL_THEMES: Record<string, { bg: string; radial: string }> = {
-  adam: {
-    bg: "bg-[#0b140d]",
-    radial: "from-[#233122]/30 via-[#132014]/15 to-[#0b140d]",
-  },
-  idris: {
-    bg: "bg-[#09101c]",
-    radial: "from-[#182338]/30 via-[#101828]/15 to-[#09101c]",
-  },
-  nuh: {
-    bg: "bg-[#120d13]",
-    radial: "from-[#2b1b28]/30 via-[#181119]/15 to-[#120d13]",
-  },
-  hud: {
-    bg: "bg-[#0b1416]",
-    radial: "from-[#1a2b2f]/30 via-[#101d20]/15 to-[#0b1416]",
-  },
-  saleh: {
-    bg: "bg-[#160d09]",
-    radial: "from-[#33211c]/30 via-[#1e130f]/15 to-[#160d09]",
-  },
-  ibrahim: {
-    bg: "bg-[#090d16]",
-    radial: "from-[#141b2b]/30 via-[#0d131f]/15 to-[#090d16]",
-  },
-  lut: {
-    bg: "bg-[#150a10]",
-    radial: "from-[#2b1822]/30 via-[#1c0f17]/15 to-[#150a10]",
-  },
-  ismail: {
-    bg: "bg-[#150f08]",
-    radial: "from-[#2f2519]/30 via-[#1c140c]/15 to-[#150f08]",
-  },
-  ishaq: {
-    bg: "bg-[#130d0a]",
-    radial: "from-[#2c201a]/30 via-[#1a120e]/15 to-[#130d0a]",
-  },
-  yaqub: {
-    bg: "bg-[#0e130e]",
-    radial: "from-[#202920]/30 via-[#131913]/15 to-[#0e130e]",
-  },
-  yunus: {
-    bg: "bg-[#08111a]",
-    radial: "from-[#122233]/30 via-[#0c1825]/15 to-[#08111a]",
-  },
+// Reader background = EXACT color sampled from each Prophet's book cover (solid, no glow)
+// `light: true` means the cover is bright (golden), so text switches to dark for readability.
+const PROPHET_MODAL_THEMES: Record<string, { bg: string; light?: boolean }> = {
+  adam: { bg: "#2a3d28" },       // Paradise Forest Green
+  idris: { bg: "#172531" },      // Deep Slate Blue
+  nuh: { bg: "#212f37" },        // Ocean Storm Slate
+  hud: { bg: "#293939" },        // Desert Slate Teal
+  saleh: { bg: "#402f24" },      // Terracotta Clay
+  ibrahim: { bg: "#273444" },    // Midnight Navy
+  lut: { bg: "#352526" },        // Deep Burgundy
+  ismail: { bg: "#6e4523" },     // Desert Amber
+  ishaq: { bg: "#5e3322" },      // Russet Bronze
+  yaqub: { bg: "#403e2c" },      // Olive Sage
+  yusuf: { bg: "#220916" },      // Royal Plum
+  ayyub: { bg: "#45241c" },      // Warm Rust
+  shuayb: { bg: "#1c1f22" },     // Charcoal Slate
+  musa: { bg: "#192a31" },       // Deep Sea Teal
+  harun: { bg: "#231213" },      // Mahogany
+  dhulkifl: { bg: "#182128" },   // Covenant Slate
+  dawud: { bg: "#261a33" },      // Royal Purple
+  sulayman: { bg: "#311418" },   // Imperial Wine Red
+  ilyas: { bg: "#161925" },      // Night Indigo
+  alyasa: { bg: "#171a25" },     // Deep Navy
+  yunus: { bg: "#1a2632" },      // Abyssal Ocean Navy
+  zakariyya: { bg: "#181a25" },  // Mihrab Midnight
+  yahya: { bg: "#201b20" },      // Ascetic Dusk
+  isa: { bg: "#13121f" },        // Celestial Indigo
+  muhammad: { bg: "#fddc73", light: true }, // Golden (as requested)
 };
 
-// Professional Scroll Word Reveal Component
-// Accurately tied to the modal's internal scroll container (containerRef)
-// Words reveal naturally as each paragraph reaches view, not prematurely
-function ScrollWordReveal({
+// Helper: Ensure Prophet Muhammad always has (S.A.W.) and all others have (A.S.)
+function getProphetEnglishTitle(story: ProphetStory): string {
+  if (story.id === "muhammad") {
+    return "Prophet Muhammad (S.A.W.)";
+  }
+  const clean = story.nameEn.replace(/\s*\((A\.S\.|S\.A\.W\.)\)/i, "").trim();
+  return `Prophet ${clean} (A.S.)`;
+}
+
+// Scroll Word Reveal (original animation restored)
+// Words fade up from a soft blur one-by-one as each paragraph scrolls into view.
+function WordReveal({
   text,
   className,
-  isRtl,
-  containerRef,
+  rootRef,
 }: {
   text: string;
   className?: string;
-  isRtl?: boolean;
-  containerRef?: React.RefObject<HTMLDivElement | null>;
+  rootRef: React.RefObject<HTMLDivElement | null>;
 }) {
-  const words = useMemo(() => text.split(" ").filter(Boolean), [text]);
+  const words = useMemo(() => text.split(/\s+/).filter(Boolean), [text]);
 
   return (
     <motion.p
@@ -106,7 +108,7 @@ function ScrollWordReveal({
       initial="hidden"
       whileInView="visible"
       viewport={{
-        root: containerRef,
+        root: rootRef,
         once: true,
         margin: "-50px 0px -30px 0px",
         amount: 0.25,
@@ -122,28 +124,22 @@ function ScrollWordReveal({
       }}
     >
       {words.map((word, idx) => (
-        <motion.span
-          key={idx}
-          variants={{
-            hidden: {
-              opacity: 0,
-              y: 10,
-              filter: "blur(3px)",
-            },
-            visible: {
-              opacity: 1,
-              y: 0,
-              filter: "blur(0px)",
-              transition: {
-                duration: 0.45,
-                ease: [0.25, 1, 0.5, 1],
+        <React.Fragment key={idx}>
+          <motion.span
+            variants={{
+              hidden: { opacity: 0, y: 10, filter: "blur(3px)" },
+              visible: {
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+                transition: { duration: 0.45, ease: [0.25, 1, 0.5, 1] },
               },
-            },
-          }}
-          className={`inline-block ${isRtl ? "ms-1" : "me-1.5"}`}
-        >
-          {word}
-        </motion.span>
+            }}
+            className="inline-block"
+          >
+            {word}
+          </motion.span>{" "}
+        </React.Fragment>
       ))}
     </motion.p>
   );
@@ -163,47 +159,11 @@ function StoriesContent() {
   const [isChapterDrawerOpen, setIsChapterDrawerOpen] = useState<boolean>(false);
 
   // Dedicated Ref for the Modal Scroll Container & Lenis instance
+  // Dedicated Ref for the Modal Scroll Container
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const modalLenisRef = useRef<Lenis | null>(null);
-
-  // Initialize dedicated Lenis instance on the reader modal for ultra-smooth inertia scrolling
-  useEffect(() => {
-    if (!isReaderOpen || !modalRef.current) return;
-
-    const lenis = new Lenis({
-      wrapper: modalRef.current,
-      content: (modalRef.current.firstElementChild as HTMLElement) || modalRef.current,
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.6,
-    });
-
-    modalLenisRef.current = lenis;
-
-    let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-      modalLenisRef.current = null;
-    };
-  }, [isReaderOpen]);
 
   const scrollToModalTop = useCallback(() => {
-    if (modalLenisRef.current) {
-      modalLenisRef.current.scrollTo(0, { duration: 1.0 });
-    } else {
-      modalRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    modalRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   // Background Scroll Lock when reader modal is open
@@ -341,7 +301,7 @@ function StoriesContent() {
         {/* Responsive Stories Grid: 2:3 Portrait Book Covers + Themed Boxes with Scroll Stagger */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 sm:gap-8">
           {filteredStories.map((story) => {
-            const cleanName = story.nameEn.replace(/\s*\(A\.S\.\)/i, "").trim();
+            const titleDisplay = getProphetEnglishTitle(story);
             const boxStyle = PROPHET_BOX_COLORS[story.id] || "bg-[#141b2b] border-[#24304d]";
 
             return (
@@ -358,9 +318,9 @@ function StoriesContent() {
                 <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-neutral-900 shadow-none border border-slate-200/50 dark:border-white/[0.08]">
                   <Image
                     src={story.image}
-                    alt={`Prophet ${cleanName} (A.S.) - Stories of the Prophets (Qisas al-Anbiya) | Noor Al-Quran`}
+                    alt={`${titleDisplay} - Stories of the Prophets (Qisas al-Anbiya) | Noor Al-Quran`}
                     fill
-                    quality={90}
+                    unoptimized
                     priority={story.order <= 4}
                     loading={story.order <= 4 ? "eager" : "lazy"}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -378,12 +338,12 @@ function StoriesContent() {
                   </div>
                 </div>
 
-                {/* Separate Themed Box (No Shadow, Matching Book Color, Glassmorphism) */}
+                {/* Separate Themed Box (Clean, Elegant, Matching Book Cover) */}
                 <div className={`mt-3 p-4 rounded-2xl ${boxStyle} backdrop-blur-md border shadow-none text-center transition-all flex flex-col justify-between flex-1`}>
                   <div>
-                    {/* Name: "Prophet [Name] (A.S.)" */}
+                    {/* Name: "Prophet [Name] (A.S.)" or "Prophet Muhammad (S.A.W.)" */}
                     <h3 className="font-heading text-base font-bold text-white leading-snug">
-                      Prophet {cleanName} (A.S.)
+                      {titleDisplay}
                     </h3>
 
                     {/* Concise Professional Story Paragraph */}
@@ -399,7 +359,7 @@ function StoriesContent() {
                         e.stopPropagation();
                         openReader(story);
                       }}
-                      className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/15 hover:bg-white/25 text-white text-xs font-semibold backdrop-blur-sm transition-all border border-white/20 active:scale-95 cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold backdrop-blur-sm transition-all border border-white/20 bg-white/15 hover:bg-white/25 text-white active:scale-95 cursor-pointer"
                     >
                       <BookOpen size={12} className="text-white" />
                       <span>Read Story</span>
@@ -413,23 +373,23 @@ function StoriesContent() {
       </main>
 
       {/* --- IMMERSIVE FULLSCREEN BOOK READER MODAL --- */}
-      {/* Centered, Grand, Seamless Flowing Typography with Precision Scroll-Linked Word Reveal */}
+      {/* Clean, Serene Dark Reading Atmosphere (Zero Harsh Glowing) */}
       <AnimatePresence>
         {isReaderOpen && (
           <motion.div
             ref={modalRef}
-            data-lenis-prevent
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fixed inset-0 z-50 ${modalTheme.bg} backdrop-blur-2xl text-white flex flex-col overflow-y-auto overscroll-contain`}
-            style={{ WebkitOverflowScrolling: "touch" }}
+            data-lenis-prevent
+            className="fixed inset-0 z-50 text-white flex flex-col overflow-y-auto overscroll-contain transition-colors duration-300"
+            style={{ backgroundColor: modalTheme.bg, WebkitOverflowScrolling: "touch" }}
           >
-            {/* Soft, Understated Atmospheric Background (Glow Reduced as requested) */}
-            <div className={`pointer-events-none fixed inset-0 bg-gradient-to-br ${modalTheme.radial} z-0 opacity-30`} />
-
             {/* Top Navigation Bar: Close (X) + Font Size + Chapter Selector + Language Toggle */}
-            <header className="sticky top-0 z-30 w-full px-4 sm:px-8 py-3.5 flex items-center justify-between border-b border-white/[0.08] backdrop-blur-xl bg-black/40">
+            <header
+              className={`sticky top-0 z-30 w-full px-4 sm:px-8 py-3.5 flex items-center justify-between border-b border-white/[0.12] backdrop-blur-xl backdrop-saturate-150 shadow-[0_4px_24px_rgba(0,0,0,0.12)] ${modalTheme.light ? "reader-light" : ""}`}
+              style={{ backgroundColor: `${modalTheme.bg}99`, WebkitBackdropFilter: "blur(20px) saturate(150%)" }}
+            >
               {/* Close Button */}
               <button
                 onClick={closeReader}
@@ -506,7 +466,7 @@ function StoriesContent() {
                 >
                   <div className="px-3 py-2 text-xs font-bold text-neutral-400 border-b border-white/[0.08] mb-1 flex items-center justify-between">
                     <span>Select Prophet Chronicle</span>
-                    <span className="text-[10px] text-neutral-500">11 Prophets</span>
+                    <span className="text-[10px] text-neutral-500">{STORIES_DATA.length} Prophets</span>
                   </div>
                   {STORIES_DATA.map((story) => (
                     <button
@@ -527,7 +487,7 @@ function StoriesContent() {
                           ? story.nameUr
                           : selectedLanguage === "ar"
                           ? story.nameAr
-                          : `Prophet ${story.nameEn.replace(/\s*\(A\.S\.\)/i, "").trim()} (A.S.)`}
+                          : getProphetEnglishTitle(story)}
                       </span>
                     </button>
                   ))}
@@ -539,7 +499,7 @@ function StoriesContent() {
             <div
               lang={selectedLanguage}
               dir={selectedLanguage === "ur" || selectedLanguage === "ar" ? "rtl" : "ltr"}
-              className="relative z-10 flex-1 max-w-3xl sm:max-w-4xl mx-auto w-full px-5 sm:px-8 md:px-12 py-10 sm:py-16"
+              className={`relative z-10 flex-1 max-w-3xl sm:max-w-4xl mx-auto w-full px-5 sm:px-8 md:px-12 py-10 sm:py-16 ${modalTheme.light ? "reader-light" : ""}`}
             >
               
               {/* HERO HEADER: Centered 2:3 Book Cover with Ambient Shadow */}
@@ -549,9 +509,9 @@ function StoriesContent() {
                     src={activeStory.image}
                     alt={`Prophet ${activeStory.nameEn} (${activeStory.nameUr} / ${activeStory.nameAr}) - Stories of the Prophets | Noor Al-Quran`}
                     fill
+                    unoptimized
                     priority
                     loading="eager"
-                    quality={92}
                     sizes="(max-width: 640px) 384px, (max-width: 768px) 448px, 512px"
                     className="object-cover"
                   />
@@ -571,7 +531,7 @@ function StoriesContent() {
                     ? activeStory.nameUr
                     : selectedLanguage === "ar"
                     ? activeStory.nameAr
-                    : `Prophet ${activeStory.nameEn.replace(/\s*\(A\.S\.\)/i, "").trim()} (A.S.)`}
+                    : getProphetEnglishTitle(activeStory)}
                 </h1>
 
                 {/* Subtitle strictly in selected language (English in EN, Urdu in UR, Arabic in AR) */}
@@ -589,7 +549,7 @@ function StoriesContent() {
                     : activeStory.titleEn}
                 </p>
 
-                {/* Quranic Reference Tag (No Emojis) */}
+                {/* Quranic Reference Tag */}
                 <div className="inline-flex items-center mt-3.5 px-4 py-1.5 rounded-full bg-white/[0.06] border border-white/10 text-xs text-white/80">
                   <span>{activeStory.quranMention}</span>
                 </div>
@@ -621,12 +581,11 @@ function StoriesContent() {
                 }`}
               >
                 {storyParagraphs.map((paragraph, idx) => (
-                  <ScrollWordReveal
+                  <WordReveal
                     key={`${activeStory.id}-${selectedLanguage}-${idx}`}
                     text={paragraph}
                     className="text-white/95"
-                    isRtl={selectedLanguage === "ur" || selectedLanguage === "ar"}
-                    containerRef={modalRef}
+                    rootRef={modalRef}
                   />
                 ))}
               </article>
@@ -670,7 +629,7 @@ function StoriesContent() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ root: modalRef, once: true, margin: "-30px", amount: 0.2 }}
                       transition={{ duration: 0.45, delay: idx * 0.08, ease: "easeOut" }}
-                      className="p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-sm flex flex-col justify-start"
+                      className="p-5 rounded-2xl bg-white/[0.06] border border-white/[0.1] flex flex-col justify-start"
                     >
                       <div className="flex items-center gap-2 mb-2.5 text-amber-400/90">
                         <CheckCircle2 size={15} />
@@ -700,6 +659,88 @@ function StoriesContent() {
                 </div>
               </div>
 
+              {/* AUTHENTIC SOURCES: Quran ayat + Sahih hadith references */}
+              <section
+                aria-label="Quranic references and hadith sources"
+                className="mt-14 sm:mt-18 pt-10 border-t border-white/10"
+              >
+                <div className="text-center mb-7">
+                  <h3 className={`text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2 ${
+                    selectedLanguage === "ur"
+                      ? "font-urdu py-1 text-2xl sm:text-4xl"
+                      : selectedLanguage === "ar"
+                      ? "font-arabic py-1"
+                      : "font-heading"
+                  }`}>
+                    {selectedLanguage === "ur"
+                      ? "حوالہ جات (قرآن و حدیث)"
+                      : selectedLanguage === "ar"
+                      ? "المراجع من القرآن والسنة"
+                      : "References from Quran & Hadith"}
+                  </h3>
+                </div>
+
+                <ul className="space-y-3">
+                  {(STORY_REFERENCES[activeStory.id] || []).map((ref, idx) => {
+                    const lang = selectedLanguage;
+                    const label =
+                      ref.kind === "quran"
+                        ? `${lang === "ur" ? "سورۃ " : lang === "ar" ? "سورة " : "Surah "}${SURAH_NAMES[ref.surah]?.[lang] ?? ref.surah} ${ref.surah}:${ref.ayat}`
+                        : ref.source[lang];
+                    return (
+                      <li
+                        key={`${activeStory.id}-ref-${idx}`}
+                        className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 p-4 rounded-2xl bg-white/[0.06] border border-white/[0.1]"
+                      >
+                        {ref.kind === "quran" ? (
+                          <a
+                            href={`/quran/${ref.surah}`}
+                            target="_blank"
+                            rel="noopener"
+                            className={`shrink-0 inline-flex items-center gap-1.5 text-amber-400/90 font-semibold hover:underline ${
+                              lang === "ur" ? "font-urdu text-sm leading-[2]" : lang === "ar" ? "font-arabic text-sm" : "text-xs sm:text-sm"
+                            }`}
+                          >
+                            <BookOpen size={14} className="shrink-0" />
+                            <span dir={lang === "en" ? "ltr" : "rtl"}>{label}</span>
+                          </a>
+                        ) : (
+                          <span
+                            className={`shrink-0 inline-flex items-center gap-1.5 text-amber-400/90 font-semibold ${
+                              lang === "ur" ? "font-urdu text-sm leading-[2]" : lang === "ar" ? "font-arabic text-sm" : "text-xs sm:text-sm"
+                            }`}
+                          >
+                            <CheckCircle2 size={14} className="shrink-0" />
+                            <span>{label}</span>
+                          </span>
+                        )}
+                        <span
+                          className={`text-white/85 ${
+                            lang === "ur"
+                              ? "font-urdu text-sm sm:text-base leading-[2.2]"
+                              : lang === "ar"
+                              ? "font-arabic text-sm sm:text-base leading-loose"
+                              : "text-xs sm:text-sm leading-relaxed"
+                          }`}
+                        >
+                          {ref.topic[lang]}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <p className={`mt-5 text-white/60 text-center ${
+                  selectedLanguage === "ur"
+                    ? "font-urdu text-xs sm:text-sm leading-[2.2]"
+                    : selectedLanguage === "ar"
+                    ? "font-arabic text-xs sm:text-sm leading-loose"
+                    : "text-[11px] sm:text-xs leading-relaxed"
+                }`}>
+                  {GENERAL_SOURCES[selectedLanguage]}
+                </p>
+              </section>
+
               {/* BOTTOM NAVIGATION: PREVIOUS & NEXT PROPHET (Reduced Glow Effect, Smooth Scroll to Top) */}
               <div className="mt-14 sm:mt-20 pt-8 border-t border-white/10 flex items-center justify-between gap-4">
                 {/* Previous Prophet */}
@@ -720,7 +761,7 @@ function StoriesContent() {
                         ? prevStory.nameUr
                         : selectedLanguage === "ar"
                         ? prevStory.nameAr
-                        : `Prophet ${prevStory.nameEn.replace(/\s*\(A\.S\.\)/i, "").trim()}`}
+                        : getProphetEnglishTitle(prevStory)}
                     </span>
                   </div>
                 </button>
@@ -742,7 +783,7 @@ function StoriesContent() {
                         ? nextStory.nameUr
                         : selectedLanguage === "ar"
                         ? nextStory.nameAr
-                        : `Prophet ${nextStory.nameEn.replace(/\s*\(A\.S\.\)/i, "").trim()}`}
+                        : getProphetEnglishTitle(nextStory)}
                     </span>
                   </div>
                   <ChevronRight size={18} />
@@ -762,16 +803,23 @@ function StoriesContent() {
 
       {/* Semantic SEO & Accessibility Section for Search Engines */}
       <section className="sr-only" aria-label="Stories of the Prophets Overview and Knowledge Base">
-        <h2>About Stories of the Prophets (Qisas al-Anbiya - قصص الأنبياء)</h2>
+        <h2>About Stories of the Prophets (Qisas al-Anbiya - قصص الأنبياء - 25 Ambiya)</h2>
         <p>
-          Welcome to the comprehensive, authentic chronicles of the Prophets of Allah on Noor Al-Quran.
-          Explore the lives, miracles, tribulations, and timeless wisdom of Prophet Adam, Prophet Idris,
-          Prophet Nuh, Prophet Hud, Prophet Saleh, Prophet Ibrahim, Prophet Lut, Prophet Ismail,
-          Prophet Ishaq, Prophet Yaqub, and Prophet Yunus (peace be upon them all).
+          Welcome to the comprehensive, authentic chronicles of all 25 Prophets of Allah mentioned in the Holy Quran on Noor Al-Quran:
+          Prophet Adam, Prophet Idris, Prophet Nuh, Prophet Hud, Prophet Saleh, Prophet Ibrahim, Prophet Lut, Prophet Ismail,
+          Prophet Ishaq, Prophet Yaqub, Prophet Yusuf, Prophet Ayyub, Prophet Shu&apos;ayb, Prophet Musa, Prophet Harun,
+          Prophet Dhul-Kifl, Prophet Dawud, Prophet Sulayman, Prophet Ilyas, Prophet Al-Yasa, Prophet Yunus, Prophet Zakariyya,
+          Prophet Yahya, Prophet Isa, and Prophet Muhammad (peace and blessings be upon them all).
           Read authentic chronicles with Quranic citations in English, Urdu (اردو), and Arabic (العربية).
         </p>
         <div>
           <h3>Frequently Asked Questions about Qisas al-Anbiya</h3>
+          <article>
+            <h4>How many Prophets are mentioned by name in the Holy Quran?</h4>
+            <p>
+              There are 25 Prophets of Allah mentioned explicitly by name in the Holy Quran, beginning with Prophet Adam (A.S.) and concluding with the Seal of the Prophets, Prophet Muhammad (S.A.W.).
+            </p>
+          </article>
           <article>
             <h4>Who was Prophet Idris (A.S.)?</h4>
             <p>
@@ -789,6 +837,12 @@ function StoriesContent() {
             <h4>What was the supplication of Prophet Yunus (A.S.) in the whale?</h4>
             <p>
               Prophet Yunus (A.S.) prayed: &apos;La ilaha illa Anta, Subhanaka inni kuntu minaz-zalimeen&apos; (There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers).
+            </p>
+          </article>
+          <article>
+            <h4>What was the miracle of Prophet Musa (A.S.) at the Red Sea?</h4>
+            <p>
+              By Allah&apos;s divine command, Prophet Musa (A.S.) struck the sea with his staff, parting the waters into towering walls like great mountains so the Children of Israel could cross safely.
             </p>
           </article>
         </div>

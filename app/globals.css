@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
 @import "tailwindcss";
 
 
@@ -121,14 +121,16 @@ button{
 }
 
 /* --- ARABIC & URDU TYPOGRAPHY --- */
-.font-arabic {
-  font-family: var(--font-arabic), 'Scheherazade New', 'Amiri', 'Traditional Arabic', serif;
+.font-arabic,
+[lang="ar"] .font-arabic {
+  font-family: var(--font-arabic), 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif !important;
   direction: rtl;
   text-rendering: optimizeLegibility;
 }
 
-.font-urdu {
-  font-family: var(--font-urdu), 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', 'Amiri', serif;
+.font-urdu,
+[lang="ur"] .font-urdu {
+  font-family: var(--font-urdu), 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', 'Amiri', serif !important;
   direction: rtl;
   text-rendering: optimizeLegibility;
 }
@@ -280,4 +282,54 @@ body:has([data-not-found-page]) aside[aria-label="Quran Audio Player"] {
   stroke-dasharray: 22 78;
   stroke-dashoffset: 100;
   animation: borderBeamTrack 4s linear infinite;
+}
+/* ===== Golden reader theme (Prophet Muhammad S.A.W.) - dark text on #fddc73 ===== */
+.reader-light [class*="text-white"],
+.reader-light [class*="text-slate-"],
+.reader-light [class*="text-neutral-"],
+.reader-light.text-white,
+.reader-light h1,
+.reader-light h3 {
+  color: #3a2806 !important;
+}
+.reader-light p,
+.reader-light article {
+  color: #2e2005 !important;
+}
+.reader-light [class*="text-amber-"] {
+  color: #7a4f00 !important;
+}
+.reader-light [class*="border-white"] {
+  border-color: rgba(58, 40, 6, 0.2) !important;
+}
+.reader-light [class*="bg-white/"] {
+  background-color: rgba(58, 40, 6, 0.08) !important;
+}
+.reader-light [class*="bg-white/"]:hover {
+  background-color: rgba(58, 40, 6, 0.15) !important;
+}
+.reader-light .bg-\[\#155DFC\],
+.reader-light .bg-\[\#155DFC\] *,
+.reader-light [class*="bg-[#155DFC]"],
+.reader-light [class*="bg-[#155DFC]"] * {
+  color: #ffffff !important;
+}
+
+/* ===== Stories reader: lightweight word reveal (GPU only, no blur) ===== */
+.word-reveal > span {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 0.45em, 0);
+  transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.word-reveal.is-visible > span {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .word-reveal > span {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

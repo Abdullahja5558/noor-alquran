@@ -9,18 +9,38 @@ import { BookOpen, ChevronRight } from "lucide-react";
 import { STORIES_DATA, ProphetStory } from "@/data/storiesData";
 
 const PROPHET_BOX_COLORS: Record<string, string> = {
-  adam: "bg-[#233122] border-[#374c35]/70",
-  idris: "bg-[#182338] border-[#29395a]/70",
-  nuh: "bg-[#241c22] border-[#3d2f39]/70",
-  hud: "bg-[#1a2b2f] border-[#2c474d]/70",
-  saleh: "bg-[#33211c] border-[#52352c]/70",
-  ibrahim: "bg-[#141b2b] border-[#24304d]/70",
-  lut: "bg-[#2b1822] border-[#472738]/70",
-  ismail: "bg-[#2f2519] border-[#4d3c29]/70",
-  ishaq: "bg-[#2c201a] border-[#4a352b]/70",
-  yaqub: "bg-[#202920] border-[#334233]/70",
-  yunus: "bg-[#122233] border-[#1e3854]/70",
+  adam: "bg-[#283b27] border-[#486546]/70",       // Paradise Forest Green
+  idris: "bg-[#1a2735] border-[#32465c]/70",      // Celestial Deep Slate Blue
+  nuh: "bg-[#213038] border-[#3d5461]/70",        // Ocean Storm Slate
+  hud: "bg-[#293a3a] border-[#4a6464]/70",        // Sandstorm Slate Teal
+  saleh: "bg-[#413025] border-[#6f5443]/70",      // Terracotta Mountain Clay
+  ibrahim: "bg-[#263343] border-[#455972]/70",    // Midnight Sanctuary Navy
+  lut: "bg-[#3b2728] border-[#654648]/70",        // Deep Burgundy Oasis
+  ismail: "bg-[#55361b] border-[#8e5e34]/70",     // Desert Amber Ochre
+  ishaq: "bg-[#5b3121] border-[#97563d]/70",      // Canaan Russet Bronze
+  yaqub: "bg-[#403e2c] border-[#6d6a4e]/70",      // Olive Sage Earth
+  yusuf: "bg-[#240a18] border-[#421a2f]/70",      // Royal Egyptian Damson Plum
+  ayyub: "bg-[#48261c] border-[#7a4535]/70",      // Patience Warm Rust
+  shuayb: "bg-[#1f2327] border-[#3a4046]/70",     // Madyan Charcoal Slate
+  musa: "bg-[#1b2c35] border-[#344e5c]/70",       // Parted Red Sea Deep Teal
+  harun: "bg-[#271214] border-[#462629]/70",      // High Priesthood Crimson Mahogany
+  dhulkifl: "bg-[#19232b] border-[#31404d]/70",   // Midnight Covenant Slate
+  dawud: "bg-[#261934] border-[#45315b]/70",      // Royal Psalms Deep Purple / Violet
+  sulayman: "bg-[#311518] border-[#562b2f]/70",   // Imperial Wine Red / Maroon
+  ilyas: "bg-[#171a25] border-[#2e3243]/70",      // Mount Carmel Night Indigo
+  alyasa: "bg-[#191e2a] border-[#31394b]/70",     // Jordan Valley Deep Navy
+  yunus: "bg-[#1b2735] border-[#34465c]/70",      // Deep Abyssal Ocean Navy
+  zakariyya: "bg-[#171d26] border-[#2e3745]/70",  // Sanctuary Mihrab Midnight
+  yahya: "bg-[#201b21] border-[#3c343d]/70",      // Pure Ascetic Forest Dark
+  isa: "bg-[#161624] border-[#2c2c42]/70",        // Celestial Midnight Indigo
+  muhammad: "bg-[#221a11] border-[#3f3120]/70",   // Warm Antique Gold & Bronze (Clean dark harmony)
 };
+
+function getProphetEnglishTitle(story: ProphetStory): string {
+  if (story.id === "muhammad") return "Prophet Muhammad (S.A.W.)";
+  const clean = story.nameEn.replace(/\s*\((A\.S\.|S\.A\.W\.)\)/i, "").trim();
+  return `Prophet ${clean} (A.S.)`;
+}
 
 export default function StoriesSection() {
   const router = useRouter();
@@ -50,7 +70,7 @@ export default function StoriesSection() {
       {/* Responsive 4-Column Grid (No Horizontal Scroll, Clean Layout) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
         {featuredStories.map((story: ProphetStory, idx: number) => {
-          const cleanName = story.nameEn.replace(/\s*\(A\.S\.\)/i, "").trim();
+          const titleDisplay = getProphetEnglishTitle(story);
           const boxStyle = PROPHET_BOX_COLORS[story.id] || "bg-[#141b2b] border-[#24304d]";
 
           return (
@@ -67,9 +87,9 @@ export default function StoriesSection() {
               <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-neutral-900 shadow-none border border-slate-200/60 dark:border-white/[0.08]">
                 <Image
                   src={story.image}
-                  alt={`Prophet ${cleanName} (A.S.) - Stories of the Prophets (Qisas al-Anbiya)`}
+                  alt={`${titleDisplay} - Stories of the Prophets (Qisas al-Anbiya)`}
                   fill
-                  quality={90}
+                  unoptimized
                   priority={idx < 2}
                   loading={idx < 2 ? "eager" : "lazy"}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -87,11 +107,11 @@ export default function StoriesSection() {
                 </div>
               </div>
 
-              {/* Separate Glassmorphism Box matching Book Color (#233122 for Adam, etc., No Shadow) */}
+              {/* Separate Glassmorphism Box matching Book Color */}
               <div className={`mt-3 p-4 rounded-2xl ${boxStyle} backdrop-blur-md border shadow-none text-center transition-all flex flex-col justify-between flex-1`}>
                 <div>
                   <h3 className="font-heading text-base font-bold text-white leading-snug">
-                    Prophet {cleanName} (A.S.)
+                    {titleDisplay}
                   </h3>
 
                   {/* Concise Professional Story Paragraph */}

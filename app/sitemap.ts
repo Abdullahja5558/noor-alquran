@@ -103,6 +103,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: contentDate,
     changeFrequency: "weekly",
     priority: 0.94,
+    images: [`${BASE_URL}${story.image}`],
   }));
 
   return [...staticRoutes, ...storyRoutes, ...cityRoutes, ...surahRoutes];
