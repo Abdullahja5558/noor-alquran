@@ -62,15 +62,16 @@ export default function Hero() {
         {/* Background Images */}
         <div className="absolute inset-0 pointer-events-none select-none z-0">
           <Image
-            src="/bg-hero-light.png"
+            src="/bg-hero-light.webp"
             alt="Hero background light"
             fill
+            priority
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1920px"
             className="object-cover object-center dark:hidden"
           />
 
           <Image
-            src="/bg-hero-dark.png"
+            src="/bg-hero-dark.webp"
             alt="Hero background dark"
             fill
             priority

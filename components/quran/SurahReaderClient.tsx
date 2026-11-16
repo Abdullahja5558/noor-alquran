@@ -509,7 +509,8 @@ export default function SurahReaderClient({
         loop
         muted
         playsInline
-        preload="none"
+        preload="auto"
+        poster="/bg-poster.webp"
         className="fixed inset-0 w-full h-full object-cover -z-20 pointer-events-none"
       >
         <source src="/bg.mp4" type="video/mp4" />

@@ -1,11 +1,12 @@
 import { MetadataRoute } from "next";
 import { ALL_SURAHS_META } from "@/components/surahMeta";
 import { CITIES_LIST } from "@/lib/prayerTimes";
+import { STORIES_DATA } from "@/data/storiesData";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const contentDate = new Date("2026-03-01T00:00:00.000Z");
+  const contentDate = new Date();
 
   // Static core routes
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -14,6 +15,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: contentDate,
       changeFrequency: "daily",
       priority: 1.0,
+    },
+    {
+      url: `${BASE_URL}/stories`,
+      lastModified: contentDate,
+      changeFrequency: "daily",
+      priority: 0.96,
     },
     {
       url: `${BASE_URL}/ai`,
@@ -90,5 +97,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: HIGH_PRIORITY_SURAHS.has(surah.number) ? 0.98 : 0.9,
   }));
 
-  return [...staticRoutes, ...cityRoutes, ...surahRoutes];
+  // Dynamic routes for all Prophet Stories (Qisas al-Anbiya)
+  const storyRoutes: MetadataRoute.Sitemap = STORIES_DATA.map((story) => ({
+    url: `${BASE_URL}/stories?id=${story.id}`,
+    lastModified: contentDate,
+    changeFrequency: "weekly",
+    priority: 0.94,
+  }));
+
+  return [...staticRoutes, ...storyRoutes, ...cityRoutes, ...surahRoutes];
 }

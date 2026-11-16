@@ -1,16 +1,20 @@
 import { Metadata } from "next";
+import { STORIES_DATA } from "@/data/storiesData";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://noor-ulquran.vercel.app";
 
 export const metadata: Metadata = {
   title: "Stories of the Prophets (Qisas al-Anbiya) – Authentic Quranic Chronicles & Wisdom",
   description:
-    "Explore authentic A-to-Z chronicles of the Prophets of Allah (Qisas al-Anbiya) in English, Urdu, and Arabic. Detailed historical narratives of Adam, Idris, Nuh, Hud, Saleh, Ibrahim, Lut, Ismail, Ishaq, Yaqub, and Yunus (A.S.) with divine lessons.",
+    "Explore authentic A-to-Z chronicles of the Prophets of Allah (Qisas al-Anbiya / قصص الأنبياء) in English, Urdu (اردو), and Arabic. Detailed historical narratives of Prophet Adam, Idris, Nuh, Hud, Saleh, Ibrahim, Lut, Ismail, Ishaq, Yaqub, and Yunus (A.S.) with divine lessons and Quranic verses.",
   keywords: [
     "Stories of the Prophets",
     "Qisas al-Anbiya",
     "Qisas ul Anbiya",
+    "Prophet Idris story",
+    "Hazrat Idris AS story",
     "Prophet Adam story",
+    "Hazrat Adam AS story",
     "Prophet Ibrahim fire miracle",
     "Prophet Yunus whale supplication",
     "Prophet Nuh ark flood",
@@ -18,16 +22,25 @@ export const metadata: Metadata = {
     "Prophet Saleh she-camel Thamud",
     "Prophet Hud Ad wind storm",
     "Prophet Yaqub Sabrun Jameel",
-    "Prophet Idris pen wisdom",
     "Prophet Lut Sodom history",
     "Prophet Ishaq Canaan",
     "Islamic history in English",
     "Qisas al Anbiya in Urdu",
     "قصص الأنبياء",
+    "قصص القرآن",
+    "انبیاء کرام کے واقعات",
+    "Life of Prophets in Islam",
+    "Prophets mentioned in Quran",
     "Noor Al-Quran stories",
   ],
   alternates: {
     canonical: `${BASE_URL}/stories`,
+    languages: {
+      "en-US": `${BASE_URL}/stories`,
+      "ur-PK": `${BASE_URL}/stories`,
+      "ar-SA": `${BASE_URL}/stories`,
+      "x-default": `${BASE_URL}/stories`,
+    },
   },
   openGraph: {
     title: "Stories of the Prophets (Qisas al-Anbiya) – Noor Al-Quran",
@@ -36,13 +49,20 @@ export const metadata: Metadata = {
     url: `${BASE_URL}/stories`,
     siteName: "Noor Al-Quran",
     locale: "en_US",
+    alternateLocale: ["ur_PK", "ar_SA"],
     type: "website",
     images: [
       {
-        url: `${BASE_URL}/stories/covers/adam-v2.jpg`,
+        url: `${BASE_URL}/stories/covers/idris-v2.webp`,
         width: 1200,
-        height: 630,
-        alt: "Stories of the Prophets – Noor Al-Quran",
+        height: 1800,
+        alt: "Prophet Idris (A.S.) – Stories of the Prophets | Noor Al-Quran",
+      },
+      {
+        url: `${BASE_URL}/stories/covers/adam-v2.webp`,
+        width: 1200,
+        height: 1800,
+        alt: "Prophet Adam (A.S.) – Stories of the Prophets | Noor Al-Quran",
       },
     ],
   },
@@ -51,7 +71,7 @@ export const metadata: Metadata = {
     title: "Stories of the Prophets (Qisas al-Anbiya) – Noor Al-Quran",
     description:
       "Explore comprehensive A-to-Z authentic chronicles of the Prophets of Allah in English, Urdu, and Arabic.",
-    images: [`${BASE_URL}/stories/covers/adam-v2.jpg`],
+    images: [`${BASE_URL}/stories/covers/idris-v2.webp`],
   },
   robots: {
     index: true,
@@ -78,15 +98,23 @@ export default function StoriesLayout({
         "@type": "CollectionPage",
         "@id": `${BASE_URL}/stories#webpage`,
         url: `${BASE_URL}/stories`,
-        name: "Stories of the Prophets (Qisas al-Anbiya)",
+        name: "Stories of the Prophets (Qisas al-Anbiya) – Noor Al-Quran",
         description:
-          "Authentic Islamic chronicles and moral wisdom of the Prophets of Allah from Adam (A.S.) to the final messengers with multilingual text.",
+          "Authentic Islamic chronicles and moral wisdom of the Prophets of Allah from Adam (A.S.) to the final messengers with multilingual text in English, Urdu, and Arabic.",
         publisher: {
           "@type": "Organization",
           name: "Noor Al-Quran",
           url: BASE_URL,
+          logo: {
+            "@type": "ImageObject",
+            url: `${BASE_URL}/favicon5.png`,
+          },
         },
         inLanguage: ["en", "ur", "ar"],
+        speakable: {
+          "@type": "SpeakableSpecification",
+          cssSelector: ["h1", "h2", "p"],
+        },
       },
       {
         "@type": "BreadcrumbList",
@@ -108,87 +136,37 @@ export default function StoriesLayout({
       {
         "@type": "ItemList",
         name: "Prophets of Allah (Qisas al-Anbiya)",
+        description: "Complete chronicles and moral teachings of the Prophets of Allah.",
         itemListOrder: "https://schema.org/ItemListOrderAscending",
-        numberOfItems: 11,
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Prophet Adam (A.S.)",
-            description: "The Father of Mankind and the first Prophet created from clay.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
+        numberOfItems: STORIES_DATA.length,
+        itemListElement: STORIES_DATA.map((story, idx) => ({
+          "@type": "ListItem",
+          position: idx + 1,
+          item: {
+            "@type": "Article",
+            "@id": `${BASE_URL}/stories?id=${story.id}#article`,
+            url: `${BASE_URL}/stories?id=${story.id}`,
+            name: `Prophet ${story.nameEn} (${story.nameUr} / ${story.nameAr})`,
+            headline: `${story.nameEn}: ${story.titleEn}`,
+            description: story.summaryEn,
+            image: `${BASE_URL}${story.image}`,
+            inLanguage: ["en", "ur", "ar"],
+            author: {
+              "@type": "Organization",
+              name: "Noor Al-Quran",
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "Noor Al-Quran",
+              url: BASE_URL,
+              logo: {
+                "@type": "ImageObject",
+                url: `${BASE_URL}/favicon5.png`,
+              },
+            },
+            mainEntityOfPage: `${BASE_URL}/stories?id=${story.id}`,
           },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Prophet Idris (A.S.)",
-            description: "The pioneer of written revelation, tailoring, and celestial wisdom.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
-          },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: "Prophet Nuh (A.S.)",
-            description: "Built the Ark on dry land, persevering for 950 years through the Great Deluge.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
-          },
-          {
-            "@type": "ListItem",
-            position: 4,
-            name: "Prophet Hud (A.S.)",
-            description: "Dispatched to the ancient giants of 'Ad in the dunes of Al-Ahqaf.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
-          },
-          {
-            "@type": "ListItem",
-            position: 5,
-            name: "Prophet Saleh (A.S.)",
-            description: "Sent to Thamud who carved mountain palaces, witnessing the miraculous She-Camel.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
-          },
-          {
-            "@type": "ListItem",
-            position: 6,
-            name: "Prophet Ibrahim (A.S.)",
-            description: "The Intimate Friend of Allah who survived the inferno and built the Ka'bah.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
-          },
-          {
-            "@type": "ListItem",
-            position: 7,
-            name: "Prophet Lut (A.S.)",
-            description: "Defended moral purity and hospitality in the cities of Sodom and Gomorrah.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
-          },
-          {
-            "@type": "ListItem",
-            position: 8,
-            name: "Prophet Ismail (A.S.)",
-            description: "Submitted to the supreme sacrifice in Mina and raised the walls of the Ka'bah.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
-          },
-          {
-            "@type": "ListItem",
-            position: 9,
-            name: "Prophet Ishaq (A.S.)",
-            description: "Miraculous son of glad tidings born to Sarah in her old age in Canaan.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
-          },
-          {
-            "@type": "ListItem",
-            position: 10,
-            name: "Prophet Yaqub (A.S.)",
-            description: "Exemplified Sabrun Jameel (beautiful patience) across decades of separation from Yusuf.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
-          },
-          {
-            "@type": "ListItem",
-            position: 11,
-            name: "Prophet Yunus (A.S.)",
-            description: "Swallowed by the whale in Nineveh, supplicating from the three darknesses.",
-            image: `${BASE_URL}/stories/covers/-v2.jpg`,
-          },
-        ],
+        })),
       },
       {
         "@type": "FAQPage",
@@ -198,23 +176,39 @@ export default function StoriesLayout({
             name: "What are the Stories of the Prophets (Qisas al-Anbiya)?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "The Stories of the Prophets (Qisas al-Anbiya) are authentic Quranic narratives and historical chronicles detailing the lives, miracles, tribulations, and moral teachings of the messengers chosen by Allah to guide humanity to monotheism (Tawheed).",
+              text: "The Stories of the Prophets (Qisas al-Anbiya / قصص الأنبياء) are authentic Quranic narratives and historical chronicles detailing the lives, divine missions, miracles, tribulations, and moral teachings of the noble messengers chosen by Allah to guide humanity to monotheism (Tawheed).",
             },
           },
           {
             "@type": "Question",
-            name: "Who was the first Prophet according to Islamic belief?",
+            name: "Who was Prophet Idris (A.S.) and what were his notable achievements?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Prophet Adam (A.S.) is revered as the first human being, the Father of Mankind, and the very first Prophet of Allah, endowed with divine knowledge and vicegerency upon Earth.",
+              text: "Prophet Idris (A.S.) was an exalted prophet commended by Allah in Surah Maryam ('And We raised him to an exalted station'). Classical Islamic tradition records that he was the first human to write with a reed pen, weave cloth and sew garments, and map celestial astronomy in contemplation of the Creator.",
             },
           },
           {
             "@type": "Question",
-            name: "What was the supplication of Prophet Yunus (A.S.) in the belly of the whale?",
+            name: "Who was the first Prophet in Islam?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Prophet Yunus (A.S.) supplicated from the belly of the whale: 'La ilaha illa Anta, Subhanaka inni kuntu minaz-zalimeen' (There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers), as commemorated in Surah Al-Anbiya (21:87).",
+              text: "Prophet Adam (A.S.) is the first human being, the Father of Mankind, and the very first Prophet of Allah, fashioned directly from clay and endowed with divine intellect as Earth's first vicegerent (Khalifah).",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "In what languages are the Prophet stories available on Noor Al-Quran?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "All Prophet stories on Noor Al-Quran are provided in three languages: English, Urdu (اردو), and Arabic (العربية), with authentic Quranic citations and key spiritual lessons.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "What was the supplication of Prophet Yunus (A.S.) in the whale?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Prophet Yunus (A.S.) prayed from the belly of the whale: 'La ilaha illa Anta, Subhanaka inni kuntu minaz-zalimeen' (There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers), as commemorated in Surah Al-Anbiya (21:87).",
             },
           },
         ],

@@ -358,10 +358,11 @@ function StoriesContent() {
                 <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-neutral-900 shadow-none border border-slate-200/50 dark:border-white/[0.08]">
                   <Image
                     src={story.image}
-                    alt={`Prophet ${cleanName} (A.S.)`}
+                    alt={`Prophet ${cleanName} (A.S.) - Stories of the Prophets (Qisas al-Anbiya) | Noor Al-Quran`}
                     fill
-                    quality={95}
+                    quality={90}
                     priority={story.order <= 4}
+                    loading={story.order <= 4 ? "eager" : "lazy"}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover"
                   />
@@ -521,7 +522,7 @@ function StoriesContent() {
                           : "text-neutral-300 hover:bg-white/[0.06]"
                       }`}
                     >
-                      <span>
+                      <span className={selectedLanguage === "ur" ? "font-urdu text-sm" : selectedLanguage === "ar" ? "font-arabic text-sm" : ""}>
                         {selectedLanguage === "ur"
                           ? story.nameUr
                           : selectedLanguage === "ar"
@@ -535,17 +536,22 @@ function StoriesContent() {
             </AnimatePresence>
 
             {/* MAIN CENTERED READING CONTAINER */}
-            <div className="relative z-10 flex-1 max-w-3xl sm:max-w-4xl mx-auto w-full px-5 sm:px-8 md:px-12 py-10 sm:py-16">
+            <div
+              lang={selectedLanguage}
+              dir={selectedLanguage === "ur" || selectedLanguage === "ar" ? "rtl" : "ltr"}
+              className="relative z-10 flex-1 max-w-3xl sm:max-w-4xl mx-auto w-full px-5 sm:px-8 md:px-12 py-10 sm:py-16"
+            >
               
               {/* HERO HEADER: Centered 2:3 Book Cover with Ambient Shadow */}
               <div className="text-center mb-10 sm:mb-14">
                 <div className="relative aspect-[2/3] w-48 sm:w-56 md:w-64 mx-auto rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-white/15 mb-6 bg-neutral-950">
                   <Image
                     src={activeStory.image}
-                    alt={activeStory.nameEn}
+                    alt={`Prophet ${activeStory.nameEn} (${activeStory.nameUr} / ${activeStory.nameAr}) - Stories of the Prophets | Noor Al-Quran`}
                     fill
                     priority
-                    quality={95}
+                    loading="eager"
+                    quality={92}
                     sizes="(max-width: 640px) 384px, (max-width: 768px) 448px, 512px"
                     className="object-cover"
                   />
@@ -554,7 +560,13 @@ function StoriesContent() {
                 </div>
 
                 {/* Prophet Full Title in Selected Language */}
-                <h1 className="font-heading text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-2.5">
+                <h1 className={`text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-2.5 ${
+                  selectedLanguage === "ur"
+                    ? "font-urdu py-2 leading-[1.8] text-3xl sm:text-5xl"
+                    : selectedLanguage === "ar"
+                    ? "font-arabic py-1 leading-snug"
+                    : "font-heading leading-tight"
+                }`}>
                   {selectedLanguage === "ur"
                     ? activeStory.nameUr
                     : selectedLanguage === "ar"
@@ -563,7 +575,13 @@ function StoriesContent() {
                 </h1>
 
                 {/* Subtitle strictly in selected language (English in EN, Urdu in UR, Arabic in AR) */}
-                <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-2xl mx-auto font-medium leading-relaxed">
+                <p className={`text-sm sm:text-base md:text-lg text-white/80 max-w-2xl mx-auto font-medium leading-relaxed ${
+                  selectedLanguage === "ur"
+                    ? "font-urdu py-1 text-base sm:text-xl leading-[2.2]"
+                    : selectedLanguage === "ar"
+                    ? "font-arabic text-base sm:text-xl leading-loose"
+                    : ""
+                }`}>
                   {selectedLanguage === "ur"
                     ? activeStory.titleUr
                     : selectedLanguage === "ar"
@@ -616,14 +634,26 @@ function StoriesContent() {
               {/* DIVINE LESSONS & WISDOM (No Emojis) */}
               <div className="mt-14 sm:mt-18 pt-10 border-t border-white/10">
                 <div className="text-center mb-8">
-                  <h3 className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">
+                  <h3 className={`text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2 ${
+                    selectedLanguage === "ur"
+                      ? "font-urdu py-1 text-2xl sm:text-4xl"
+                      : selectedLanguage === "ar"
+                      ? "font-arabic py-1"
+                      : "font-heading"
+                  }`}>
                     {selectedLanguage === "ur"
                       ? "قرآنی اسباق و حکمت"
                       : selectedLanguage === "ar"
                       ? "الدروس والعبر الربانية"
                       : "Divine Lessons & Spiritual Wisdom"}
                   </h3>
-                  <p className="text-xs sm:text-sm text-white/60">
+                  <p className={`text-xs sm:text-sm text-white/60 ${
+                    selectedLanguage === "ur"
+                      ? "font-urdu py-1 text-sm sm:text-base leading-[2.2]"
+                      : selectedLanguage === "ar"
+                      ? "font-arabic text-sm leading-loose"
+                      : ""
+                  }`}>
                     {selectedLanguage === "ur"
                       ? "قصص الانبیاء سے زندگی کے لیے ابدی رہنمائی"
                       : selectedLanguage === "ar"
@@ -644,7 +674,9 @@ function StoriesContent() {
                     >
                       <div className="flex items-center gap-2 mb-2.5 text-amber-400/90">
                         <CheckCircle2 size={15} />
-                        <span className="text-xs font-semibold uppercase tracking-wider">
+                        <span className={`text-xs font-semibold uppercase tracking-wider ${
+                          selectedLanguage === "ur" ? "font-urdu text-xs" : selectedLanguage === "ar" ? "font-arabic text-xs" : ""
+                        }`}>
                           {selectedLanguage === "ur"
                             ? `سبق نمبر ${idx + 1}`
                             : selectedLanguage === "ar"
@@ -653,12 +685,12 @@ function StoriesContent() {
                         </span>
                       </div>
                       <p
-                        className={`text-xs sm:text-sm text-white/85 leading-relaxed ${
+                        className={`text-xs sm:text-sm text-white/85 ${
                           selectedLanguage === "ur"
-                            ? "text-right font-urdu"
+                            ? "text-right font-urdu leading-[2.4] text-sm sm:text-base"
                             : selectedLanguage === "ar"
-                            ? "text-right font-arabic"
-                            : "text-left"
+                            ? "text-right font-arabic leading-loose text-sm sm:text-base"
+                            : "text-left leading-relaxed font-normal"
                         }`}
                       >
                         {lesson}
@@ -681,7 +713,15 @@ function StoriesContent() {
                   <ChevronLeft size={18} />
                   <div>
                     <span className="block text-[10px] text-white/50">Previous Chronicle</span>
-                    <span className="block font-bold">Prophet {prevStory.nameEn.replace(/\s*\(A\.S\.\)/i, "").trim()}</span>
+                    <span className={`block font-bold ${
+                      selectedLanguage === "ur" ? "font-urdu text-sm" : selectedLanguage === "ar" ? "font-arabic text-sm" : ""
+                    }`}>
+                      {selectedLanguage === "ur"
+                        ? prevStory.nameUr
+                        : selectedLanguage === "ar"
+                        ? prevStory.nameAr
+                        : `Prophet ${prevStory.nameEn.replace(/\s*\(A\.S\.\)/i, "").trim()}`}
+                    </span>
                   </div>
                 </button>
 
@@ -695,7 +735,15 @@ function StoriesContent() {
                 >
                   <div>
                     <span className="block text-[10px] text-blue-200">Next Chronicle</span>
-                    <span className="block font-bold">Prophet {nextStory.nameEn.replace(/\s*\(A\.S\.\)/i, "").trim()}</span>
+                    <span className={`block font-bold ${
+                      selectedLanguage === "ur" ? "font-urdu text-sm" : selectedLanguage === "ar" ? "font-arabic text-sm" : ""
+                    }`}>
+                      {selectedLanguage === "ur"
+                        ? nextStory.nameUr
+                        : selectedLanguage === "ar"
+                        ? nextStory.nameAr
+                        : `Prophet ${nextStory.nameEn.replace(/\s*\(A\.S\.\)/i, "").trim()}`}
+                    </span>
                   </div>
                   <ChevronRight size={18} />
                 </button>
@@ -703,7 +751,7 @@ function StoriesContent() {
 
               {/* End of Chronicle Ornament */}
               <div className="text-center mt-12 sm:mt-16 text-xs text-white/40">
-                <p>الحمد لله رب العالمين</p>
+                <p className="font-arabic text-sm sm:text-base">الحمد لله رب العالمين</p>
                 <p className="mt-1 text-[11px] text-white/30">Noor Al-Quran • Stories of the Prophets</p>
               </div>
 
@@ -711,6 +759,40 @@ function StoriesContent() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Semantic SEO & Accessibility Section for Search Engines */}
+      <section className="sr-only" aria-label="Stories of the Prophets Overview and Knowledge Base">
+        <h2>About Stories of the Prophets (Qisas al-Anbiya - قصص الأنبياء)</h2>
+        <p>
+          Welcome to the comprehensive, authentic chronicles of the Prophets of Allah on Noor Al-Quran.
+          Explore the lives, miracles, tribulations, and timeless wisdom of Prophet Adam, Prophet Idris,
+          Prophet Nuh, Prophet Hud, Prophet Saleh, Prophet Ibrahim, Prophet Lut, Prophet Ismail,
+          Prophet Ishaq, Prophet Yaqub, and Prophet Yunus (peace be upon them all).
+          Read authentic chronicles with Quranic citations in English, Urdu (اردو), and Arabic (العربية).
+        </p>
+        <div>
+          <h3>Frequently Asked Questions about Qisas al-Anbiya</h3>
+          <article>
+            <h4>Who was Prophet Idris (A.S.)?</h4>
+            <p>
+              Prophet Idris (A.S.) is an exalted prophet praised in Surah Maryam (&apos;And We raised him to an exalted station&apos;).
+              He was the first human to write with a reed pen, weave cloth and sew garments, and study celestial astronomy in contemplation of the Creator.
+            </p>
+          </article>
+          <article>
+            <h4>Who was the first prophet created by Allah?</h4>
+            <p>
+              Prophet Adam (A.S.) was the first human created from dust and clay and appointed as Allah&apos;s first vicegerent (Khalifah) on Earth.
+            </p>
+          </article>
+          <article>
+            <h4>What was the supplication of Prophet Yunus (A.S.) in the whale?</h4>
+            <p>
+              Prophet Yunus (A.S.) prayed: &apos;La ilaha illa Anta, Subhanaka inni kuntu minaz-zalimeen&apos; (There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers).
+            </p>
+          </article>
+        </div>
+      </section>
 
       <Footer />
     </div>

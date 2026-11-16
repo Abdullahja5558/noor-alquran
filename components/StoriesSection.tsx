@@ -67,10 +67,11 @@ export default function StoriesSection() {
               <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-neutral-900 shadow-none border border-slate-200/60 dark:border-white/[0.08]">
                 <Image
                   src={story.image}
-                  alt={`Prophet ${cleanName} (A.S.)`}
+                  alt={`Prophet ${cleanName} (A.S.) - Stories of the Prophets (Qisas al-Anbiya)`}
                   fill
-                  quality={95}
+                  quality={90}
                   priority={idx < 2}
+                  loading={idx < 2 ? "eager" : "lazy"}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
                 />

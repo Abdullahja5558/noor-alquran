@@ -122,13 +122,13 @@ button{
 
 /* --- ARABIC & URDU TYPOGRAPHY --- */
 .font-arabic {
-  font-family: var(--font-arabic), 'Scheherazade New', 'Amiri', serif;
+  font-family: var(--font-arabic), 'Scheherazade New', 'Amiri', 'Traditional Arabic', serif;
   direction: rtl;
   text-rendering: optimizeLegibility;
 }
 
 .font-urdu {
-  font-family: var(--font-urdu), 'Noto Nastaliq Urdu', 'Amiri', serif;
+  font-family: var(--font-urdu), 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', 'Amiri', serif;
   direction: rtl;
   text-rendering: optimizeLegibility;
 }
