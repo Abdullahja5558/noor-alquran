@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -146,8 +146,10 @@ function WordReveal({
 }
 
 function StoriesContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const storyParam = searchParams.get("id");
+  const fromParam = searchParams.get("from");
 
   const [selectedLanguage, setSelectedLanguage] = useState<"en" | "ur" | "ar">("en");
   const [activeStory, setActiveStory] = useState<ProphetStory>(STORIES_DATA[0]);
@@ -158,24 +160,31 @@ function StoriesContent() {
   const [fontSize, setFontSize] = useState<"sm" | "base" | "lg" | "xl">("lg");
   const [isChapterDrawerOpen, setIsChapterDrawerOpen] = useState<boolean>(false);
 
-  // Dedicated Ref for the Modal Scroll Container & Lenis instance
   // Dedicated Ref for the Modal Scroll Container
   const modalRef = useRef<HTMLDivElement | null>(null);
+  // Preserves the user's exact scroll position on the grid
+  const lastGridScrollRef = useRef<number>(0);
 
   const scrollToModalTop = useCallback(() => {
     modalRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // Background Scroll Lock when reader modal is open
+  // Background Scroll Lock when reader modal is open (maintains exact window scroll position)
   useEffect(() => {
     if (isReaderOpen) {
-      const originalOverflow = document.body.style.overflow;
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
       document.body.style.overflow = "hidden";
+
       return () => {
-        document.body.style.overflow = originalOverflow;
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        document.body.style.overflow = "";
+        window.scrollTo({ top: scrollY, behavior: "instant" });
       };
-    } else {
-      document.body.style.overflow = "";
     }
   }, [isReaderOpen]);
 
@@ -210,14 +219,62 @@ function StoriesContent() {
   }, [activeStory.id]);
 
   const openReader = useCallback((story: ProphetStory) => {
+    lastGridScrollRef.current = window.scrollY;
     setActiveStory(story);
     setIsReaderOpen(true);
-  }, []);
+    // Push browser history state so back button works and URL updates cleanly
+    window.history.pushState(
+      { storyId: story.id, scrollPos: window.scrollY },
+      "",
+      `/stories?id=${story.id}${fromParam ? `&from=${fromParam}` : ""}`
+    );
+  }, [fromParam]);
 
   const closeReader = useCallback(() => {
     setIsReaderOpen(false);
     setIsChapterDrawerOpen(false);
-  }, []);
+
+    // If navigated from homepage ("from=home"), return user right back to #stories on homepage
+    if (fromParam === "home") {
+      router.push("/#stories");
+      return;
+    }
+
+    // Clean URL back to /stories without full page reload
+    window.history.replaceState(null, "", "/stories");
+
+    // Seamlessly restore exact scroll position to the card user clicked
+    const savedTop = lastGridScrollRef.current;
+    requestAnimationFrame(() => {
+      if (savedTop > 0) {
+        window.scrollTo({ top: savedTop, behavior: "instant" });
+      } else {
+        const cardEl = document.getElementById(`story-card-${activeStory.id}`);
+        cardEl?.scrollIntoView({ block: "center", behavior: "instant" });
+      }
+    });
+  }, [fromParam, router, activeStory.id]);
+
+  // Handle browser back button (popstate): gracefully close reader and restore exact position
+  useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      if (isReaderOpen) {
+        setIsReaderOpen(false);
+        setIsChapterDrawerOpen(false);
+        if (fromParam === "home") {
+          router.push("/#stories");
+        } else {
+          const savedTop = e.state?.scrollPos ?? lastGridScrollRef.current;
+          if (savedTop > 0) {
+            window.scrollTo({ top: savedTop, behavior: "instant" });
+          }
+        }
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [isReaderOpen, fromParam, router]);
 
   const cycleFontSize = () => {
     if (fontSize === "sm") setFontSize("base");
@@ -298,8 +355,8 @@ function StoriesContent() {
           </div>
         </div>
 
-        {/* Responsive Stories Grid: 2:3 Portrait Book Covers + Themed Boxes with Scroll Stagger */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 sm:gap-8">
+        {/* Responsive Stories Grid: Exactly 2 columns on mobile, 4 columns on desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
           {filteredStories.map((story) => {
             const titleDisplay = getProphetEnglishTitle(story);
             const boxStyle = PROPHET_BOX_COLORS[story.id] || "bg-[#141b2b] border-[#24304d]";
@@ -307,15 +364,16 @@ function StoriesContent() {
             return (
               <motion.div
                 key={story.id}
-                initial={{ opacity: 0, y: 22 }}
+                id={`story-card-${story.id}`}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-20px" }}
-                transition={{ duration: 0.45, delay: (story.order % 4) * 0.07, ease: "easeOut" }}
+                transition={{ duration: 0.45, delay: (story.order % 4) * 0.06, ease: "easeOut" }}
                 onClick={() => openReader(story)}
                 className="group cursor-pointer flex flex-col w-full"
               >
                 {/* 2:3 Portrait Book Cover (No Outer Box, Full Image) */}
-                <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-neutral-900 shadow-none border border-slate-200/50 dark:border-white/[0.08]">
+                <div className="relative aspect-[2/3] w-full rounded-xl sm:rounded-2xl overflow-hidden bg-neutral-900 shadow-none border border-slate-200/50 dark:border-white/[0.08]">
                   <Image
                     src={story.image}
                     alt={`${titleDisplay} - Stories of the Prophets (Qisas al-Anbiya) | Noor Al-Quran`}
@@ -323,7 +381,7 @@ function StoriesContent() {
                     unoptimized
                     priority={story.order <= 4}
                     loading={story.order <= 4 ? "eager" : "lazy"}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className="object-cover"
                   />
 
@@ -332,36 +390,36 @@ function StoriesContent() {
 
                   {/* Center Glassmorphism Book Read Button on Hover */}
                   <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
-                    <div className="w-13 h-13 rounded-full bg-white/20 dark:bg-black/40 backdrop-blur-md border border-white/40 dark:border-white/20 text-white flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform shadow-lg shadow-black/20">
-                      <BookOpen size={20} className="text-white" />
+                    <div className="w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-white/20 dark:bg-black/40 backdrop-blur-md border border-white/40 dark:border-white/20 text-white flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform shadow-lg shadow-black/20">
+                      <BookOpen size={18} className="text-white sm:w-5 sm:h-5" />
                     </div>
                   </div>
                 </div>
 
                 {/* Separate Themed Box (Clean, Elegant, Matching Book Cover) */}
-                <div className={`mt-3 p-4 rounded-2xl ${boxStyle} backdrop-blur-md border shadow-none text-center transition-all flex flex-col justify-between flex-1`}>
+                <div className={`mt-2.5 sm:mt-3 p-3 sm:p-4 rounded-xl sm:rounded-2xl ${boxStyle} backdrop-blur-md border shadow-none text-center transition-all flex flex-col justify-between flex-1`}>
                   <div>
                     {/* Name: "Prophet [Name] (A.S.)" or "Prophet Muhammad (S.A.W.)" */}
-                    <h3 className="font-heading text-base font-bold text-white leading-snug">
+                    <h3 className="font-heading text-xs sm:text-base font-bold text-white leading-snug line-clamp-1 sm:line-clamp-none">
                       {titleDisplay}
                     </h3>
 
                     {/* Concise Professional Story Paragraph */}
-                    <p className="text-xs text-white/80 mt-1.5 leading-relaxed line-clamp-2 font-normal">
+                    <p className="text-[11px] sm:text-xs text-white/80 mt-1 sm:mt-1.5 leading-relaxed line-clamp-2 font-normal">
                       {story.summaryEn}
                     </p>
                   </div>
 
                   {/* Centered "Read Story" Button */}
-                  <div className="flex justify-center mt-3 pt-2.5 border-t border-white/10">
+                  <div className="flex justify-center mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-white/10">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         openReader(story);
                       }}
-                      className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold backdrop-blur-sm transition-all border border-white/20 bg-white/15 hover:bg-white/25 text-white active:scale-95 cursor-pointer"
+                      className="inline-flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-semibold backdrop-blur-sm transition-all border border-white/20 bg-white/15 hover:bg-white/25 text-white active:scale-95 cursor-pointer"
                     >
-                      <BookOpen size={12} className="text-white" />
+                      <BookOpen size={11} className="text-white sm:w-3 sm:h-3" />
                       <span>Read Story</span>
                     </button>
                   </div>

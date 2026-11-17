@@ -533,14 +533,20 @@ export default function SurahReaderClient({
 
       {/* --- TOP HEADER --- */}
       <header className="shrink-0 flex-none z-30 w-full flex items-center justify-between pointer-events-auto py-1.5 sm:py-2.5 max-w-7xl mx-auto">
-        {/* Left: Back Link */}
-        <Link
-          href="/quran"
-          className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-white/90 hover:text-blue-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] transition-colors active:scale-95"
+        {/* Left: Back Link with Exact Scroll Restoration */}
+        <button
+          onClick={() => {
+            if (typeof window !== "undefined" && window.history.length > 1) {
+              router.back();
+            } else {
+              router.push(`/quran#surah-${surahInfo.number}`);
+            }
+          }}
+          className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-white/90 hover:text-blue-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] transition-colors active:scale-95 cursor-pointer"
         >
           <ArrowLeft size={16} />
           <span>Surahs</span>
-        </Link>
+        </button>
 
         {/* Center: Surah Title */}
         <div className="text-center drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] px-2">

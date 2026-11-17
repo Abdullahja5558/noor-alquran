@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -48,27 +48,48 @@ export default function StoriesSection() {
   // Show only 4 featured stories on the homepage
   const featuredStories = STORIES_DATA.slice(0, 4);
 
+  // Restore scroll position when returning from a story reader
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedScroll = sessionStorage.getItem("stories_home_scroll");
+      if (savedScroll) {
+        sessionStorage.removeItem("stories_home_scroll");
+        // Scroll right back to where user was
+        setTimeout(() => {
+          window.scrollTo({ top: parseInt(savedScroll, 10), behavior: "instant" });
+        }, 60);
+      } else if (window.location.hash === "#stories") {
+        setTimeout(() => {
+          document.getElementById("stories")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100);
+      }
+    }
+  }, []);
+
   const handleCardClick = (storyId: string) => {
-    router.push(`/stories?id=${storyId}`);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("stories_home_scroll", window.scrollY.toString());
+    }
+    router.push(`/stories?id=${storyId}&from=home`);
   };
 
   return (
-    <section id="stories" className="relative py-16 sm:py-24 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
+    <section id="stories" className="relative py-14 sm:py-24 px-3.5 sm:px-6 md:px-8 max-w-7xl mx-auto scroll-mt-24">
       {/* Centered Section Header (No Pill Badge) */}
-      <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-        <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
+        <h2 className="font-heading text-2xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white">
           Stories of the{" "}
-          <span className="bg-[#155DFC] text-white px-3.5 sm:px-4 py-0.5 rounded-full text-xl sm:text-3xl md:text-4xl font-extrabold align-middle inline-block">
+          <span className="bg-[#155DFC] text-white px-3 sm:px-4 py-0.5 rounded-full text-lg sm:text-3xl md:text-4xl font-extrabold align-middle inline-block">
             Prophets
           </span>
         </h2>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 mt-2.5 font-normal max-w-md mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 mt-2 sm:mt-2.5 font-normal max-w-md mx-auto leading-relaxed px-2">
           Authentic Quranic chronicles and timeless wisdom from Qisas al-Anbiya for daily contemplation.
         </p>
       </div>
 
-      {/* Responsive 4-Column Grid (No Horizontal Scroll, Clean Layout) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
+      {/* Responsive Grid: Exactly 2 columns on mobile, 4 columns on desktop */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-7">
         {featuredStories.map((story: ProphetStory, idx: number) => {
           const titleDisplay = getProphetEnglishTitle(story);
           const boxStyle = PROPHET_BOX_COLORS[story.id] || "bg-[#141b2b] border-[#24304d]";
@@ -76,15 +97,16 @@ export default function StoriesSection() {
           return (
             <motion.div
               key={story.id}
-              initial={{ opacity: 0, y: 24 }}
+              id={`home-story-${story.id}`}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.5, delay: idx * 0.08, ease: "easeOut" }}
+              viewport={{ once: true, margin: "-20px" }}
+              transition={{ duration: 0.45, delay: idx * 0.06, ease: "easeOut" }}
               onClick={() => handleCardClick(story.id)}
               className="group cursor-pointer flex flex-col w-full"
             >
-              {/* 2:3 Portrait Book Cover (No Hover-Up, No Extra Shadow) */}
-              <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-neutral-900 shadow-none border border-slate-200/60 dark:border-white/[0.08]">
+              {/* 2:3 Portrait Book Cover */}
+              <div className="relative aspect-[2/3] w-full rounded-xl sm:rounded-2xl overflow-hidden bg-neutral-900 shadow-none border border-slate-200/60 dark:border-white/[0.08]">
                 <Image
                   src={story.image}
                   alt={`${titleDisplay} - Stories of the Prophets (Qisas al-Anbiya)`}
@@ -92,7 +114,7 @@ export default function StoriesSection() {
                   unoptimized
                   priority={idx < 2}
                   loading={idx < 2 ? "eager" : "lazy"}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   className="object-cover"
                 />
 
@@ -101,29 +123,29 @@ export default function StoriesSection() {
 
                 {/* Navbar-style Glassmorphism Read Button on Hover */}
                 <div className="absolute inset-0 bg-black/15 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
-                  <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-white/20 dark:bg-black/40 backdrop-blur-md border border-white/40 dark:border-white/20 text-white flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform shadow-lg shadow-black/20">
-                    <BookOpen size={22} className="text-white" />
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/20 dark:bg-black/40 backdrop-blur-md border border-white/40 dark:border-white/20 text-white flex items-center justify-center transform scale-90 group-hover:scale-100 transition-transform shadow-lg shadow-black/20">
+                    <BookOpen size={18} className="text-white sm:w-5 sm:h-5" />
                   </div>
                 </div>
               </div>
 
               {/* Separate Glassmorphism Box matching Book Color */}
-              <div className={`mt-3 p-4 rounded-2xl ${boxStyle} backdrop-blur-md border shadow-none text-center transition-all flex flex-col justify-between flex-1`}>
+              <div className={`mt-2.5 sm:mt-3 p-3 sm:p-4 rounded-xl sm:rounded-2xl ${boxStyle} backdrop-blur-md border shadow-none text-center transition-all flex flex-col justify-between flex-1`}>
                 <div>
-                  <h3 className="font-heading text-base font-bold text-white leading-snug">
+                  <h3 className="font-heading text-xs sm:text-base font-bold text-white leading-snug line-clamp-1 sm:line-clamp-none">
                     {titleDisplay}
                   </h3>
 
                   {/* Concise Professional Story Paragraph */}
-                  <p className="text-xs text-white/80 mt-1.5 leading-relaxed line-clamp-2 font-normal">
+                  <p className="text-[11px] sm:text-xs text-white/80 mt-1 sm:mt-1.5 leading-relaxed line-clamp-2 font-normal">
                     {story.summaryEn}
                   </p>
                 </div>
 
                 {/* Centered Read Story CTA */}
-                <div className="flex justify-center mt-3 pt-2.5 border-t border-white/10">
-                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/15 group-hover:bg-white/25 text-white text-xs font-semibold backdrop-blur-sm transition-all border border-white/20">
-                    <BookOpen size={12} className="text-white" />
+                <div className="flex justify-center mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-white/10">
+                  <span className="inline-flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white/15 group-hover:bg-white/25 text-white text-[11px] sm:text-xs font-semibold backdrop-blur-sm transition-all border border-white/20">
+                    <BookOpen size={11} className="text-white sm:w-3 sm:h-3" />
                     <span>Read Story</span>
                   </span>
                 </div>
@@ -134,10 +156,10 @@ export default function StoriesSection() {
       </div>
 
       {/* Centered "View All Stories" Button */}
-      <div className="text-center mt-12 sm:mt-14">
+      <div className="text-center mt-10 sm:mt-14">
         <Link
           href="/stories"
-          className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#155DFC] hover:bg-blue-600 text-white font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl transition-all active:scale-95 group"
+          className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[#155DFC] hover:bg-blue-600 text-white font-semibold text-xs sm:text-sm shadow-md hover:shadow-xl transition-all active:scale-95 group"
         >
           <span>View All Stories</span>
           <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />

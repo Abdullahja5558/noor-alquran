@@ -153,7 +153,7 @@ function QuranPageContent() {
               const isOpening = navigatingId === surah.number;
 
               return (
-                <div key={surah.number}>
+                <div key={surah.number} id={`surah-${surah.number}`} className="scroll-mt-28">
                   <Link
                     href={`/quran/${surah.number}`}
                     onClick={() => setNavigatingId(surah.number)}
