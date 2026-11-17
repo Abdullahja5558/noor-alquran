@@ -619,7 +619,7 @@ export default function SurahReaderClient({
       </header>
 
       {/* --- CENTER STAGE: BALANCED & REFINED TYPOGRAPHY --- */}
-      <main className="flex-1 min-h-0 w-full flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 max-w-4xl lg:max-w-5xl mx-auto text-center z-20 overflow-y-auto no-scrollbar py-1 sm:py-2">
+      <main data-lenis-prevent className="flex-1 min-h-0 w-full flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 max-w-4xl lg:max-w-5xl mx-auto text-center z-20 overflow-y-auto no-scrollbar py-1 sm:py-2">
         {currentAyah && (
           <AnimatePresence mode="wait">
             <motion.div
@@ -796,7 +796,7 @@ export default function SurahReaderClient({
 
               {/* Tab 1: Reciters Grid */}
               {activeMixerTab === "reciters" && (
-                <div className="flex-1 overflow-y-auto px-0.5 py-1 custom-scrollbar max-h-[58vh]">
+                <div data-lenis-prevent className="flex-1 overflow-y-auto px-0.5 py-1 custom-scrollbar max-h-[58vh]">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {RECITERS_LIST.map((reciter) => {
                       const isSelected = selectedReciter.id === reciter.id;
@@ -846,7 +846,7 @@ export default function SurahReaderClient({
 
               {/* Tab 2: Ambience & Soundscapes */}
               {activeMixerTab === "soundscapes" && (
-                <div className="flex-1 overflow-y-auto px-1 py-2 flex flex-col gap-4">
+                <div data-lenis-prevent className="flex-1 overflow-y-auto px-1 py-2 flex flex-col gap-4">
                   <div>
                     <label className="text-xs font-semibold text-neutral-300 mb-2 block">
                       Background Soundscape

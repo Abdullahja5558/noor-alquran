@@ -520,7 +520,7 @@ function StoriesContent() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-16 right-4 sm:right-8 z-40 w-72 max-h-96 overflow-y-auto rounded-2xl bg-neutral-900/95 backdrop-blur-2xl border border-white/15 shadow-2xl p-2"
+                  data-lenis-prevent className="absolute top-16 right-4 sm:right-8 z-40 w-72 max-h-96 overflow-y-auto rounded-2xl bg-neutral-900/95 backdrop-blur-2xl border border-white/15 shadow-2xl p-2"
                 >
                   <div className="px-3 py-2 text-xs font-bold text-neutral-400 border-b border-white/[0.08] mb-1 flex items-center justify-between">
                     <span>Select Prophet Chronicle</span>

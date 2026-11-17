@@ -218,7 +218,7 @@ export default function CollectionsSection() {
               </div>
 
               {/* Surah Tracks List */}
-              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2.5 no-scrollbar">
+              <div data-lenis-prevent className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2.5 no-scrollbar">
                 <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-neutral-400 mb-1 px-1">
                   <span>Surahs in this session ({selectedCollection.tracks.length})</span>
                   <span className="text-[11px] text-[#155DFC] font-medium">Click track to play</span>

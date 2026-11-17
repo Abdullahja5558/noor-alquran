@@ -303,7 +303,7 @@ export default function PrayerTimesClient({
                       <span>Use Exact GPS Location</span>
                     </button>
 
-                    <div className="max-h-56 overflow-y-auto no-scrollbar space-y-1">
+                    <div data-lenis-prevent className="max-h-56 overflow-y-auto no-scrollbar space-y-1">
                       {CITIES_LIST.map((city) => (
                         <button
                           key={city.slug}

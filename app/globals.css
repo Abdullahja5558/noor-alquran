@@ -18,6 +18,10 @@ button{
 
 @layer base {
   html {
+    /* Lenis handles smooth scrolling; native smooth only as fallback when JS is off */
+    scroll-behavior: auto;
+  }
+  html:not(.lenis) {
     scroll-behavior: smooth;
   }
 

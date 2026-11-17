@@ -614,7 +614,7 @@ export default function NoorAiPage() {
       {/* Main Center Area */}
       <main
         ref={scrollContainerRef}
-        className={`relative z-10 flex-1 flex flex-col w-full overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
+        data-lenis-prevent className={`relative z-10 flex-1 flex flex-col w-full overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden`}
       >
         {messages.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center px-4 select-none pb-20 sm:pb-28 -translate-y-8 sm:-translate-y-12 md:-translate-y-16">

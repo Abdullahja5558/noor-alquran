@@ -393,7 +393,7 @@ export default function RecitersSection() {
               </div>
 
               {/* Surahs Scrollable List */}
-              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2 custom-scrollbar">
+              <div data-lenis-prevent className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2 custom-scrollbar">
                 {loadingSurahs ? (
                   <div className="py-12 text-center text-slate-400 text-sm animate-pulse">
                     Loading Surahs list...

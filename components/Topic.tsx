@@ -170,7 +170,7 @@ export default function Topics() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-[2.5rem] p-6 sm:p-8 md:p-10 bg-white/95 dark:bg-[#070709] shadow-[0_30px_90px_rgba(0,0,0,0.6)] border border-slate-200/80 dark:border-white/[0.09] backdrop-blur-2xl overscroll-contain text-slate-900 dark:text-white custom-scrollbar"
+              data-lenis-prevent className="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-[2.5rem] p-6 sm:p-8 md:p-10 bg-white/95 dark:bg-[#070709] shadow-[0_30px_90px_rgba(0,0,0,0.6)] border border-slate-200/80 dark:border-white/[0.09] backdrop-blur-2xl overscroll-contain text-slate-900 dark:text-white custom-scrollbar"
             >
               {/* Close Button */}
               <button

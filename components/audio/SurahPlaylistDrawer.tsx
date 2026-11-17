@@ -143,7 +143,7 @@ export const SurahPlaylistDrawer: React.FC = () => {
           </div>
 
           {/* Surah List */}
-          <div className="flex-1 overflow-y-auto divide-y divide-white/[0.06] p-2 space-y-1">
+          <div data-lenis-prevent className="flex-1 overflow-y-auto divide-y divide-white/[0.06] p-2 space-y-1">
             {filteredSurahs.map((surah) => {
               const isCurrent = currentSurah.number === surah.number;
               return (
