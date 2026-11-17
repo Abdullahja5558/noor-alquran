@@ -91,6 +91,7 @@ function getProphetEnglishTitle(story: ProphetStory): string {
 
 // Scroll Word Reveal (original animation restored)
 // Words fade up from a soft blur one-by-one as each paragraph scrolls into view.
+// Preserves authentic Quranic verses ﴿...﴾ as intact RTL units styled with amber calligraphy.
 function WordReveal({
   text,
   className,
@@ -100,7 +101,21 @@ function WordReveal({
   className?: string;
   rootRef: React.RefObject<HTMLDivElement | null>;
 }) {
-  const words = useMemo(() => text.split(/\s+/).filter(Boolean), [text]);
+  const tokens = useMemo(() => {
+    const parts = text.split(/(﴿[^﴾]+﴾)/g).filter(Boolean);
+    const result: { text: string; isAyah: boolean }[] = [];
+    for (const part of parts) {
+      if (part.startsWith("﴿") && part.endsWith("﴾")) {
+        result.push({ text: part, isAyah: true });
+      } else {
+        const words = part.split(/\s+/).filter(Boolean);
+        for (const w of words) {
+          result.push({ text: w, isAyah: false });
+        }
+      }
+    }
+    return result;
+  }, [text]);
 
   return (
     <motion.p
@@ -123,7 +138,7 @@ function WordReveal({
         },
       }}
     >
-      {words.map((word, idx) => (
+      {tokens.map((token, idx) => (
         <React.Fragment key={idx}>
           <motion.span
             variants={{
@@ -135,9 +150,14 @@ function WordReveal({
                 transition: { duration: 0.45, ease: [0.25, 1, 0.5, 1] },
               },
             }}
-            className="inline-block"
+            className={
+              token.isAyah
+                ? "inline-block font-arabic text-amber-300 font-medium px-1 text-[1.12em] leading-normal"
+                : "inline-block"
+            }
+            dir={token.isAyah ? "rtl" : undefined}
           >
-            {word}
+            {token.text}
           </motion.span>{" "}
         </React.Fragment>
       ))}
